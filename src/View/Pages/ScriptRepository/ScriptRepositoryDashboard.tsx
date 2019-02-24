@@ -3,6 +3,8 @@ import {ApiService} from "../../../Common/ApiService";
 import {HttpUtil} from "../../../Utilities/HttpUtil";
 import {Script, ScriptCategories, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/Script";
 import toastr from 'toastr';
+import {UserUtil} from "../../../Utilities/UserUtil";
+import {bool} from "prop-types";
 
 type State = {
     scripts: Script[],
@@ -12,6 +14,7 @@ type State = {
     orderBy: string,
     category: string,
     [key: string]: any
+    loggedIn : boolean
 }
 
 export class ScriptRepositoryDashboard extends React.Component<any, State> {
@@ -28,11 +31,13 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             search: '',
             queryType: ScriptTypes[queryRaw] == null ? 'free' : queryRaw,
             orderBy: 'users',
-            category: 'All'
+            category: 'All',
+            loggedIn : true
         }
     }
 
     async componentDidMount() {
+        this.setState({loggedIn : UserUtil.getSession() != null});
         let scripts = await this.apiService.post("script/list", {
             type: this.state.queryType,
             search: this.state.search,
@@ -51,6 +56,9 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
     }
 
     private setAccessIds = async () => {
+        if(!this.state.loggedIn) {
+            return;
+        }
         const access : number[] = await this.apiService.get("script/accessIds");
         const ids : any = {};
         if(!Array.isArray(access)) {
@@ -159,7 +167,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             </React.Fragment>}
             {!this.state.loading && <div className="card-columns" style={{columnCount: 4}}>
                 {this.state.scripts.map((script: any) => {
-                    return <ScriptCard key={script.id} onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
+                    return <ScriptCard key={script.id} loggedIn={this.state.loggedIn} onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
                 })}
             </div>}
         </div>)
@@ -170,7 +178,8 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
 type ScriptCardProps = {
     script: Script,
     api : ApiService,
-    onAccessChange : () => any
+    onAccessChange : () => any,
+    loggedIn : boolean
 }
 
 type ScriptCardState = {
@@ -208,6 +217,9 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
         if(this.state.processing) {
             return 'Processing...'
         }
+        if(!this.props.loggedIn) {
+            return "Sign In To Add"
+        }
         if(this.props.script.doesUserOwn) {
             return 'Remove'
         }
@@ -228,6 +240,10 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
     };
 
     private onAdd = async () => {
+        if(!this.props.loggedIn) {
+            window.location.replace("/#/login");
+            return;
+        }
         if(this.props.script.doesUserOwn && this.props.script.type == ScriptType.Premium) {
             const confirm = window.confirm("You are attempting to remove a premium script. You will have to re-purchase to gain access again. Are you sure?")
             if(!confirm) {
