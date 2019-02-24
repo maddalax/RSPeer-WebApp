@@ -10,6 +10,7 @@
     "@types/react": "16.8.4",
     "@types/react-dom": "16.8.2",
     "@types/react-router-dom": "^4.3.1",
+    "@types/toastr": "^2.1.36",
     "Flot": "github:flot/flot",
     "ace-builds": "^1.4.2",
     "at.js": "^1.5.4",

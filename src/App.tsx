@@ -19,6 +19,7 @@ class App extends Component {
                            <main className="app-main">
                                <div className="wrapper">
                                    <div className="page">
+                                       <div id="alert-message"/>
                                        <div className="page-inner">
                                            <Routes/>
                                        </div>

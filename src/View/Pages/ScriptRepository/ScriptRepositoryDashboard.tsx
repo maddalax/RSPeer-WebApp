@@ -2,6 +2,7 @@ import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
 import {HttpUtil} from "../../../Utilities/HttpUtil";
 import {Script, ScriptCategories, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/Script";
+import toastr from 'toastr';
 
 type State = {
     scripts: Script[],
@@ -39,21 +40,30 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             //Subtract 1 off index because 'All' is added to beginning of the list.
             category: this.state.category === 'All' ? null : ScriptCategories.indexOf(this.state.category) - 1
         });
-        const access : number[] = await this.apiService.get("script/accessIds");
-        console.log("ACCESS IDS", access);
-        console.log("SCRIPT IDS", scripts.map((s : Script) => s.id))
+        if(scripts.error) {
+            toastr.error("", scripts.error + " Please refresh the page.", {positionClass : 'toast-top-right', timeOut : 0});
+            return;
+        }
         if (!Array.isArray(scripts)) {
           return;
         }
-        const ids : any = {};
-        access.forEach((a : any) => (ids[a] = true));
-        console.log(ids);
-        scripts = scripts.map((s : Script) => {
-            s.doesUserOwn = ids[s.id] === true;
-            return s;
-        });
-        this.setState({scripts, loading: false})
+        this.setState({scripts, loading: false}, () => this.setAccessIds())
     }
+
+    private setAccessIds = async () => {
+        const access : number[] = await this.apiService.get("script/accessIds");
+        const ids : any = {};
+        if(!Array.isArray(access)) {
+            return;
+        }
+        access.forEach((a : any) => (ids[a] = true));
+        this.setState(prev => {
+            prev.scripts.forEach((s : Script) => {
+                s.doesUserOwn = ids[s.id] === true;
+            });
+            return prev;
+        });
+    };
 
     private setFilter(key: string, value: string) {
         this.setState({
@@ -149,7 +159,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             </React.Fragment>}
             {!this.state.loading && <div className="card-columns" style={{columnCount: 4}}>
                 {this.state.scripts.map((script: any) => {
-                    return <ScriptCard key={script.id} script={script}/>
+                    return <ScriptCard key={script.id} onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
                 })}
             </div>}
         </div>)
@@ -158,10 +168,23 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
 }
 
 type ScriptCardProps = {
-    script: Script
+    script: Script,
+    api : ApiService,
+    onAccessChange : () => any
 }
 
-export class ScriptCard extends React.Component<ScriptCardProps, any> {
+type ScriptCardState = {
+    processing : boolean
+}
+
+export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState> {
+
+    constructor(props : ScriptCardProps) {
+        super(props);
+        this.state = {
+            processing : false
+        }
+    }
 
     private title = {
         fontSize: '1.5em'
@@ -182,6 +205,9 @@ export class ScriptCard extends React.Component<ScriptCardProps, any> {
     };
 
     private addButtonText = () => {
+        if(this.state.processing) {
+            return 'Processing...'
+        }
         if(this.props.script.doesUserOwn) {
             return 'Remove'
         }
@@ -199,6 +225,32 @@ export class ScriptCard extends React.Component<ScriptCardProps, any> {
             return 'btn btn-success'
         }
         return 'btn btn-success'
+    };
+
+    private onAdd = async () => {
+        if(this.props.script.doesUserOwn && this.props.script.type == ScriptType.Premium) {
+            const confirm = window.confirm("You are attempting to remove a premium script. You will have to re-purchase to gain access again. Are you sure?")
+            if(!confirm) {
+                return;
+            }
+        }
+        this.setState({processing : true});
+        if(this.props.script.doesUserOwn) {
+            await this.props.api.post("script/removeAccess", {
+                scriptId : this.props.script.id
+            });
+            await this.props.onAccessChange();
+            return this.setState({processing : false});
+        }
+        await this.props.api.post("script/addAccess", {
+            scriptId : this.props.script.id
+        });
+        await this.props.onAccessChange();
+        this.setState({processing : false});
+    };
+
+    private onMoreInfo = () => {
+
     };
 
     render(): any {
@@ -220,10 +272,10 @@ export class ScriptCard extends React.Component<ScriptCardProps, any> {
                     <p className="card-text">{this.props.script.description}</p>
                     <div className={"btn-toolbar"}>
                         <div className="btn-group" role="group" aria-label="Third group">
-                            <button type="button" style={this.button} className={addButtonClass}>{addButtonText}</button>
+                            <button type="button" style={this.button} onClick={this.onAdd} className={addButtonClass}>{addButtonText}</button>
                         </div>
                         <div className="btn-group" role="group" aria-label="Third group">
-                            <button type="button" style={this.button} className={"btn btn-info"}>More Info</button>
+                            <button type="button" style={this.button} onClick={this.onMoreInfo} className={"btn btn-info"}>More Info</button>
                         </div>
                     </div>
                 </div>

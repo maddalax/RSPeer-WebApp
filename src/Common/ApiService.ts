@@ -1,4 +1,6 @@
 import axios from 'axios';
+import {Alert} from "../Utilities/Alert";
+import {UserUtil} from "../Utilities/UserUtil";
 
 declare global {
     interface Window { rspeer: {apiUrl : string } }
@@ -6,10 +8,20 @@ declare global {
 
 window.rspeer = window.rspeer || {};
 
+export interface ApiConfig {
+    supressAlert : boolean
+}
+
 export class ApiService {
 
+    private apiConfig : ApiConfig;
+
+    constructor(config : ApiConfig = {supressAlert : false}) {
+        this.apiConfig = config;
+    }
+
     private buildConfig = () => {
-        const session = localStorage.getItem("session");
+        const session = UserUtil.getSession();
         const headers : any = {};
         if(session) {
             headers.Authorization = "Bearer " + session;
@@ -43,16 +55,21 @@ export class ApiService {
         try {
             return await func();
         } catch (e) {
-            return this.parseError(e);
+            const error = this.parseError(e);
+            if(!this.apiConfig.supressAlert) {
+                Alert.show(error.error);
+            }
+            return error;
         }
     }
 
     private parseError = (ex : any) => {
+        console.log(ex);
         if(!ex.response) {
             return {error : "Something went wrong."};
         }
         const error = ex.response.data;
-        return {error : error.body || 'Something went wrong.'}
+        return {error : error.error || 'Something went wrong.'}
     };
 
 }

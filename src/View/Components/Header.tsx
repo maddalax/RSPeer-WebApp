@@ -1,17 +1,49 @@
 import React from 'react';
-import profile from '../../assets/images/avatars/profile.jpg';
 import {Link, withRouter} from 'react-router-dom'
+import {ApiService} from "../../Common/ApiService";
+import {UserUtil} from "../../Utilities/UserUtil";
 
 export type HeaderProps = {
-    username : string
+    user: any
 }
 
 export class Header extends React.Component<HeaderProps | any, any> {
 
-    constructor(props : HeaderProps | any) {
+    private api: ApiService;
+
+    constructor(props: HeaderProps | any) {
         super(props);
-        console.log(props);
+        this.api = new ApiService();
+        this.state = {
+            user: {
+                username : 'Loading...'
+            }
+        }
     }
+
+    async componentDidMount() {
+        if(!UserUtil.getSession()) {
+            if(this.state.user != null) {
+                this.setState({user: null});
+            }
+            return;
+        }
+        const me = await this.api.get("user/me");
+        this.setState({user: me});
+    }
+
+    async componentDidUpdate() {
+        if(!this.state.user) {
+            this.componentDidMount();
+        }
+    }
+
+    private logout = () => {
+        localStorage.removeItem("rspeer_session");
+        sessionStorage.removeItem("rspeer_session");
+        this.setState({user: null})
+        this.props.history.push('/login')
+    };
 
     render(): any {
         return (<header className="app-header app-header-dark">
@@ -265,29 +297,35 @@ export class Header extends React.Component<HeaderProps | any, any> {
                         </ul>
                         {/* /.nav */}
                         {/* .btn-account */}
-                        <div className="dropdown">
+                        {this.state.user && <div className="dropdown">
                             <button className="btn-account d-none d-md-flex" type="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false"><span
-                                className="user-avatar user-avatar-md"><img
-                                src={profile}/></span> <span
+                                    aria-haspopup="true" aria-expanded="false"> <span
                                 className="account-summary pr-lg-4 d-none d-lg-block"><span
-                                className="account-name">{this.props.username}</span> <span
+                                className="account-name">{this.state.user.username}</span> <span
                                 className="account-description">Director</span></span></button>
                             <div className="dropdown-arrow dropdown-arrow-left"/>
                             {/* .dropdown-menu */}
                             <div className="dropdown-menu">
-                                <h6 className="dropdown-header d-none d-md-block d-lg-none"> Beni Arisandi </h6><Link
-                                className="dropdown-item" to="/scripts"><span
-                                className="dropdown-icon oi oi-person"/> Profile</Link> <a className="dropdown-item"
-                                                                                        href="auth-signin-v1.html"><span
-                                className="dropdown-icon oi oi-account-logout"/> Logout</a>
+                                {<h6
+                                    className="dropdown-header d-none d-md-block d-lg-none"> {this.state.user.username} </h6>}
+                                <Link
+                                    className="dropdown-item" to="/scripts"><span
+                                    className="dropdown-icon oi oi-person"/> Profile</Link>
+                                <a className="dropdown-item"
+                                   href="javascript:void(0)" onClick={this.logout}><span
+                                    className="dropdown-icon oi oi-account-logout"/> Logout</a>
                                 <div className="dropdown-divider"/>
                                 <a className="dropdown-item" href="#">Help Center</a> <a className="dropdown-item"
                                                                                          href="#">Ask Forum</a> <a
                                 className="dropdown-item" href="#">Keyboard Shortcuts</a>
                             </div>
                             {/* /.dropdown-menu */}
-                        </div>
+                        </div>}
+                        {!this.state.user && <div className="dropdown">
+                            <button onClick={this.logout} className="btn-account d-none d-md-flex" type="button">
+                                    <span className="account-name">Sign In</span>
+                            </button>
+                        </div>}
                         {/* /.btn-account */}
                     </div>
                     {/* /.top-bar-item */}
@@ -300,4 +338,4 @@ export class Header extends React.Component<HeaderProps | any, any> {
 
 }
 
-export const HeaderWithRouter = withRouter((props : any) => (<Header {...props}/>));
+export const HeaderWithRouter = withRouter((props: any) => (<Header {...props}/>));
