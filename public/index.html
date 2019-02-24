@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+    <script type="application/ld+json">
+      {
+        "name": "Looper - Bootstrap 4 Admin Theme",
+        "description": "Responsive admin theme build on top of Bootstrap 4",
+        "author":
+        {
+          "@type": "Person",
+          "name": "Beni Arisandi"
+        },
+        "@type": "WebSite",
+        "url": "",
+        "headline": "Dashboard",
+        "@context": "http://schema.org"
+      }
+    </script><!-- End SEO tag -->
+    <!-- FAVICONS -->
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/apple-touch-icon.png">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/dist/assets/favicon.ico">
+    <meta name="theme-color" content="#3063A0"><!-- End FAVICONS -->
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet"><!-- End GOOGLE FONT -->
+    <!-- BEGIN PLUGINS STYLES -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/vendor/open-iconic/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/vendor/fontawesome/css/all.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/vendor/flatpickr/flatpickr.min.css"><!-- END PLUGINS STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/stylesheets/theme.min.css" data-skin="default">
+    <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/stylesheets/theme-dark.min.css" data-skin="dark">
+    <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/stylesheets/custom.css"><!-- Disable unused skin immediately -->
+    <script>
+      window.rspeer = {
+        apiUrl : 'http://localhost/api/'
+      };
+      console.log(window.rspeer);
+    </script>
+    <script> var skin = localStorage.getItem('skin') || 'default';
+    var unusedLink = document.querySelector('link[data-skin]:not([data-skin="'+ skin +'"])');
+
+    unusedLink.setAttribute('rel', '');
+    unusedLink.setAttribute('disabled', true);
+    </script><!-- END THEME STYLES -->
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+  <!-- BEGIN BASE JS -->
+  <script src="%PUBLIC_URL%/dist/assets/vendor/jquery/jquery.min.js"></script>
+  <script src="%PUBLIC_URL%/dist/assets/vendor/bootstrap/js/popper.min.js"></script>
+  <script src="%PUBLIC_URL%/dist/assets/vendor/bootstrap/js/bootstrap.min.js"></script> <!-- END BASE JS -->
+  <!-- BEGIN PLUGINS JS -->
+  <script src="%PUBLIC_URL%/dist/assets/vendor/pace/pace.min.js"></script>
+  <script src="%PUBLIC_URL%/dist/assets/vendor/stacked-menu/stacked-menu.min.js"></script>
+  <script src="%PUBLIC_URL%/dist/assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+  <script src="%PUBLIC_URL%/dist/assets/vendor/flatpickr/flatpickr.min.js"></script>
+  <script src="%PUBLIC_URL%/dist/assets/vendor/easy-pie-chart/jquery.easypiechart.min.js"></script>
+  <script src="%PUBLIC_URL%/dist/assets/vendor/chart.js/Chart.min.js"></script> <!-- END PLUGINS JS -->
+  <!-- BEGIN THEME JS -->
+  <script src="%PUBLIC_URL%/dist/assets/javascript/theme.min.js"></script> <!-- END THEME JS -->
+  <!-- BEGIN PAGE LEVEL JS -->
+]</html>
