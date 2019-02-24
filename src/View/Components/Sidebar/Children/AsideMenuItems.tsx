@@ -54,16 +54,10 @@ export class StoreMenuItem extends React.Component {
                 className="menu-text">Store</span></a> {/* child menu */}
             <ul className="menu">
                 <li className="menu-item">
-                    <a href="user-profile.html" className="menu-link"><i className="fas fa-user"></i> My Scripts</a>
+                    <a href="user-profile.html" className="menu-link"><i className="fas fa-user"></i> Purchase Tokens</a>
                 </li>
                 <li className="menu-item">
-                    <a href="user-activities.html" className="menu-link"><i className="fas fa-globe-europe"/> All Scripts</a>
-                </li>
-                <li className="menu-item">
-                    <a href="user-activities.html" className="menu-link"><i className="fab fa-paypal"/> Premium Scripts</a>
-                </li>
-                <li className="menu-item">
-                    <a href="user-activities.html" className="menu-link"><i className="fas fa-tree"/> Free Scripts</a>
+                    <a href="user-activities.html" className="menu-link"><i className="fas fa-globe-europe"/> Purchase Instances</a>
                 </li>
             </ul>
         </li>);

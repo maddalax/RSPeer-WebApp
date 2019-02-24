@@ -7,12 +7,17 @@ import {ScriptRepositoryDashboard} from "./View/Pages/ScriptRepository/ScriptRep
 import {SignIn} from "./View/Pages/Authentication/SignIn";
 
 export class Routes extends React.Component {
+
+    componentDidMount(): void {
+        console.log("ROUTER" , this.props);
+    }
+
     render() : any {
         return (
             <Switch>
-                <Route exact path={`/`} component={(props : any) => <Dashboard {...props}/>}/>
-                <Route exact path={`/login`} component={(props : any) => <SignIn {...props}/>}/>
-                <Route exact path={`/scripts`} component={(props : any) => <ScriptRepositoryDashboard {...props}/>}/>
+                <Route exact path={`/`} component={(props : any) => <Dashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/login`} component={(props : any) => <SignIn {...props} {...this.props}/>}/>
+                <Route exact path={`/scripts`} component={(props : any) => <ScriptRepositoryDashboard {...props} {...this.props}/>}/>
             </Switch>
         )
     }

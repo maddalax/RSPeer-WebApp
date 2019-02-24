@@ -23,18 +23,13 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>RSPeer</title>
     <script type="application/ld+json">
       {
-        "name": "Looper - Bootstrap 4 Admin Theme",
-        "description": "Responsive admin theme build on top of Bootstrap 4",
-        "author":
-        {
-          "@type": "Person",
-          "name": "Beni Arisandi"
-        },
+        "name": "RSPeer",
+        "description": "Next Generation Runescape Automation.",
         "@type": "WebSite",
-        "url": "",
+        "url": "https://rspeer.org",
         "headline": "Dashboard",
         "@context": "http://schema.org"
       }
@@ -55,9 +50,8 @@
     <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/stylesheets/custom.css"><!-- Disable unused skin immediately -->
     <script>
       window.rspeer = {
-        apiUrl : 'https://services.rspeer.org/api/'
+        apiUrl : 'http://localhost/api/'
       };
-      console.log(window.rspeer);
     </script>
     <script> var skin = localStorage.getItem('skin') || 'default';
     var unusedLink = document.querySelector('link[data-skin]:not([data-skin="'+ skin +'"])');

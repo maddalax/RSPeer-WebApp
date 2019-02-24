@@ -6,6 +6,7 @@ import {Routes} from "./Routes";
 import {
    HashRouter
 } from 'react-router-dom';
+import {PageContainer} from "./PageContainer";
 
 class App extends Component {
     render() {
@@ -13,26 +14,36 @@ class App extends Component {
             <React.Fragment>
                 <div className="app">
                     <HashRouter>
-                       <React.Fragment>
+                       <PageContainer>
                            <HeaderWithRouter username={"MadDev"}/>
                            <AsideWithRouter/>
-                           <main className="app-main">
-                               <div className="wrapper">
-                                   <div className="page">
-                                       <div id="alert-message"/>
-                                       <div className="page-inner">
-                                           <Routes/>
-                                       </div>
-                                   </div>
-                               </div>
-                               <Footer/>
-                           </main>
-                       </React.Fragment>
+                           <Page/>
+                       </PageContainer>
                     </HashRouter>
                 </div>
             </React.Fragment>
         );
     }
+}
+
+class Page extends React.Component {
+
+    render() {
+        return (
+            <main className="app-main">
+                <div className="wrapper">
+                    <div className="page">
+                        <div id="alert-message"/>
+                        <div className="page-inner">
+                            {<Routes {...this.props}/>}
+                        </div>
+                    </div>
+                </div>
+                <Footer/>
+            </main>
+        );
+    }
+
 }
 
 export default App;

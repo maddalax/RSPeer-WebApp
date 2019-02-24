@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {ApiService} from "../../Common/ApiService";
-import {UserUtil} from "../../Utilities/UserUtil";
 
 export type HeaderProps = {
     user: any
@@ -13,35 +12,23 @@ export class Header extends React.Component<HeaderProps | any, any> {
 
     constructor(props: HeaderProps | any) {
         super(props);
+        console.log(props);
         this.api = new ApiService();
-        this.state = {
-            user: {
-                username : 'Loading...'
-            }
-        }
     }
 
     async componentDidMount() {
-        if(!UserUtil.getSession()) {
-            if(this.state.user != null) {
-                this.setState({user: null});
-            }
-            return;
-        }
-        const me = await this.api.get("user/me");
-        this.setState({user: me});
+
     }
 
     async componentDidUpdate() {
-        if(!this.state.user) {
-            this.componentDidMount();
-        }
+       console.log(this.props.user)
     }
 
     private logout = () => {
         localStorage.removeItem("rspeer_session");
         sessionStorage.removeItem("rspeer_session");
-        this.setState({user: null})
+        this.setState({user: null});
+        this.props.logoutCallback();
         this.props.history.push('/login')
     };
 
@@ -297,17 +284,17 @@ export class Header extends React.Component<HeaderProps | any, any> {
                         </ul>
                         {/* /.nav */}
                         {/* .btn-account */}
-                        {this.state.user && <div className="dropdown">
+                        {this.props.user && <div className="dropdown">
                             <button className="btn-account d-none d-md-flex" type="button" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false"> <span
                                 className="account-summary pr-lg-4 d-none d-lg-block"><span
-                                className="account-name">{this.state.user.username}</span> <span
+                                className="account-name">{this.props.user.username}</span> <span
                                 className="account-description">Director</span></span></button>
                             <div className="dropdown-arrow dropdown-arrow-left"/>
                             {/* .dropdown-menu */}
                             <div className="dropdown-menu">
                                 {<h6
-                                    className="dropdown-header d-none d-md-block d-lg-none"> {this.state.user.username} </h6>}
+                                    className="dropdown-header d-none d-md-block d-lg-none"> {this.props.user.username} </h6>}
                                 <Link
                                     className="dropdown-item" to="/scripts"><span
                                     className="dropdown-icon oi oi-person"/> Profile</Link>
@@ -321,7 +308,7 @@ export class Header extends React.Component<HeaderProps | any, any> {
                             </div>
                             {/* /.dropdown-menu */}
                         </div>}
-                        {!this.state.user && <div className="dropdown">
+                        {!this.props.user && <div className="dropdown">
                             <button onClick={this.logout} className="btn-account d-none d-md-flex" type="button">
                                     <span className="account-name">Sign In</span>
                             </button>

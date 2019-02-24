@@ -4,7 +4,6 @@ import {HttpUtil} from "../../../Utilities/HttpUtil";
 import {Script, ScriptCategories, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/Script";
 import toastr from 'toastr';
 import {UserUtil} from "../../../Utilities/UserUtil";
-import {bool} from "prop-types";
 
 type State = {
     scripts: Script[],

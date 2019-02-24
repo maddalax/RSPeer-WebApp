@@ -1,91 +1,23 @@
 import React from 'react';
 
-export class Dashboard extends React.Component {
+export class Dashboard extends React.Component<any, any> {
+
+    componentDidMount(): void {
+        console.log("DASH", this.props);
+    }
+
+    componentDidUpdate(): void {
+        console.log("DASH", this.props);
+    }
+
     render() {
         return (<div>
             <header className="page-title-bar">
                 <div className="d-flex flex-column flex-md-row">
                     <p className="lead">
-                        <span className="font-weight-bold">Hi, MadDev.</span> <span
+                        {this.props.user && <span className="font-weight-bold">Hi, {this.props.user.username}.</span>} <span
                         className="d-block text-muted">Here’s what’s happening with RSPeer.</span>
                     </p>
-                    <div className="ml-auto">
-                        <div className="dropdown">
-                            <button className="btn btn-secondary" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                <span>This Week</span> <i className="fa fa-fw fa-caret-down"/>
-                            </button>
-                            <div className="dropdown-arrow dropdown-arrow-right"/>
-                            <div
-                                className="dropdown-menu dropdown-menu-right dropdown-menu-md stop-propagation">
-                                <div className="custom-control custom-radio">
-                                    <input type="radio" className="custom-control-input"
-                                           id="dpToday" name="dpFilter" defaultValue={"0"}/>
-                                    <label
-                                        className="custom-control-label d-flex justify-content-between"
-                                        htmlFor="dpToday"><span>Today</span> <span
-                                        className="text-muted">Mar 27</span></label>
-                                </div>
-                                {/* .custom-control */}
-                                <div className="custom-control custom-radio">
-                                    <input type="radio" className="custom-control-input"
-                                           id="dpYesterday" name="dpFilter" defaultValue={"1"}/>
-                                    <label
-                                        className="custom-control-label d-flex justify-content-between"
-                                        htmlFor="dpYesterday"><span>Yesterday</span> <span
-                                        className="text-muted">Mar 26</span></label>
-                                </div>
-                                {/* /.custom-control */}
-                                {/* .custom-control */}
-                                <div className="custom-control custom-radio">
-                                    <input type="radio" className="custom-control-input"
-                                           id="dpWeek" name="dpFilter" defaultValue={"2"}
-                                           defaultChecked/> <label
-                                    className="custom-control-label d-flex justify-content-between"
-                                    htmlFor="dpWeek"><span>This Week</span> <span
-                                    className="text-muted">Mar 21-27</span></label>
-                                </div>
-                                {/* /.custom-control */}
-                                {/* .custom-control */}
-                                <div className="custom-control custom-radio">
-                                    <input type="radio" className="custom-control-input"
-                                           id="dpMonth" name="dpFilter" defaultValue={"3"}/>
-                                    <label
-                                        className="custom-control-label d-flex justify-content-between"
-                                        htmlFor="dpMonth"><span>This Month</span> <span
-                                        className="text-muted">Mar 1-31</span></label>
-                                </div>
-                                {/* /.custom-control */}
-                                {/* .custom-control */}
-                                <div className="custom-control custom-radio">
-                                    <input type="radio" className="custom-control-input"
-                                           id="dpYear" name="dpFilter" defaultValue={"4"}/>
-                                    <label
-                                        className="custom-control-label d-flex justify-content-between"
-                                        htmlFor="dpYear"><span>This Year</span> <span
-                                        className="text-muted">2018</span></label>
-                                </div>
-                                {/* /.custom-control */}
-                                {/* .custom-control */}
-                                <div className="custom-control custom-radio">
-                                    <input type="radio" className="custom-control-input"
-                                           id="dpCustom" name="dpFilter" defaultValue={"5"}/>
-                                    <label className="custom-control-label"
-                                           htmlFor="dpCustom">Custom</label>
-                                    <div className="custom-control-hint my-1">
-                                        {/* datepicker:range */}
-                                        <input type="text" className="form-control"
-                                               data-toggle="flatpickr" data-mode="range"
-                                               data-disable-mobile="true"
-                                               data-date-format="Y-m-d"/> {/* /datepicker:range */}
-                                    </div>
-                                </div>
-                                {/* /.custom-control */}
-                            </div>
-                            {/* /.dropdown-menu */}
-                        </div>
-                        {/* /.dropdown */}
-                    </div>
                 </div>
             </header>
             {/* /.page-title-bar */}
