@@ -1,6 +1,8 @@
 import React from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {ApiService} from "../../Common/ApiService";
+import {Util} from "../../Utilities/Util";
+import {HttpUtil} from "../../Utilities/HttpUtil";
 
 export type HeaderProps = {
     user: any
@@ -17,7 +19,10 @@ export class Header extends React.Component<HeaderProps | any, any> {
     }
 
     async componentDidMount() {
-
+        const isPaypalRedirect = HttpUtil.getParameterByName("paymentId") != null;
+        if(isPaypalRedirect) {
+            return this.props.history.push('/store/process')
+        }
     }
 
     async componentDidUpdate() {
@@ -64,93 +69,10 @@ export class Header extends React.Component<HeaderProps | any, any> {
                         {/* .nav */}
                         <ul className="header-nav nav">
                             {/* .nav-item */}
-                            <li className="nav-item dropdown header-nav-dropdown has-notified">
+                            {this.props.user && <li className="nav-item dropdown header-nav-dropdown">
                                 <a className="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true"
-                                   aria-expanded="false"><span className="oi oi-pulse"/></a>
-                                <div className="dropdown-arrow"/>
-                                {/* .dropdown-menu */}
-                                <div className="dropdown-menu dropdown-menu-rich dropdown-menu-right">
-                                    <h6 className="dropdown-header stop-propagation">
-                                        <span>Activities <span className="badge">(2)</span></span>
-                                    </h6>{/* .dropdown-scroll */}
-                                    <div className="dropdown-scroll perfect-scrollbar">
-                                        {/* .dropdown-item */}
-                                        <a href="#" className="dropdown-item unread">
-                                            <div className="user-avatar">
-                                                <img src="../../assets/images/avatars/uifaces15.jpg"/>
-                                            </div>
-                                            <div className="dropdown-item-body">
-                                                <p className="text"> Jeffrey Wells created a schedule </p><span
-                                                className="date">Just now</span>
-                                            </div>
-                                        </a> {/* /.dropdown-item */}
-                                        {/* .dropdown-item */}
-                                        <a href="#" className="dropdown-item unread">
-                                            <div className="user-avatar">
-                                                <img src="../../assets/images/avatars/uifaces16.jpg"/>
-                                            </div>
-                                            <div className="dropdown-item-body">
-                                                <p className="text"> Anna Vargas logged a chat </p><span
-                                                className="date">3 hours ago</span>
-                                            </div>
-                                        </a> {/* /.dropdown-item */}
-                                        {/* .dropdown-item */}
-                                        <a href="#" className="dropdown-item">
-                                            <div className="user-avatar">
-                                                <img src="../../assets/images/avatars/uifaces17.jpg"/>
-                                            </div>
-                                            <div className="dropdown-item-body">
-                                                <p className="text"> Sara Carr invited to Stilearn Admin </p><span
-                                                className="date">5 hours ago</span>
-                                            </div>
-                                        </a> {/* /.dropdown-item */}
-                                        {/* .dropdown-item */}
-                                        <a href="#" className="dropdown-item">
-                                            <div className="user-avatar">
-                                                <img src="../../assets/images/avatars/uifaces18.jpg"/>
-                                            </div>
-                                            <div className="dropdown-item-body">
-                                                <p className="text"> Arthur Carroll updated a project </p><span
-                                                className="date">1 day ago</span>
-                                            </div>
-                                        </a> {/* /.dropdown-item */}
-                                        {/* .dropdown-item */}
-                                        <a href="#" className="dropdown-item">
-                                            <div className="user-avatar">
-                                                <img src="../../assets/images/avatars/uifaces19.jpg"/>
-                                            </div>
-                                            <div className="dropdown-item-body">
-                                                <p className="text"> Hannah Romero created a task </p><span
-                                                className="date">1 day ago</span>
-                                            </div>
-                                        </a> {/* /.dropdown-item */}
-                                        {/* .dropdown-item */}
-                                        <a href="#" className="dropdown-item">
-                                            <div className="user-avatar">
-                                                <img src="../../assets/images/avatars/uifaces20.jpg"/>
-                                            </div>
-                                            <div className="dropdown-item-body">
-                                                <p className="text"> Angela Peterson assign a task to you </p><span
-                                                className="date">2 days ago</span>
-                                            </div>
-                                        </a> {/* /.dropdown-item */}
-                                        {/* .dropdown-item */}
-                                        <a href="#" className="dropdown-item">
-                                            <div className="user-avatar">
-                                                <img src="../../assets/images/avatars/uifaces21.jpg"/>
-                                            </div>
-                                            <div className="dropdown-item-body">
-                                                <p className="text"> Shirley Mason and 3 others followed you </p><span
-                                                className="date">2 days ago</span>
-                                            </div>
-                                        </a> {/* /.dropdown-item */}
-                                    </div>
-                                    {/* /.dropdown-scroll */}
-                                    <a href="user-activities.html" className="dropdown-footer">All activities <i
-                                        className="fas fa-fw fa-long-arrow-alt-right"/></a>
-                                </div>
-                                {/* /.dropdown-menu */}
-                            </li>
+                                   aria-expanded="false">Tokens: <strong>{Util.formatNumber(this.props.user.balance)}</strong></a>
+                            </li>}
                             {/* /.nav-item */}
                             {/* .nav-item */}
                             <li className="nav-item dropdown header-nav-dropdown has-notified">
@@ -301,10 +223,8 @@ export class Header extends React.Component<HeaderProps | any, any> {
                                 <a className="dropdown-item"
                                    href="javascript:void(0)" onClick={this.logout}><span
                                     className="dropdown-icon oi oi-account-logout"/> Logout</a>
-                                <div className="dropdown-divider"/>
-                                <a className="dropdown-item" href="#">Help Center</a> <a className="dropdown-item"
-                                                                                         href="#">Ask Forum</a> <a
-                                className="dropdown-item" href="#">Keyboard Shortcuts</a>
+                                <div className="dropdown-divider"/><a
+                                className="dropdown-item" href="#">Tokens: {Util.formatNumber(this.props.user.balance)}</a>
                             </div>
                             {/* /.dropdown-menu */}
                         </div>}

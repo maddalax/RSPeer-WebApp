@@ -21,7 +21,9 @@ export class PageContainer extends React.Component<any, any> {
             }
             return;
         }
-        const me = await this.api.get("user/me");
+        const me = await this.api.post("user/me", {
+            includeBalance : true
+        });
         this.setState({user: me});
     }
 
@@ -31,6 +33,10 @@ export class PageContainer extends React.Component<any, any> {
         }
     }
 
+    private reloadUser = () => {
+      this.componentDidMount();
+    };
+
     private onLogout = () => {
         this.setState({user : null})
     };
@@ -39,7 +45,7 @@ export class PageContainer extends React.Component<any, any> {
         const { children } = this.props;
 
         const childrenWithProps = React.Children.map(children, (child : any, index : number) =>
-            React.cloneElement(child, { index, user : this.state.user, logoutCallback : this.onLogout })
+            React.cloneElement(child, { index, user : this.state.user, logoutCallback : this.onLogout, reloadUser : this.reloadUser })
         );
         return <React.Fragment>{childrenWithProps}</React.Fragment>
     }
