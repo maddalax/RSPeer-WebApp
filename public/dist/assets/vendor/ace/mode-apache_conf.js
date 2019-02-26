@@ -58,7 +58,7 @@ var ApacheConfHighlightRules = function() {
          { token: 'keyword.access.apacheconf',
            regex: '\\b(?:Allow|Deny|Order)\\b' },
          { token: 'keyword.actions.apacheconf',
-           regex: '\\b(?:Action|Script)\\b' },
+           regex: '\\b(?:Action|ScriptDto)\\b' },
          { token: 'keyword.alias.apacheconf',
            regex: '\\b(?:Alias|AliasMatch|Redirect|RedirectMatch|RedirectPermanent|RedirectTemp|ScriptAlias|ScriptAliasMatch)\\b' },
          { token: 'keyword.auth.apacheconf',

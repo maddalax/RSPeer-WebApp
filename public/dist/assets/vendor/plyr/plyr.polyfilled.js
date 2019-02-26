@@ -836,7 +836,7 @@ typeof navigator === "object" && (function (global, factory) {
   // ES3 wrong here
   var ARG = _cof(function () { return arguments; }()) == 'Arguments';
 
-  // fallback for IE11 Script Access Denied error
+  // fallback for IE11 ScriptDto Access Denied error
   var tryGet = function (it, key) {
     try {
       return it[key];
@@ -9000,7 +9000,7 @@ typeof navigator === "object" && (function (global, factory) {
             loadScript(this.player.config.urls.googleIMA.sdk).then(function () {
               _this2.ready();
             }).catch(function () {
-              // Script failed to load or is blocked
+              // ScriptDto failed to load or is blocked
               _this2.trigger('error', new Error('Google IMA SDK failed to load'));
             });
           } else {

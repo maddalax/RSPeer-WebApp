@@ -5894,7 +5894,7 @@ typeof navigator === "object" && (function (global, factory) {
             loadScript(this.player.config.urls.googleIMA.sdk).then(function () {
               _this2.ready();
             }).catch(function () {
-              // Script failed to load or is blocked
+              // ScriptDto failed to load or is blocked
               _this2.trigger('error', new Error('Google IMA SDK failed to load'));
             });
           } else {

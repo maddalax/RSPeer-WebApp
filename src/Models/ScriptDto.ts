@@ -1,4 +1,4 @@
-export interface Script {
+export interface ScriptDto {
     id:                number;
     name:              string;
     version:           number;
@@ -16,7 +16,32 @@ export interface Script {
     doesUserOwn:       boolean;
     instances:         number;
     forumThread:       string;
+    statusFormatted:   string;
+    status: ScriptStatus;
 }
+
+export interface Script {
+    id:            number;
+    legacyId:      null | string;
+    userId:        number;
+    user:          null;
+    name:          string;
+    description:   string;
+    version:       number;
+    type:          number;
+    status:        number;
+    price:         number | null;
+    instances:     null;
+    maxUsers:      null;
+    category:      number;
+    forumThread:   string;
+    repositoryUrl: null | string;
+    dateAdded:     Date;
+    lastUpdate:    Date;
+    totalUsers:    number;
+    scriptContent: null;
+}
+
 
 export const ScriptTypes : any = {
     'mine' : "Mine",
@@ -45,4 +70,11 @@ export enum ScriptType {
     Premium,
     Private,
     Mine
+}
+
+export enum ScriptStatus
+{
+    Pending,
+    Live,
+    Denied
 }

@@ -1,12 +1,12 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
 import {HttpUtil} from "../../../Utilities/HttpUtil";
-import {Script, ScriptCategories, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/Script";
+import {ScriptDto, ScriptCategories, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/ScriptDto";
 import toastr from 'toastr';
 import {UserUtil} from "../../../Utilities/UserUtil";
 
 type State = {
-    scripts: Script[],
+    scripts: ScriptDto[],
     loading: boolean,
     search: string,
     queryType: any,
@@ -65,7 +65,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
         }
         access.forEach((a : any) => (ids[a] = true));
         this.setState(prev => {
-            prev.scripts.forEach((s : Script) => {
+            prev.scripts.forEach((s : ScriptDto) => {
                 s.doesUserOwn = ids[s.id] === true;
             });
             return prev;
@@ -175,7 +175,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
 }
 
 type ScriptCardProps = {
-    script: Script,
+    script: ScriptDto,
     api : ApiService,
     onAccessChange : () => any,
     loggedIn : boolean

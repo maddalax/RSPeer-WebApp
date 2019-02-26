@@ -9,6 +9,8 @@ import {StoreDashboard} from "./View/Pages/Store/StoreDashboard";
 import {StoreCheckout} from "./View/Pages/Store/StoreCheckout";
 import {StoreSuccess} from "./View/Pages/Store/StoreSuccess";
 import {StoreProcess} from "./View/Pages/Store/StoreProcess";
+import {DeveloperCenterDashboard} from "./View/Pages/DeveloperCenter/DeveloperCenterDashboard";
+import {AddModifyScript} from "./View/Pages/DeveloperCenter/AddModifyScript";
 
 export class Routes extends React.Component {
 
@@ -26,6 +28,8 @@ export class Routes extends React.Component {
                 <Route exact path={`/store/checkout`} component={(props : any) => <StoreCheckout {...props} {...this.props}/>}/>
                 <Route exact path={`/store/success`} component={(props : any) => <StoreSuccess {...props} {...this.props}/>}/>
                 <Route exact path={`/store/process`} component={(props : any) => <StoreProcess {...props} {...this.props}/>}/>
+                <Route exact path={`/developer`} component={(props : any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/developer/addScript`} component={(props : any) => <AddModifyScript {...props} {...this.props}/>}/>
             </Switch>
         )
     }

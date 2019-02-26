@@ -71,10 +71,10 @@ export class DeveloperCenter extends React.Component {
                 className="menu-text">Developer Center</span></a>
             <ul className="menu">
                 <li className="menu-item">
-                    <a href="user-profile.html" className="menu-link">Manage Scripts</a>
+                    <Link to={"developer"} className="menu-link">Modify Script</Link>
                 </li>
                 <li className="menu-item">
-                    <a href="user-activities.html" className="menu-link">Add New Script</a>
+                    <Link to={"developer"} className="menu-link">Add New Script</Link>
                 </li>
             </ul>
         </li>);
