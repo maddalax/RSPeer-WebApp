@@ -1,10 +1,10 @@
 import React from 'react';
-import toastr from 'toastr';
 import {ApiService} from "../../../Common/ApiService";
-import {ScriptType} from "../../../Models/ScriptDto";
+import {ScriptDto, ScriptType} from "../../../Models/ScriptDto";
 import {Alert} from "../../../Utilities/Alert";
 
 type State = {
+    scriptId : number,
     categories: string[],
     category: string,
     description: string,
@@ -17,22 +17,29 @@ type State = {
     [key: string]: any
 }
 
-export class AddModifyScript extends React.Component<any, State> {
+type Props = {
+    script : ScriptDto
+}
+
+export class AddModifyScript extends React.Component<Props | any, State> {
 
     private api: ApiService;
 
     constructor(props: any) {
         super(props);
+        const script : ScriptDto = props.script;
+        console.log(script);
         this.state = {
+            scriptId : script != null ? script.id : -1,
             categories: [],
-            category: '',
-            description: '',
-            name: '',
-            repoUrl: '',
-            forumThread: '',
-            price: 300,
-            instances: 5,
-            isPremium: false
+            category: script != null ? script.categoryFormatted : '',
+            description: script != null ? script.description : '',
+            name: script != null ? script.name : '',
+            repoUrl: script != null ? script.repositoryUrl : '',
+            forumThread: script != null ? script.forumThread : '',
+            price: script != null ? script.price : 300,
+            instances: script != null ? script.instances : 5,
+            isPremium: script != null ? script.type === ScriptType.Premium : false
         };
         this.api = new ApiService();
     }
@@ -54,29 +61,35 @@ export class AddModifyScript extends React.Component<any, State> {
     onFormSubmit = async (e: any) => {
         e.preventDefault();
         if (!this.state.category) {
-            return toastr.error("Please select a script category.");
+            return Alert.show("Please select a script category.");
         }
         if (!this.state.forumThread) {
-            return toastr.error("Please enter a valid forum thread for your script. Visit https://rspeer.org/forums/ to create one.");
+            return Alert.show("Please enter a valid forum thread for your script. Visit https://rspeer.org/forums/ to create one.");
         }
-        const res = await this.api.post('script/create', {
+        const script : any = {
+            Id : this.state.scriptId,
             RepositoryUrl : this.state.repoUrl,
-            Script : {
-               Name: this.state.name,
-               Description: this.state.description,
-               Category: this.state.category,
-               ForumThread: this.state.forumThread,
-               Meta: {
-                   Price: this.state.price,
-                   Instances: this.state.instances,
-                   Type: this.state.isPremium ? ScriptType.Premium : ScriptType.Free
-               }
-           }
+            Name: this.state.name,
+            Description: this.state.description,
+            Category: this.state.category,
+            ForumThread: this.state.forumThread,
+            Price: this.state.price,
+            Instances: this.state.instances,
+            Type: this.state.isPremium ? ScriptType.Premium : ScriptType.Free
+        };
+
+        const res = await this.api.post('script/create', {
+            Script : script
         });
         if (res.error) {
             return Alert.show(res.error);
         }
+        this.cancel();
+    };
+
+    cancel = () => {
         this.props.history.push('/developer');
+
     };
 
     setValue = (e: any, key: string) => {
@@ -141,19 +154,20 @@ export class AddModifyScript extends React.Component<any, State> {
                                 <button className="btn btn-secondary dropdown-toggle" type="button"
                                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
-                                    {this.state.category || 'ScriptDto Category'}
+                                    {this.state.category || 'Script Category'}
                                 </button>
-                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{"height" : "auto", "maxHeight" : "200px", "overflow-y" : "scroll"}}>
                                     {this.state.categories.map(c => {
-                                        return <a key={c} onClick={(e) => this.setCategory(e, c)} href='#'
-                                                  className="dropdown-item">{c}</a>
-                                    })};
-                                </div>
+                                        return <li key={c} onClick={(e) => this.setCategory(e, c)}
+                                                  className="dropdown-item">{c}</li>
+                                    })}
+                                </ul>
                             </div>
                         </div>
                         <div className="form-group">
                             <div className="form-check">
                                 <input type="checkbox" className="form-check-input" id="premiumScriptCheck"
+                                       checked={this.state.isPremium}
                                        onChange={(e) => {
                                            this.setState({isPremium: e.target.checked})
                                        }}/>
@@ -184,7 +198,9 @@ export class AddModifyScript extends React.Component<any, State> {
                                 </p>
                             </div>
                         </React.Fragment>}
-                        <button type="submit" className="btn btn-primary">Submit Script For Review</button>
+                        {!this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Script For Review</button>}
+                        {this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Update For Review</button>}
+                        <button style={{marginLeft : '5px'}} className="btn btn-danger" onClick={this.cancel}>Cancel</button>
                     </form>
                 </div>
             </div>

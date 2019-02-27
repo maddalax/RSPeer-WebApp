@@ -17,6 +17,7 @@ export interface ScriptDto {
     instances:         number;
     forumThread:       string;
     statusFormatted:   string;
+    repositoryUrl : string;
     status: ScriptStatus;
 }
 
@@ -40,6 +41,14 @@ export interface Script {
     lastUpdate:    Date;
     totalUsers:    number;
     scriptContent: null;
+}
+
+export interface ScripterInfo {
+    gitlabUsername : string;
+    gitlabUserId : string;
+    gitlabGroupId : string;
+    gitlabGroupPath : string;
+    dateAdded : string
 }
 
 

@@ -11,6 +11,7 @@ import {StoreSuccess} from "./View/Pages/Store/StoreSuccess";
 import {StoreProcess} from "./View/Pages/Store/StoreProcess";
 import {DeveloperCenterDashboard} from "./View/Pages/DeveloperCenter/DeveloperCenterDashboard";
 import {AddModifyScript} from "./View/Pages/DeveloperCenter/AddModifyScript";
+import {RegisterGitRepository} from "./View/Pages/DeveloperCenter/RegisterGitRepository";
 
 export class Routes extends React.Component {
 
@@ -30,6 +31,7 @@ export class Routes extends React.Component {
                 <Route exact path={`/store/process`} component={(props : any) => <StoreProcess {...props} {...this.props}/>}/>
                 <Route exact path={`/developer`} component={(props : any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/addScript`} component={(props : any) => <AddModifyScript {...props} {...this.props}/>}/>
+                <Route exact path={`/developer/register`} component={(props : any) => <RegisterGitRepository {...props} {...this.props}/>}/>
             </Switch>
         )
     }
