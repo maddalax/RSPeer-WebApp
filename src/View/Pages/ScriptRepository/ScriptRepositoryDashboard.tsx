@@ -13,7 +13,7 @@ type State = {
     orderBy: string,
     category: string,
     [key: string]: any
-    loggedIn : boolean
+    loggedIn: boolean
 }
 
 export class ScriptRepositoryDashboard extends React.Component<any, State> {
@@ -31,12 +31,12 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             queryType: ScriptTypes[queryRaw] == null ? 'free' : queryRaw,
             orderBy: 'users',
             category: 'All',
-            loggedIn : true
+            loggedIn: true
         }
     }
 
     async componentDidMount() {
-        this.setState({loggedIn : UserUtil.getSession() != null});
+        this.setState({loggedIn: UserUtil.getSession() != null});
         let scripts = await this.apiService.post("script/list", {
             type: this.state.queryType,
             search: this.state.search,
@@ -44,28 +44,28 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             //Subtract 1 off index because 'All' is added to beginning of the list.
             category: this.state.category === 'All' ? null : ScriptCategories.indexOf(this.state.category) - 1
         });
-        if(scripts.error) {
+        if (scripts.error) {
             Alert.show(scripts.error + " Please refresh the page.");
             return;
         }
         if (!Array.isArray(scripts)) {
-          return;
+            return;
         }
         this.setState({scripts, loading: false}, () => this.setAccessIds())
     }
 
     private setAccessIds = async () => {
-        if(!this.state.loggedIn) {
+        if (!this.state.loggedIn) {
             return;
         }
-        const access : number[] = await this.apiService.get("script/accessIds");
-        const ids : any = {};
-        if(!Array.isArray(access)) {
+        const access: number[] = await this.apiService.get("script/accessIds");
+        const ids: any = {};
+        if (!Array.isArray(access)) {
             return;
         }
-        access.forEach((a : any) => (ids[a] = true));
+        access.forEach((a: any) => (ids[a] = true));
         this.setState(prev => {
-            prev.scripts.forEach((s : ScriptDto) => {
+            prev.scripts.forEach((s: ScriptDto) => {
                 s.doesUserOwn = ids[s.id] === true;
             });
             return prev;
@@ -166,7 +166,8 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             </React.Fragment>}
             {!this.state.loading && <div className="card-columns" style={{columnCount: 4}}>
                 {this.state.scripts.map((script: any) => {
-                    return <ScriptCard key={script.id} history={this.props.history} loggedIn={this.state.loggedIn} onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
+                    return <ScriptCard key={script.id} history={this.props.history} loggedIn={this.state.loggedIn}
+                                       onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
                 })}
             </div>}
         </div>)
@@ -176,22 +177,22 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
 
 type ScriptCardProps = {
     script: ScriptDto,
-    api : ApiService,
-    onAccessChange : () => any,
-    loggedIn : boolean,
-    history : any
+    api: ApiService,
+    onAccessChange: () => any,
+    loggedIn: boolean,
+    history: any
 }
 
 type ScriptCardState = {
-    processing : boolean
+    processing: boolean
 }
 
 export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState> {
 
-    constructor(props : ScriptCardProps) {
+    constructor(props: ScriptCardProps) {
         super(props);
         this.state = {
-            processing : false
+            processing: false
         }
     }
 
@@ -209,63 +210,68 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
 
     private scriptTypeStyles = () => {
         return {
-            color : this.props.script.type == ScriptType.Premium ? '#ea6759' : ''
+            color: this.props.script.type == ScriptType.Premium ? '#ea6759' : ''
         }
     };
 
     private addButtonText = () => {
-        if(this.state.processing) {
+        if (this.state.processing) {
             return 'Processing...'
         }
-        if(!this.props.loggedIn) {
+        if (!this.props.loggedIn) {
             return "Sign In To Add"
         }
-        if(this.props.script.doesUserOwn) {
+        if (this.props.script.doesUserOwn) {
             return 'Remove'
         }
-        if(this.props.script.price > 0) {
+        if (this.props.script.price > 0) {
             return 'Purchase'
         }
         return 'Add'
     };
 
     private addButtonClass = () => {
-        if(this.props.script.doesUserOwn) {
+        if (this.props.script.doesUserOwn) {
             return 'btn btn-danger'
         }
-        if(this.props.script.price > 0) {
+        if (this.props.script.price > 0) {
             return 'btn btn-success'
         }
         return 'btn btn-success'
     };
 
     private onAdd = async () => {
-        if(!this.props.loggedIn) {
+        if (!this.props.loggedIn) {
             window.location.replace("/#/login");
             return;
         }
-        if(this.props.script.doesUserOwn && this.props.script.type === ScriptType.Premium) {
+
+        if (this.props.script.doesUserOwn && this.props.script.type === ScriptType.Premium) {
             const confirm = window.confirm("You are attempting to remove a premium script. You will have to re-purchase to gain access again. Are you sure?");
-            if(!confirm) {
+            if (!confirm) {
                 return;
             }
         }
-        if(this.props.script.type === ScriptType.Premium) {
-            return this.props.history.push(`/store/checkout?sku=premium-script-${this.props.script.id}&quantity=1`);
-        }
-        this.setState({processing : true});
-        if(this.props.script.doesUserOwn) {
+
+        this.setState({processing: true});
+
+        if (this.props.script.doesUserOwn) {
             await this.props.api.post("script/removeAccess", {
-                scriptId : this.props.script.id
+                scriptId: this.props.script.id
             });
             await this.props.onAccessChange();
-            return this.setState({processing : false});
+            return this.setState({processing: false});
         }
+
+        if (this.props.script.type === ScriptType.Premium) {
+            return this.props.history.push(`/store/checkout?sku=premium-script-${this.props.script.id}&quantity=1`);
+        }
+
         await this.props.api.post("script/addAccess", {
-            scriptId : this.props.script.id
+            scriptId: this.props.script.id
         });
         await this.props.onAccessChange();
-        this.setState({processing : false});
+        this.setState({processing: false});
     };
 
     private onMoreInfo = () => {
@@ -291,10 +297,13 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
                     <p className="card-text">{this.props.script.description}</p>
                     <div className={"btn-toolbar"}>
                         <div className="btn-group" role="group" aria-label="Third group">
-                            <button type="button" style={this.button} onClick={this.onAdd} className={addButtonClass}>{addButtonText}</button>
+                            <button type="button" style={this.button} onClick={this.onAdd}
+                                    className={addButtonClass}>{addButtonText}</button>
                         </div>
                         <div className="btn-group" role="group" aria-label="Third group">
-                            <button type="button" style={this.button} onClick={this.onMoreInfo} className={"btn btn-info"}>More Info</button>
+                            <button type="button" style={this.button} onClick={this.onMoreInfo}
+                                    className={"btn btn-info"}>More Info
+                            </button>
                         </div>
                     </div>
                 </div>
