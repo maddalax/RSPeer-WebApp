@@ -4,6 +4,7 @@ import {HttpUtil} from "../../../Utilities/HttpUtil";
 import {ScriptDto, ScriptCategories, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/ScriptDto";
 import toastr from 'toastr';
 import {UserUtil} from "../../../Utilities/UserUtil";
+import {Alert} from "../../../Utilities/Alert";
 
 type State = {
     scripts: ScriptDto[],
@@ -45,7 +46,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             category: this.state.category === 'All' ? null : ScriptCategories.indexOf(this.state.category) - 1
         });
         if(scripts.error) {
-            toastr.error("", scripts.error + " Please refresh the page.", {positionClass : 'toast-top-right', timeOut : 0});
+            Alert.show(scripts.error + " Please refresh the page.");
             return;
         }
         if (!Array.isArray(scripts)) {

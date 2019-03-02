@@ -12,11 +12,14 @@ import {StoreProcess} from "./View/Pages/Store/StoreProcess";
 import {DeveloperCenterDashboard} from "./View/Pages/DeveloperCenter/DeveloperCenterDashboard";
 import {AddModifyScript} from "./View/Pages/DeveloperCenter/AddModifyScript";
 import {RegisterGitRepository} from "./View/Pages/DeveloperCenter/RegisterGitRepository";
+import {BotPanelDashboard} from "./View/Pages/BotPanel/BotPanelDashboard";
+import {ProxyManager} from "./View/Pages/BotPanel/ProxyManager";
+import {QuickLaunch} from "./View/Pages/BotPanel/QuickLaunch";
+import {ViewLogs} from "./View/Pages/BotPanel/ViewLogs";
 
 export class Routes extends React.Component {
 
     componentDidMount(): void {
-        console.log("ROUTER" , this.props);
     }
 
     render() : any {
@@ -32,6 +35,11 @@ export class Routes extends React.Component {
                 <Route exact path={`/developer`} component={(props : any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/addScript`} component={(props : any) => <AddModifyScript {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/register`} component={(props : any) => <RegisterGitRepository {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management`} component={(props : any) => <BotPanelDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/qs`} component={(props : any) => <QuickLaunch {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/proxy`} component={(props : any) => <ProxyManager {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/logs`} component={(props : any) => <ViewLogs {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/logs/:launcherId`} component={(props : any) => <ViewLogs {...props} {...this.props}/>}/>
             </Switch>
         )
     }

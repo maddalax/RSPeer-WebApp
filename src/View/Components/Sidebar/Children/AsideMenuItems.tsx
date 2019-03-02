@@ -31,16 +31,18 @@ export class BotPanelMenuItem extends React.Component {
                 className="menu-text">Bot Management</span></a> {/* child menu */}
             <ul className="menu">
                 <li className="menu-item">
-                    <a href="user-profile.html" className="menu-link"><i className="fas fa-user"></i> My Scripts</a>
+                    <Link className="menu-link" to={"/bot/management"}>
+                        <i className="fas fa-user"/> Start Clients</Link>
                 </li>
                 <li className="menu-item">
-                    <a href="user-activities.html" className="menu-link"><i className="fas fa-globe-europe"/> All Scripts</a>
+                    <Link to={"/bot/management/qs"} className="menu-link">
+                        <i className="fas fa-globe-europe"/> Manage Quick Launch</Link>
                 </li>
                 <li className="menu-item">
-                    <a href="user-activities.html" className="menu-link"><i className="fab fa-paypal"/> Premium Scripts</a>
+                    <Link to={"/bot/management/proxy"} className="menu-link"><i className="fab fa-paypal"/> Manage Proxies</Link>
                 </li>
                 <li className="menu-item">
-                    <a href="user-activities.html" className="menu-link"><i className="fas fa-tree"/> Free Scripts</a>
+                    <Link to={"/bot/management/logs"} className="menu-link"><i className="fab fa-paypal"/> View Logs</Link>
                 </li>
             </ul>
         </li>);

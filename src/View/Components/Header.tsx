@@ -14,8 +14,10 @@ export class Header extends React.Component<HeaderProps | any, any> {
 
     constructor(props: HeaderProps | any) {
         super(props);
-        console.log(props);
         this.api = new ApiService();
+        this.state = {
+            clientsOnline : 0
+        }
     }
 
     async componentDidMount() {
@@ -23,10 +25,11 @@ export class Header extends React.Component<HeaderProps | any, any> {
         if(isPaypalRedirect) {
             return this.props.history.push('/store/process')
         }
+        const count = await this.api.get("stats/connected");
+        this.setState({clientsOnline : count})
     }
 
     async componentDidUpdate() {
-       console.log(this.props.user)
     }
 
     private logout = () => {
@@ -58,20 +61,17 @@ export class Header extends React.Component<HeaderProps | any, any> {
                     </div>
                     {/* /.top-bar-item */}
                     {/* .top-bar-item */}
-                    <div className="top-bar-item top-bar-item-full">
-                        {/* .top-bar-search */}
-
-                        {/* /.top-bar-search */}
-                    </div>
                     {/* /.top-bar-item */}
                     {/* .top-bar-item */}
                     <div className="top-bar-item top-bar-item-right px-0 d-none d-sm-flex">
                         {/* .nav */}
                         <ul className="header-nav nav">
+                            <li className="nav-item dropdown header-nav-dropdown">
+                                <a className="nav-link" href="#">Clients Online: <strong>{Util.formatNumber(this.state.clientsOnline)}</strong></a>
+                            </li>
                             {/* .nav-item */}
                             {this.props.user && <li className="nav-item dropdown header-nav-dropdown">
-                                <a className="nav-link" href="#" data-toggle="dropdown" aria-haspopup="true"
-                                   aria-expanded="false">Tokens: <strong>{Util.formatNumber(this.props.user.balance)}</strong></a>
+                                <a className="nav-link" href="#">Tokens: <strong>{Util.formatNumber(this.props.user.balance)}</strong></a>
                             </li>}
                             {/* /.nav-item */}
                             {/* .nav-item */}
