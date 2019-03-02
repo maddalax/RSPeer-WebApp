@@ -8,8 +8,9 @@ export class Util {
         return !number ? number : number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    public static formatDate(value : string) {
-        return new Date(value).toDateString();
+    public static formatDate(value : string, includeTime : boolean = false) {
+        const date = new Date(value);
+        return includeTime ? date.toLocaleString() : date.toDateString();
     };
 
     public static toCamel(o: any) {

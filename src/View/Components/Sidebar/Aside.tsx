@@ -1,9 +1,21 @@
 import React from 'react';
 import profile from '../../../assets/images/avatars/profile.jpg';
-import {BotPanelMenuItem, DeveloperCenter, ScriptsMenuItem, StoreMenuItem} from "./Children/AsideMenuItems";
+import {
+    AdminCenter,
+    BotPanelMenuItem,
+    DeveloperCenter,
+    ScriptsMenuItem,
+    StoreMenuItem
+} from "./Children/AsideMenuItems";
 import {withRouter} from "react-router";
+import {User} from "../../../Models/User";
+import {Link} from "react-router-dom";
 
-export class Aside extends React.Component {
+type Props = {
+    user : User
+}
+
+export class Aside extends React.Component<Props | any, any> {
 
     render(): any {
         return (<aside className="app-aside app-aside-expand-md app-aside-light">
@@ -13,14 +25,16 @@ export class Aside extends React.Component {
                         <nav id="stacked-menu" className="stacked-menu">
                             <ul className="menu">
                                 <li className="menu-item has-active">
-                                    <a href="index.html" className="menu-link"><span className="menu-icon fas fa-home"/>
-                                        <span className="menu-text">Dashboard</span></a>
+                                    <Link to={"/"} className="menu-link"><span className="menu-icon fas fa-home"/>
+                                        <span className="menu-text">Dashboard</span></Link>
                                 </li>
                                 <BotPanelMenuItem {...this.props}/>
                                 <ScriptsMenuItem {...this.props}/>
                                 <StoreMenuItem {...this.props}/>
                                 <li className="menu-header">Script Development</li>
                                 <DeveloperCenter {...this.props}/>
+                                <li className="menu-header">Administration</li>
+                                <AdminCenter {...this.props}/>
                             </ul>
                         </nav>
                     </div>
@@ -33,7 +47,7 @@ export class Aside extends React.Component {
 
 export class ToggleSkin extends React.Component {
 
-    private skin = localStorage.getItem('skin') || 'default';
+    private skin = localStorage.getItem('skin') || 'dark';
 
     render() : any {
         const icon = this.skin === 'dark' ? 'fas fa-sun ml-1' : 'fas fa-moon ml-1';

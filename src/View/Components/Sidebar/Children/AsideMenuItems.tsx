@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import {User} from "../../../../Models/User";
 
 export class ScriptsMenuItem extends React.Component {
     render(): any {
@@ -11,10 +12,12 @@ export class ScriptsMenuItem extends React.Component {
                     <Link to={"/scripts?q=mine"} className="menu-link"><i className="fas fa-user"/> My Scripts</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/scripts?q=all"} className="menu-link"><i className="fas fa-globe-europe"/> All Scripts</Link>
+                    <Link to={"/scripts?q=all"} className="menu-link"><i className="fas fa-globe-europe"/> All
+                        Scripts</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/scripts?q=premium"} className="menu-link"><i className="fab fa-app-store"/> Premium Scripts</Link>
+                    <Link to={"/scripts?q=premium"} className="menu-link"><i className="fab fa-app-store"/> Premium
+                        Scripts</Link>
                 </li>
                 <li className="menu-item">
                     <Link to={"/scripts?q=free"} className="menu-link"><i className="fas fa-tree"/> Free Scripts</Link>
@@ -39,10 +42,12 @@ export class BotPanelMenuItem extends React.Component {
                         <i className="fas fa-globe-europe"/> Manage Quick Launch</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/bot/management/proxy"} className="menu-link"><i className="fab fa-paypal"/> Manage Proxies</Link>
+                    <Link to={"/bot/management/proxy"} className="menu-link"><i className="fab fa-paypal"/> Manage
+                        Proxies</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/bot/management/logs"} className="menu-link"><i className="fab fa-paypal"/> View Logs</Link>
+                    <Link to={"/bot/management/logs"} className="menu-link"><i className="fab fa-paypal"/> View
+                        Logs</Link>
                 </li>
             </ul>
         </li>);
@@ -59,7 +64,8 @@ export class StoreMenuItem extends React.Component {
                     <Link to={"/store"} className="menu-link"><i className="fas fa-user"></i> Purchase Tokens</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/store"} className="menu-link"><i className="fas fa-globe-europe"/> Purchase Instances</Link>
+                    <Link to={"/store"} className="menu-link"><i className="fas fa-globe-europe"/> Purchase
+                        Instances</Link>
                 </li>
             </ul>
         </li>);
@@ -77,6 +83,26 @@ export class DeveloperCenter extends React.Component {
                 </li>
                 <li className="menu-item">
                     <Link to={"/developer/addScript"} className="menu-link">Add New Script</Link>
+                </li>
+            </ul>
+        </li>);
+    }
+}
+
+export class AdminCenter extends React.Component<any, any> {
+
+    render(): any {
+        const user: User = this.props.user;
+        const display = !user || !user.isOwner ? {"display": 'none'} : {};
+        return (<li className="menu-item has-child" style={display}>
+            <a href="#" className="menu-link"><span className="menu-icon fas fa-fingerprint"/> <span
+                className="menu-text">Administration Center</span></a>
+            <ul className="menu">
+                <li className="menu-item">
+                    <Link to={"/administration"} className="menu-link">Dashboard</Link>
+                </li>
+                <li className="menu-item">
+                    <Link to={"/administration/user/search"} className="menu-link">User Search</Link>
                 </li>
             </ul>
         </li>);

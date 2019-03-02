@@ -1,8 +1,13 @@
 import React from 'react';
 import {UserUtil} from "./Utilities/UserUtil";
 import {ApiService} from "./Common/ApiService";
+import {User} from "./Models/User";
 
-export class PageContainer extends React.Component<any, any> {
+type State = {
+    user : User | null
+}
+
+export class PageContainer extends React.Component<any, State> {
 
     private api : ApiService;
 

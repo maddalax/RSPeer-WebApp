@@ -16,6 +16,8 @@ import {BotPanelDashboard} from "./View/Pages/BotPanel/BotPanelDashboard";
 import {ProxyManager} from "./View/Pages/BotPanel/ProxyManager";
 import {QuickLaunch} from "./View/Pages/BotPanel/QuickLaunch";
 import {ViewLogs} from "./View/Pages/BotPanel/ViewLogs";
+import {AdministrationDashboard} from "./View/Pages/Administration/AdministrationDashboard";
+import {AdministrationUserDetails} from "./View/Pages/Administration/AdministrationUserDetails";
 
 export class Routes extends React.Component {
 
@@ -40,6 +42,8 @@ export class Routes extends React.Component {
                 <Route exact path={`/bot/management/proxy`} component={(props : any) => <ProxyManager {...props} {...this.props}/>}/>
                 <Route exact path={`/bot/management/logs`} component={(props : any) => <ViewLogs {...props} {...this.props}/>}/>
                 <Route exact path={`/bot/management/logs/:launcherId`} component={(props : any) => <ViewLogs {...props} {...this.props}/>}/>
+                <Route exact path={`/administration`} component={(props : any) => <AdministrationDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/user/search`} component={(props : any) => <AdministrationUserDetails {...props} {...this.props}/>}/>
             </Switch>
         )
     }
