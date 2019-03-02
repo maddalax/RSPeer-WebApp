@@ -15,6 +15,7 @@ type State = {
 export class ConnectedLaunchers extends React.Component<any, State> {
 
     private readonly api: ApiService;
+    private internal : any;
 
     constructor(props: any) {
         super(props);
@@ -31,7 +32,11 @@ export class ConnectedLaunchers extends React.Component<any, State> {
 
     async componentDidMount() {
         this.load();
-        setInterval(this.load, 5000)
+        this.internal = setInterval(this.load, 5000)
+    }
+
+    componentWillUnmount(): void {
+        clearInterval(this.internal);
     }
 
     getClients = (machineName: string) => {

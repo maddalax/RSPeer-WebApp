@@ -50,10 +50,10 @@
     <link rel="stylesheet" href="%PUBLIC_URL%/dist/assets/stylesheets/custom.css"><!-- Disable unused skin immediately -->
     <script>
       window.rspeer = {
-        apiUrl : 'https://services.rspeer.org/api/'
+        apiUrl : 'http://localhost/api/'
       };
     </script>
-    <script> var skin = localStorage.getItem('skin') || 'default';
+    <script> var skin = localStorage.getItem('skin') || 'dark';
     var unusedLink = document.querySelector('link[data-skin]:not([data-skin="'+ skin +'"])');
 
     unusedLink.setAttribute('rel', '');

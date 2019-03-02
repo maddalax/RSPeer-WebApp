@@ -1,8 +1,7 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
 import {HttpUtil} from "../../../Utilities/HttpUtil";
-import {ScriptDto, ScriptCategories, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/ScriptDto";
-import toastr from 'toastr';
+import {ScriptCategories, ScriptDto, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/ScriptDto";
 import {UserUtil} from "../../../Utilities/UserUtil";
 import {Alert} from "../../../Utilities/Alert";
 
@@ -167,7 +166,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             </React.Fragment>}
             {!this.state.loading && <div className="card-columns" style={{columnCount: 4}}>
                 {this.state.scripts.map((script: any) => {
-                    return <ScriptCard key={script.id} loggedIn={this.state.loggedIn} onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
+                    return <ScriptCard key={script.id} history={this.props.history} loggedIn={this.state.loggedIn} onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
                 })}
             </div>}
         </div>)
@@ -179,7 +178,8 @@ type ScriptCardProps = {
     script: ScriptDto,
     api : ApiService,
     onAccessChange : () => any,
-    loggedIn : boolean
+    loggedIn : boolean,
+    history : any
 }
 
 type ScriptCardState = {
@@ -244,11 +244,14 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
             window.location.replace("/#/login");
             return;
         }
-        if(this.props.script.doesUserOwn && this.props.script.type == ScriptType.Premium) {
-            const confirm = window.confirm("You are attempting to remove a premium script. You will have to re-purchase to gain access again. Are you sure?")
+        if(this.props.script.doesUserOwn && this.props.script.type === ScriptType.Premium) {
+            const confirm = window.confirm("You are attempting to remove a premium script. You will have to re-purchase to gain access again. Are you sure?");
             if(!confirm) {
                 return;
             }
+        }
+        if(this.props.script.type === ScriptType.Premium) {
+            return this.props.history.push(`/store/checkout?sku=premium-script-${this.props.script.id}&quantity=1`);
         }
         this.setState({processing : true});
         if(this.props.script.doesUserOwn) {
