@@ -4,7 +4,9 @@ import {ApiService} from "./Common/ApiService";
 import {User} from "./Models/User";
 
 type State = {
-    user : User | null
+    user : User | null,
+    count : number,
+    allowedInstances : number
 }
 
 export class PageContainer extends React.Component<any, State> {
@@ -15,7 +17,9 @@ export class PageContainer extends React.Component<any, State> {
         super(props);
         this.api = new ApiService();
         this.state = {
-            user : null
+            user : null,
+            count : 0,
+            allowedInstances : 0
         }
     }
 
@@ -29,7 +33,9 @@ export class PageContainer extends React.Component<any, State> {
         const me = await this.api.post("user/me", {
             includeBalance : true
         });
-        this.setState({user: me});
+        const count = await this.api.get("stats/connected");
+        const allowed = await this.api.get("instance/allowedClients");
+        this.setState({user: me, count, allowedInstances : allowed});
     }
 
     componentDidUpdate(): void {
@@ -50,7 +56,13 @@ export class PageContainer extends React.Component<any, State> {
         const { children } = this.props;
 
         const childrenWithProps = React.Children.map(children, (child : any, index : number) =>
-            React.cloneElement(child, { index, user : this.state.user, logoutCallback : this.onLogout, reloadUser : this.reloadUser })
+            React.cloneElement(child, { index,
+                user : this.state.user,
+                logoutCallback : this.onLogout,
+                reloadUser : this.reloadUser,
+                allowedInstances : this.state.allowedInstances,
+                totalClientCount : this.state.count
+            })
         );
         return <React.Fragment>{childrenWithProps}</React.Fragment>
     }

@@ -38,7 +38,8 @@ export class StoreProcess extends React.Component<any, State> {
             return;
         }
         this.setState({processing : false});
-        window.location.replace("/#/store/success")
+        this.props.reloadUser();
+        this.props.history.push("/#/store/success")
     };
 
     render() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {OwnerPageWrapper} from "../../Components/OwnerPage/OwnerPageWrapper";
-import {User} from "../../../Models/User";
+import {AddRemove, User} from "../../../Models/User";
 import {ApiService} from "../../../Common/ApiService";
 import {Util} from "../../../Utilities/Util";
 import {Alert} from "../../../Utilities/Alert";
@@ -49,6 +49,9 @@ export class AdministrationUserDetails extends React.Component<any, State> {
     };
 
     setUser = async (user: User) => {
+        if(!user) {
+            return;
+        }
         const fullUser: User = await this.api.get(`user/byId?id=${user.id}&groups=true`);
         localStorage.setItem("adminUserSearch", JSON.stringify(fullUser));
         this.setState({user: fullUser, results: []});
@@ -90,14 +93,15 @@ export class AdministrationUserDetails extends React.Component<any, State> {
                 </div>
             </div>}
             {this.state.user && <div>
-                <UserDetailsTabs user={this.state.user}/>
+                <UserDetailsTabs user={this.state.user} reloadUser={() => this.setUser(this.state.user!)}/>
             </div>}
         </OwnerPageWrapper>
     }
 }
 
 type Props = {
-    user: User
+    user: User,
+    reloadUser : () => any
 }
 
 class UserDetailsTabs extends React.Component<Props, any> {
@@ -127,15 +131,23 @@ class UserDetailsTabs extends React.Component<Props, any> {
                            href="#orders" role="tab"
                            aria-controls="orders" aria-selected="false">Orders</a>
                     </li>
+                    <li className="nav-item">
+                        <a onClick={() => this.setSelected(2)} className="nav-link" id="balancechanges-tab" data-toggle="tab"
+                           href="#balancechanges" role="tab"
+                           aria-controls="orders" aria-selected="false">Balance Changes</a>
+                    </li>
                 </ul>
                 <div className="tab-content" id="myTabContent">
                     <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div style={{marginTop: '15px'}}>
-                            {this.state.selected === 0 && <div><UserDetails user={this.props.user!}/></div>}
+                            {this.state.selected === 0 && <div><UserDetails user={this.props.user!} reloadUser={this.props.reloadUser}/></div>}
                         </div>
                     </div>
                     <div className="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                        {this.state.selected === 1 && <div><OrdersView user={this.props.user!}/></div>}
+                        {this.state.selected === 1 && <div><OrdersView user={this.props.user!} reloadUser={this.props.reloadUser}/></div>}
+                    </div>
+                    <div className="tab-pane fade" id="balancechanges" role="tabpanel" aria-labelledby="balancechanges-tab">
+                        {this.state.selected === 2 && <div><BalanceChanges user={this.props.user!} reloadUser={this.props.reloadUser}/></div>}
                     </div>
                 </div>
             </React.Fragment>
@@ -144,6 +156,52 @@ class UserDetailsTabs extends React.Component<Props, any> {
 }
 
 class UserDetails extends React.Component<Props, any> {
+
+    private readonly api: ApiService;
+
+    constructor(props: Props) {
+        super(props);
+        this.api = new ApiService();
+    }
+
+    disableUser = async () => {
+        const user = this.props.user;
+        const res = await this.api.post("adminUser/disable", {
+            userId : user.id,
+            disabled : !user.disabled
+        });
+        if(res.error) {
+            Alert.show(res.error);
+        }
+        this.props.reloadUser();
+    };
+
+    updateBalance = async (add : boolean) => {
+        const user = this.props.user;
+        const prompt : string | null = window.prompt(`How much would you like to ${add ? 'add' : 'remove'}?`);
+        if(!prompt) {
+            return;
+        }
+        const amount = parseInt(prompt);
+        if(isNaN(amount)) {
+            return Alert.show("Invalid amount. Must be a number.")
+        }
+        const reason = window.prompt(`Please include a reason or any additional metadata related to this balance change.`);
+        if(!reason) {
+            return Alert.show("A reason is required to update balance.");
+        }
+        const res = await this.api.post("adminUser/updateBalance", {
+            userId : user.id,
+            amount,
+            type : add ? AddRemove.Add : AddRemove.Remove,
+            reason : reason
+        });
+        if(res.error) {
+            return Alert.show(res.error);
+        }
+        this.props.reloadUser();
+    };
+
     render() {
         const user = this.props.user;
         return <div>
@@ -152,6 +210,13 @@ class UserDetails extends React.Component<Props, any> {
             <p>Email: <strong>{user.email}</strong></p>
             <p>Balance: <strong>{Util.formatNumber(user.balance.toString())}</strong></p>
             <p>Groups: <strong>{user.groups.map(w => w.name).join(" , ")}</strong></p>
+            <button type="button" className="btn btn-success button-spacing" onClick={() => this.updateBalance(true)}>Add Balance</button>
+            <button type="button" className="btn btn-danger button-spacing" onClick={() => this.updateBalance(false)}>Remove Balance</button>
+            {!user.disabled && <button type="button" className="btn btn-danger button-spacing" onClick={this.disableUser}>Disable User</button>}
+            {user.disabled && <button type="button" className="btn btn-success button-spacing" onClick={this.disableUser}>Enable User</button>}
+            <div style={{marginTop : '5px'}}>
+                <p><strong>Note: </strong>If you are refunding a purchase, please do not add tokens here. Instead, click on Orders and refund it there.</p>
+            </div>
         </div>
     }
 }
@@ -192,6 +257,12 @@ class OrdersView extends React.Component<Props, any> {
         if (refund.error) {
             return Alert.show(refund.error);
         }
+        this.setState((prev : any) => {
+            const index = prev.orders.indexOf(order);
+            order.isRefunded = true;
+            prev.orders[index] = order;
+            return prev;
+        });
         this.setState({refunding: 0});
     };
 
@@ -238,6 +309,72 @@ class OrdersView extends React.Component<Props, any> {
                                 {o.isRefunded && <th scope="col">
                                     <p>N/A</p>
                                 </th>}
+                            </tr>)
+                        })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    }
+
+}
+
+class BalanceChanges extends React.Component<Props, any> {
+
+    private readonly api: ApiService;
+
+    constructor(props: Props) {
+        super(props);
+        this.api = new ApiService();
+        this.state = {
+            changes: []
+        }
+    }
+
+    async componentDidMount() {
+        const changes = await this.api.post("adminUser/balanceChanges", {
+            userId: this.props.user.id,
+            includeAdminUser : true
+        });
+        this.setState({changes});
+    }
+
+    componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<any>, snapshot?: any): void {
+        if (prevProps.user.id != this.props.user.id) {
+            this.componentDidMount();
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <div className="table-responsive">
+                    <table className="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Old Balance</th>
+                            <th scope="col">New Balance</th>
+                            <th scope="col">Order Id</th>
+                            <th scope="col">By Admin</th>
+                            <th scope="col">Reason</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.state.changes.map((o: any) => {
+                            const isRemove = o.newBalance < o.oldBalance;
+                            return (<tr>
+                                <td>{Util.formatDate(o.timestamp, true)}</td>
+                                <td className={isRemove ? 'table-danger' : 'table-success'}>
+                                    <span style={{color : 'black'}}>{isRemove ? 'Remove' : 'Add'}</span>
+                                </td>
+                                <td>{Util.formatNumber(o.oldBalance)}</td>
+                                <td>{Util.formatNumber(o.newBalance)}</td>
+                                <td>{o.orderId || ''}</td>
+                                <td>{o.adminUser != null ? o.adminUser.username : (o.adminUserId || '')}</td>
+                                <td>{o.reason}</td>
                             </tr>)
                         })}
                         </tbody>

@@ -1,23 +1,18 @@
 import React from 'react';
 import {Link, withRouter} from 'react-router-dom'
-import {ApiService} from "../../Common/ApiService";
 import {Util} from "../../Utilities/Util";
 import {HttpUtil} from "../../Utilities/HttpUtil";
 
 export type HeaderProps = {
-    user: any
+    user: any,
+    allowedInstances : number,
+    totalClientCount : number
 }
 
 export class Header extends React.Component<HeaderProps | any, any> {
 
-    private api: ApiService;
-
     constructor(props: HeaderProps | any) {
         super(props);
-        this.api = new ApiService();
-        this.state = {
-            clientsOnline : 0
-        }
     }
 
     async componentDidMount() {
@@ -25,8 +20,6 @@ export class Header extends React.Component<HeaderProps | any, any> {
         if(isPaypalRedirect) {
             return this.props.history.push('/store/process')
         }
-        const count = await this.api.get("stats/connected");
-        this.setState({clientsOnline : count})
     }
 
     async componentDidUpdate() {
@@ -38,6 +31,11 @@ export class Header extends React.Component<HeaderProps | any, any> {
         this.setState({user: null});
         this.props.logoutCallback();
         this.props.history.push('/login')
+    };
+
+    private formatInstances = () => {
+        const count = this.props.allowedInstances;
+        return count >= 1000000 ? 'Unlimited' : Util.formatNumber(count);
     };
 
     render(): any {
@@ -67,11 +65,14 @@ export class Header extends React.Component<HeaderProps | any, any> {
                         {/* .nav */}
                         <ul className="header-nav nav">
                             <li className="nav-item dropdown header-nav-dropdown">
-                                <a className="nav-link" href="#">Clients Online: <strong>{Util.formatNumber(this.state.clientsOnline)}</strong></a>
+                                <a className="nav-link" href="#">Clients Online: <strong>{Util.formatNumber(this.props.totalClientCount)}</strong></a>
                             </li>
                             {/* .nav-item */}
                             {this.props.user && <li className="nav-item dropdown header-nav-dropdown">
                                 <a className="nav-link" href="#">Tokens: <strong>{Util.formatNumber(this.props.user.balance)}</strong></a>
+                            </li>}
+                            {this.props.user && <li className="nav-item dropdown header-nav-dropdown">
+                                <a className="nav-link" href="#">Instances Allowed: <strong>{this.formatInstances()}</strong></a>
                             </li>}
                             {/* /.nav-item */}
                             {/* .nav-item */}

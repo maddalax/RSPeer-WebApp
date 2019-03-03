@@ -1,6 +1,7 @@
 import React from 'react';
 
-export class StoreSuccess extends React.Component {
+export class StoreSuccess extends React.Component<any, any> {
+
 
     render() {
         return <div>

@@ -13,6 +13,16 @@ input:-webkit-autofill {
   margin-right: 5px;
 }
 
+.btn-danger {
+  background-color: #ec2348;
+  border-color: #ec2348;
+}
+
+.btn-danger:hover {
+  background-color: #b31d38;
+  border-color: #b31d38;
+}
+
 .page-message-success {
   background-color: #4c9c6c;
   color : #fbfbfb
