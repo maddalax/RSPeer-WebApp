@@ -29,7 +29,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             loading: true,
             search: '',
             queryType: ScriptTypes[queryRaw] == null ? 'free' : queryRaw,
-            orderBy: 'users',
+            orderBy: 'featured',
             category: 'All',
             loggedIn: true
         }
@@ -37,6 +37,10 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
 
     async componentDidMount() {
         this.setState({loggedIn: UserUtil.getSession() != null});
+        this.load();
+    }
+
+    private load = async () => {
         let scripts = await this.apiService.post("script/list", {
             type: this.state.queryType,
             search: this.state.search,
@@ -51,8 +55,10 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
         if (!Array.isArray(scripts)) {
             return;
         }
-        this.setState({scripts, loading: false}, () => this.setAccessIds())
-    }
+        this.setState({scripts, loading: false}, () => {
+            this.setAccessIds();
+        })
+    };
 
     private setAccessIds = async () => {
         if (!this.state.loggedIn) {
@@ -75,14 +81,12 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
     private setFilter(key: string, value: string) {
         this.setState({
             [key]: value, loading: true
-        }, () => {
-            this.componentDidMount();
-        })
+        }, this.load)
     }
 
     private setSearch(e: any) {
         if (e.key === 'Enter') {
-            this.componentDidMount();
+            this.load();
             return;
         }
         this.setState({search: e.target.value})
@@ -164,7 +168,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
                     <h3>There are no scripts that match your filter.</h3>
                 </div>
             </React.Fragment>}
-            {!this.state.loading && <div className="card-columns" style={{columnCount: 4}}>
+            {!this.state.loading && <div className={"card-columns"} style={{columnCount: 4}}>
                 {this.state.scripts.map((script: any) => {
                     return <ScriptCard key={script.id} history={this.props.history} loggedIn={this.state.loggedIn}
                                        onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
@@ -275,7 +279,7 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
     };
 
     private onMoreInfo = () => {
-
+        
     };
 
     render(): any {

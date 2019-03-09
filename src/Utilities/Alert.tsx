@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import {Modal} from "../View/Components/Utility/Modal";
 
 export class Alert {
 
@@ -7,7 +8,7 @@ export class Alert {
         const container = document.getElementById('alert-message') as any;
         ReactDOM.unmountComponentAtNode(container);
     }
-
+    
     public static show(message: string, timeout = 8000) {
         setTimeout(this.removeAlert, timeout);
         const container = document.getElementById('alert-message') as any;
@@ -34,6 +35,14 @@ export class Alert {
                 ><span aria-hidden="true"><i
                     className="fa fa-times"/></span></a>
             </div>,
+            container
+        );
+    }
+
+    public static modal({title, body, onConfirm, onCancel, hideButtons} : any) {
+        const container = document.getElementById('modal') as any;
+        ReactDOM.render(
+            <Modal title={title} body={body} onConfirm={onConfirm} onCancel={onCancel} hideButtons={hideButtons}/>, 
             container
         );
     }

@@ -162,6 +162,16 @@ class UserDetails extends React.Component<Props, any> {
     constructor(props: Props) {
         super(props);
         this.api = new ApiService();
+        this.state = {
+            ipAddresses : []
+        }
+    }
+
+    async componentDidMount() {
+        const ipAddresses = await this.api.post("adminUser/ipAccess", {
+            userId : this.props.user.id
+        });
+        this.setState({ipAddresses});
     }
 
     disableUser = async () => {
@@ -210,6 +220,7 @@ class UserDetails extends React.Component<Props, any> {
             <p>Email: <strong>{user.email}</strong></p>
             <p>Balance: <strong>{Util.formatNumber(user.balance.toString())}</strong></p>
             <p>Groups: <strong>{user.groups.map(w => w.name).join(" , ")}</strong></p>
+            <p>Ip Addresses: <strong>{this.state.ipAddresses.join(" , ")}</strong></p>
             <button type="button" className="btn btn-success button-spacing" onClick={() => this.updateBalance(true)}>Add Balance</button>
             <button type="button" className="btn btn-danger button-spacing" onClick={() => this.updateBalance(false)}>Remove Balance</button>
             {!user.disabled && <button type="button" className="btn btn-danger button-spacing" onClick={this.disableUser}>Disable User</button>}

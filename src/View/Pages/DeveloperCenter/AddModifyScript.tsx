@@ -14,11 +14,14 @@ type State = {
     price: number,
     instances: number,
     isPremium: boolean
-    [key: string]: any
+    [key: string]: any,
+    recompile : boolean
 }
 
 type Props = {
-    script : ScriptDto
+    script : ScriptDto,
+    isAdminView : boolean,
+    onCancel? : () => any
 }
 
 export class AddModifyScript extends React.Component<Props | any, State> {
@@ -39,7 +42,8 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             forumThread: script != null ? script.forumThread : '',
             price: script != null ? script.price : 300,
             instances: script != null ? script.instances : 5,
-            isPremium: script != null ? script.type === ScriptType.Premium : false
+            isPremium: script != null ? script.type === ScriptType.Premium : false,
+            recompile : !this.props.isAdminView
         };
         this.api = new ApiService();
     }
@@ -78,16 +82,23 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             Type: this.state.isPremium ? ScriptType.Premium : ScriptType.Free
         };
 
-        const res = await this.api.post('script/create', {
-            Script : script
+        const path = this.props.isAdminView ? 'adminScript/update' : 'script/create';
+        const res = await this.api.post(path, {
+            Script : script,
+            Recompile : this.state.recompile
         });
         if (res.error) {
             return Alert.show(res.error);
         }
-        this.cancel();
+        this.cancel(e);
     };
 
-    cancel = () => {
+    cancel = (e : any) => {
+        e.preventDefault();
+        if(this.props.isAdminView) {
+            this.props.onCancel && this.props.onCancel();
+            return;
+        }
         this.props.history.push('/developer');
 
     };
@@ -101,14 +112,16 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         return <div>
             <div className="card" style={{maxHeight: '100%'}}>
                 <div className="card-body">
-                    <h5 className="card-title">Submit Script To Add To Repository</h5>
-                    <div className="card-text">
-                        <p>Fill in the form below to request to add a script to the repository.</p>
-                        <p>Your script will go through a formal verification process by staff to ensure your script is
-                            safe.</p>
-                        <p>Once that process is completed, your script will be added to the repository for use by all
-                            RSPeer users.</p>
-                    </div>
+                    {!this.props.isAdminView && <div>
+                        <h5 className="card-title">Submit Script To Add To Repository</h5>
+                        <div className="card-text">
+                            <p>Fill in the form below to request to add a script to the repository.</p>
+                            <p>Your script will go through a formal verification process by staff to ensure your script is
+                                safe.</p>
+                            <p>Once that process is completed, your script will be added to the repository for use by all
+                                RSPeer users.</p>
+                        </div>
+                    </div>}
                     <br/>
                     <form onSubmit={this.onFormSubmit}>
                         <div className="form-group">
@@ -198,8 +211,23 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 </p>
                             </div>
                         </React.Fragment>}
-                        {!this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Script For Review</button>}
-                        {this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Update For Review</button>}
+                        {!this.props.isAdminView && <React.Fragment>
+                            {!this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Script For Review</button>}
+                            {this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Update For Review</button>}       
+                        </React.Fragment>}
+                        {this.props.isAdminView && <React.Fragment>
+                            <div className="form-group">
+                                <div className="form-check">
+                                    <input type="checkbox" className="form-check-input" id="recompile-gitlab"
+                                           checked={this.state.recompile}
+                                           onChange={(e) => {
+                                               this.setState({recompile: e.target.checked})
+                                           }}/>
+                                    <label className="form-check-label" htmlFor="recompile-gitlab">Recompile from GitLab</label>
+                                </div>
+                            </div>
+                            <button type="submit" className="btn btn-primary">Update Script</button>
+                        </React.Fragment>}
                         <button style={{marginLeft : '5px'}} className="btn btn-danger" onClick={this.cancel}>Cancel</button>
                     </form>
                 </div>

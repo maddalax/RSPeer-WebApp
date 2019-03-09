@@ -13,9 +13,10 @@ class App extends Component {
         return (
             <React.Fragment>
                 <div className="app">
+                    <div id="modal"/>
                     <HashRouter>
                        <PageContainer>
-                           <HeaderWithRouter username={"MadDev"}/>
+                           <HeaderWithRouter/>
                            <AsideWithRouter/>
                            <Page/>
                        </PageContainer>

@@ -59,7 +59,8 @@ export const ScriptTypes : any = {
 };
 
 export const ScriptOrderBy : any = {
-    'featured' : 'Featured',
+    'featured' : 'Most Popular (24 Hours)',
+    'featuredAllTime' : 'Most Popular All Time',
     'newest' : 'Newest',
     'users' : 'Users',
     'alphabetical' : 'Alphabetical',

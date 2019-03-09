@@ -96,7 +96,8 @@
     "typescript": "3.3.3333",
     "vanilla-text-mask": "^5.1.1",
     "wnumb": "^1.1.0",
-    "react-router-dom": "latest"
+    "react-router-dom": "latest",
+    "react-masonry-component": "^6.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -112,5 +113,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@types/bricks.js": "^1.8.0"
+  }
 }

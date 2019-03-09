@@ -5,8 +5,7 @@ import {User} from "./Models/User";
 
 type State = {
     user : User | null,
-    count : number,
-    allowedInstances : number
+    allowedInstances : number,
 }
 
 export class PageContainer extends React.Component<any, State> {
@@ -18,11 +17,10 @@ export class PageContainer extends React.Component<any, State> {
         this.api = new ApiService();
         this.state = {
             user : null,
-            count : 0,
             allowedInstances : 0
         }
     }
-
+    
     async componentDidMount() {
         if(!UserUtil.getSession()) {
             if(this.state.user != null) {
@@ -33,9 +31,8 @@ export class PageContainer extends React.Component<any, State> {
         const me = await this.api.post("user/me", {
             includeBalance : true
         });
-        const count = await this.api.get("stats/connected");
         const allowed = await this.api.get("instance/allowedClients");
-        this.setState({user: me, count, allowedInstances : allowed});
+        this.setState({user: me, allowedInstances : allowed});
     }
 
     componentDidUpdate(): void {
@@ -60,8 +57,7 @@ export class PageContainer extends React.Component<any, State> {
                 user : this.state.user,
                 logoutCallback : this.onLogout,
                 reloadUser : this.reloadUser,
-                allowedInstances : this.state.allowedInstances,
-                totalClientCount : this.state.count
+                allowedInstances : this.state.allowedInstances
             })
         );
         return <React.Fragment>{childrenWithProps}</React.Fragment>

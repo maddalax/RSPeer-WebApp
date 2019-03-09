@@ -33,7 +33,7 @@ export class Aside extends React.Component<Props | any, any> {
                                 <StoreMenuItem {...this.props}/>
                                 <li className="menu-header">Script Development</li>
                                 <DeveloperCenter {...this.props}/>
-                                <li className="menu-header">Administration</li>
+                                {this.props.user && this.props.user.isOwner && <li className="menu-header">Administration</li>}
                                 <AdminCenter {...this.props}/>
                             </ul>
                         </nav>

@@ -18,6 +18,7 @@ import {QuickLaunch} from "./View/Pages/BotPanel/QuickLaunch";
 import {ViewLogs} from "./View/Pages/BotPanel/ViewLogs";
 import {AdministrationDashboard} from "./View/Pages/Administration/AdministrationDashboard";
 import {AdministrationUserDetails} from "./View/Pages/Administration/AdministrationUserDetails";
+import {AdministrationScriptList} from "./View/Pages/Administration/Scripts/AdministrationScriptList";
 
 export class Routes extends React.Component {
 
@@ -44,6 +45,7 @@ export class Routes extends React.Component {
                 <Route exact path={`/bot/management/logs/:launcherId`} component={(props : any) => <ViewLogs {...props} {...this.props}/>}/>
                 <Route exact path={`/administration`} component={(props : any) => <AdministrationDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/administration/user/search`} component={(props : any) => <AdministrationUserDetails {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/scripts`} component={(props : any) => <AdministrationScriptList {...props} {...this.props}/>}/>
             </Switch>
         )
     }

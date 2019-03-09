@@ -1,4 +1,5 @@
 import React from 'react';
+import {Util} from "../../Utilities/Util";
 
 export class Dashboard extends React.Component<any, any> {
 
@@ -34,10 +35,10 @@ export class Dashboard extends React.Component<any, any> {
                                     {/* .metric */}
                                     <a href="user-teams.html"
                                        className="metric metric-bordered align-items-center">
-                                        <h2 className="metric-label"> Teams </h2>
+                                        <h2 className="metric-label"> Total Clients Online </h2>
                                         <p className="metric-value h3">
                                             <sub><i className="oi oi-people"/></sub> <span
-                                            className="value">8</span>
+                                            className="value">{Util.formatNumber(this.props.totalClientCount)}</span>
                                         </p>
                                     </a> {/* /.metric */}
                                 </div>
