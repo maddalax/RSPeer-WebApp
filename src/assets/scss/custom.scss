@@ -27,3 +27,8 @@ input:-webkit-autofill {
   background-color: #4c9c6c;
   color : #fbfbfb
 }
+
+.modal-content {
+  max-height: 800px;
+  overflow-y: scroll;
+}

@@ -105,7 +105,10 @@ export class AdminCenter extends React.Component<any, any> {
                     <Link to={"/administration/user/search"} className="menu-link">User Search</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/administration/scripts"} className="menu-link">Manage Scripts</Link>
+                    <Link to={"/administration/scripts"} className="menu-link">All Scripts</Link>
+                </li>
+                <li className="menu-item">
+                    <Link to={"/administration/scripts?status=pending"} className="menu-link">Pending Scripts</Link>
                 </li>
             </ul>
         </li>);

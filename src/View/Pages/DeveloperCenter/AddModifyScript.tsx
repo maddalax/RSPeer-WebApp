@@ -4,7 +4,7 @@ import {ScriptDto, ScriptType} from "../../../Models/ScriptDto";
 import {Alert} from "../../../Utilities/Alert";
 
 type State = {
-    scriptId : number,
+    scriptId: number,
     categories: string[],
     category: string,
     description: string,
@@ -15,13 +15,15 @@ type State = {
     instances: number,
     isPremium: boolean
     [key: string]: any,
-    recompile : boolean
+    recompile: boolean,
+    processing: boolean
 }
 
 type Props = {
-    script : ScriptDto,
-    isAdminView : boolean,
-    onCancel? : () => any
+    script: ScriptDto,
+    isAdminView: boolean,
+    onCancel?: () => any,
+    onConfirm?: () => any
 }
 
 export class AddModifyScript extends React.Component<Props | any, State> {
@@ -30,10 +32,10 @@ export class AddModifyScript extends React.Component<Props | any, State> {
 
     constructor(props: any) {
         super(props);
-        const script : ScriptDto = props.script;
+        const script: ScriptDto = props.script;
         console.log(script);
         this.state = {
-            scriptId : script != null ? script.id : -1,
+            scriptId: script != null ? script.id : -1,
             categories: [],
             category: script != null ? script.categoryFormatted : '',
             description: script != null ? script.description : '',
@@ -43,14 +45,15 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             price: script != null ? script.price : 300,
             instances: script != null ? script.instances : 5,
             isPremium: script != null ? script.type === ScriptType.Premium : false,
-            recompile : !this.props.isAdminView
+            recompile: !this.props.isAdminView,
+            processing: false
         };
         this.api = new ApiService();
     }
 
-     componentDidMount(): void {
-         this.setScriptCategories();
-     }
+    componentDidMount(): void {
+        this.setScriptCategories();
+    }
 
     setScriptCategories = async () => {
         const res = await this.api.get('script/categories');
@@ -62,17 +65,40 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         this.setState({category})
     };
 
-    onFormSubmit = async (e: any) => {
+    deleteScript = async (e: any) => {
         e.preventDefault();
+        const confirm = await window.confirm(`Are you sure you want to delete ${this.state.name}? This will remove the script from the SDN and all users access.`);
+        if (!confirm) {
+            return;
+        }
+        if (this.state.processing) {
+            return;
+        }
+        this.setState({processing : true});
+        const res = await this.api.post("adminScript/delete?id=" + this.state.scriptId, {});
+        if(res.error) {
+            this.setState({processing : false});
+            return Alert.show(res.error);
+        }
+        this.setState({processing : false});
+        this.props.onConfirm && this.props.onConfirm();
+    };
+
+    onFormSubmit = async (e: any) => {
+        e && e.preventDefault();
+        if (this.state.processing) {
+            return;
+        }
         if (!this.state.category) {
             return Alert.show("Please select a script category.");
         }
         if (!this.state.forumThread) {
             return Alert.show("Please enter a valid forum thread for your script. Visit https://rspeer.org/forums/ to create one.");
         }
-        const script : any = {
-            Id : this.state.scriptId,
-            RepositoryUrl : this.state.repoUrl,
+        this.setState({processing: true});
+        const script: any = {
+            Id: this.state.scriptId,
+            RepositoryUrl: this.state.repoUrl,
             Name: this.state.name,
             Description: this.state.description,
             Category: this.state.category,
@@ -84,23 +110,30 @@ export class AddModifyScript extends React.Component<Props | any, State> {
 
         const path = this.props.isAdminView ? 'adminScript/update' : 'script/create';
         const res = await this.api.post(path, {
-            Script : script,
-            Recompile : this.state.recompile
+            Script: script,
+            Recompile: this.state.recompile
         });
+        this.setState({processing: false});
         if (res.error) {
             return Alert.show(res.error);
         }
-        this.cancel(e);
+        this.props.onConfirm && this.props.onConfirm();
+        if (!this.props.isAdminView) {
+            this.exit();
+        }
     };
 
-    cancel = (e : any) => {
-        e.preventDefault();
-        if(this.props.isAdminView) {
+    cancel = (e: any) => {
+        e && e.preventDefault();
+        if (this.props.isAdminView) {
             this.props.onCancel && this.props.onCancel();
             return;
         }
-        this.props.history.push('/developer');
+        this.exit();
+    };
 
+    exit = () => {
+        this.props.history.push('/developer');
     };
 
     setValue = (e: any, key: string) => {
@@ -116,9 +149,11 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                         <h5 className="card-title">Submit Script To Add To Repository</h5>
                         <div className="card-text">
                             <p>Fill in the form below to request to add a script to the repository.</p>
-                            <p>Your script will go through a formal verification process by staff to ensure your script is
+                            <p>Your script will go through a formal verification process by staff to ensure your script
+                                is
                                 safe.</p>
-                            <p>Once that process is completed, your script will be added to the repository for use by all
+                            <p>Once that process is completed, your script will be added to the repository for use by
+                                all
                                 RSPeer users.</p>
                         </div>
                     </div>}
@@ -169,10 +204,11 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                         aria-expanded="false">
                                     {this.state.category || 'Script Category'}
                                 </button>
-                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{"height" : "auto", "maxHeight" : "200px", "overflow-y" : "scroll"}}>
+                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                    style={{"height": "auto", "maxHeight": "200px", "overflow-y": "scroll"}}>
                                     {this.state.categories.map(c => {
                                         return <li key={c} onClick={(e) => this.setCategory(e, c)}
-                                                  className="dropdown-item">{c}</li>
+                                                   className="dropdown-item">{c}</li>
                                     })}
                                 </ul>
                             </div>
@@ -212,8 +248,12 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                             </div>
                         </React.Fragment>}
                         {!this.props.isAdminView && <React.Fragment>
-                            {!this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Script For Review</button>}
-                            {this.state.scriptId && <button type="submit" className="btn btn-primary">Submit Update For Review</button>}       
+                            {!this.state.processing && !this.state.scriptId &&
+                            <button type="submit" className="btn btn-primary">Submit Script For Review</button>}
+                            {!this.state.processing && this.state.scriptId &&
+                            <button type="submit" className="btn btn-primary">Submit Update For Review</button>}
+                            {this.state.processing &&
+                            <button type="submit" className="btn btn-primary">Processing...</button>}
                         </React.Fragment>}
                         {this.props.isAdminView && <React.Fragment>
                             <div className="form-group">
@@ -223,12 +263,23 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                            onChange={(e) => {
                                                this.setState({recompile: e.target.checked})
                                            }}/>
-                                    <label className="form-check-label" htmlFor="recompile-gitlab">Recompile from GitLab</label>
+                                    <label className="form-check-label" htmlFor="recompile-gitlab">Recompile from
+                                        GitLab</label>
+                                    <p id="recompileHelp" className="form-text text-muted">Scripts will be compiled at
+                                        the time of submission,
+                                        it is not necessary to recompile when approving a pending script.
+                                    </p>
                                 </div>
                             </div>
-                            <button type="submit" className="btn btn-primary">Update Script</button>
+                            {!this.state.processing &&
+                            <button type="submit" className="btn btn-primary button-spacing">Update Script</button>}
+                            {this.state.processing &&
+                            <button type="submit" className="btn btn-primary button-spacing">Processing...</button>}
                         </React.Fragment>}
-                        <button style={{marginLeft : '5px'}} className="btn btn-danger" onClick={this.cancel}>Cancel</button>
+                        {this.props.isAdminView && !this.state.processing &&
+                        <button onClick={this.deleteScript} className="btn btn-danger">Delete Script</button>}
+                        <button style={{marginLeft: '5px'}} className="btn btn-danger" onClick={this.cancel}>Cancel
+                        </button>
                     </form>
                 </div>
             </div>
