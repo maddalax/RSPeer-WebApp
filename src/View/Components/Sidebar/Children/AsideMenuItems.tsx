@@ -110,6 +110,9 @@ export class AdminCenter extends React.Component<any, any> {
                 <li className="menu-item">
                     <Link to={"/administration/scripts?status=pending"} className="menu-link">Pending Scripts</Link>
                 </li>
+                <li className="menu-item">
+                    <Link to={"/administration/scripter/payout"} className="menu-link">Scripter Payout</Link>
+                </li>
             </ul>
         </li>);
     }

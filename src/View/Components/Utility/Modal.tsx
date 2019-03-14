@@ -48,11 +48,11 @@ export class Modal extends React.Component<Props, State> {
     render() {
         return <div>
             <div style={{display : 'block', opacity : 100}} className="modal fade" id="exampleModalCenter" tabIndex={-1} role="dialog">
-                <div className="modal-dialog modal-dialog-centered" role="document">
+                <div className="modal-dialog modal-dialog-centered" role="document" style={{maxWidth : '80%'}}>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalCenterTitle">{this.props.title}</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" className="close" onClick={this.onCancel} data-dismiss="modal" aria-label="Close">
                                 <span>×</span>
                             </button>
                         </div>
