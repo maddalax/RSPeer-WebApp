@@ -244,6 +244,12 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
         return 'btn btn-success'
     };
 
+    private purchaseMoreInstances = async () => {
+        if (this.props.script.type === ScriptType.Premium) {
+            return this.props.history.push(`/store/checkout?sku=premium-script-${this.props.script.id}&quantity=1`);
+        }
+    };
+    
     private onAdd = async () => {
         if (!this.props.loggedIn) {
             window.location.replace("/#/login");
@@ -279,7 +285,7 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
     };
 
     private onMoreInfo = () => {
-        
+
     };
 
     render(): any {
@@ -289,6 +295,9 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
         return (
             <div className="card">
                 <div className="card-body">
+                    {this.props.script.doesUserOwn && this.props.script.type === ScriptType.Premium && <p className="form-text text-muted">
+                        You currently own this script, but you may click purchase below to purchase additional instances.
+                    </p>}
                     <h5 className="card-title" style={this.title}>{this.props.script.name}</h5>
                     <div>
                         <h6 style={this.subTitle} className="card-subtitle mb-2 text-muted">Type: <span
@@ -300,6 +309,12 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
                     </div>
                     <p className="card-text">{this.props.script.description}</p>
                     <div className={"btn-toolbar"}>
+                        {this.props.script.doesUserOwn && this.props.script.type === ScriptType.Premium &&
+                        <div className="btn-group" role="group" aria-label="Third group">
+                            <button type="button" style={this.button} onClick={this.purchaseMoreInstances}
+                                    className={'btn btn-success'}>Purchase
+                            </button>
+                        </div>}
                         <div className="btn-group" role="group" aria-label="Third group">
                             <button type="button" style={this.button} onClick={this.onAdd}
                                     className={addButtonClass}>{addButtonText}</button>

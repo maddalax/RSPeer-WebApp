@@ -63,9 +63,7 @@ export class Header extends React.Component<HeaderProps | any, State> {
 
     render(): any {
         return (<header className="app-header app-header-dark">
-                {/* .top-bar */}
                 <div className="top-bar">
-                    {/* .top-bar-brand */}
                     <div className="top-bar-brand">
                         <a href="/"><span className="tile tile-md tile-img mr-2" style={{width : '3.6em'}}>
                         <img src={logo}
@@ -75,29 +73,18 @@ export class Header extends React.Component<HeaderProps | any, State> {
                             <small>RSPeer.org</small>
                         </a>
                     </div>
-                    {/* /.top-bar-brand */}
-                    {/* .top-bar-list */}
                     <div className="top-bar-list">
-                        {/* .top-bar-item */}
                         <div className="top-bar-item px-2 d-md-none d-lg-none d-xl-none">
-                            {/* toggle menu */}
                             <button className="hamburger hamburger-squeeze" type="button" data-toggle="aside"
                                     aria-label="toggle menu"><span className="hamburger-box"><span
                                 className="hamburger-inner"/></span></button>
-                            {/* /toggle menu */}
                         </div>
-                        {/* /.top-bar-item */}
-                        {/* .top-bar-item */}
-                        {/* /.top-bar-item */}
-                        {/* .top-bar-item */}
                         <div className="top-bar-item top-bar-item-right px-0 d-none d-sm-flex">
-                            {/* .nav */}
                             <ul className="header-nav nav">
                                 <li className="nav-item dropdown header-nav-dropdown">
                                     <a className="nav-link" href="#">Clients
                                         Online: <strong>{Util.formatNumber(this.state.totalClientCount.toString())}</strong></a>
                                 </li>
-                                {/* .nav-item */}
                                 {this.props.user && <li className="nav-item dropdown header-nav-dropdown">
                                     <a className="nav-link"
                                        href="#">Tokens: <strong>{Util.formatNumber(this.props.user.balance)}</strong></a>
@@ -107,8 +94,6 @@ export class Header extends React.Component<HeaderProps | any, State> {
                                         Allowed: <strong>{this.formatInstances()}</strong></a>
                                 </li>}
                             </ul>
-                            {/* /.nav */}
-                            {/* .btn-account */}
                             {this.props.user && <div className="dropdown">
                                 <button className="btn-account d-none d-md-flex" type="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false"> <span
@@ -116,7 +101,6 @@ export class Header extends React.Component<HeaderProps | any, State> {
                                     className="account-name">{this.props.user.username}</span> <span
                                     className="account-description">Director</span></span></button>
                                 <div className="dropdown-arrow dropdown-arrow-left"/>
-                                {/* .dropdown-menu */}
                                 <div className="dropdown-menu">
                                     {<h6
                                         className="dropdown-header d-none d-md-block d-lg-none"> {this.props.user.username} </h6>}
@@ -131,20 +115,15 @@ export class Header extends React.Component<HeaderProps | any, State> {
                                         className="dropdown-item"
                                         href="#">Tokens: {Util.formatNumber(this.props.user.balance)}</a>
                                 </div>
-                                {/* /.dropdown-menu */}
                             </div>}
                             {!this.props.user && <div className="dropdown">
                                 <button onClick={this.logout} className="btn-account d-none d-md-flex" type="button">
                                     <span className="account-name">Sign In</span>
                                 </button>
                             </div>}
-                            {/* /.btn-account */}
                         </div>
-                        {/* /.top-bar-item */}
                     </div>
-                    {/* /.top-bar-list */}
                 </div>
-                {/* /.top-bar */}
             </header>
         );
     }
