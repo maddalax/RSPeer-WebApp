@@ -12,6 +12,15 @@ export class Util {
         const date = new Date(value);
         return includeTime ? date.toLocaleString() : date.toDateString();
     };
+    
+    public static toByteArray(value : string) {
+        const utf8 = unescape(encodeURIComponent(value));
+        const arr = [];
+        for (let i = 0; i < utf8.length; i++) {
+            arr.push(utf8.charCodeAt(i));
+        }
+        return arr;
+    }
 
     public static toCamel(o: any) {
         let newO : any, origKey, newKey, value;

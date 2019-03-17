@@ -20,6 +20,7 @@ import {AdministrationDashboard} from "./View/Pages/Administration/Administratio
 import {AdministrationUserDetails} from "./View/Pages/Administration/AdministrationUserDetails";
 import {AdministrationScriptList} from "./View/Pages/Administration/Scripts/AdministrationScriptList";
 import {ScripterPayout} from "./View/Pages/Administration/Scripter/ScripterPayout";
+import {SiteContentManager} from "./View/Pages/Administration/Content/SiteContentManager";
 
 export class Routes extends React.Component {
 
@@ -48,6 +49,7 @@ export class Routes extends React.Component {
                 <Route exact path={`/administration/user/search`} component={(props : any) => <AdministrationUserDetails {...props} {...this.props}/>}/>
                 <Route exact path={`/administration/scripts`} component={(props : any) => <AdministrationScriptList {...props} {...this.props}/>}/>
                 <Route exact path={`/administration/scripter/payout`} component={(props : any) => <ScripterPayout {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/content`} component={(props : any) => <SiteContentManager {...props} {...this.props}/>}/>
             </Switch>
         )
     }

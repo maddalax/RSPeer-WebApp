@@ -1,4 +1,6 @@
 import React from 'react';
+import {Alert} from "../../Utilities/Alert";
+import {PrivacyPolicy} from "../Pages/Other/PrivacyPolicy";
 
 export class Footer extends React.Component {
 
@@ -7,19 +9,14 @@ export class Footer extends React.Component {
             <footer className="app-footer">
                 <ul className="list-inline">
                     <li className="list-inline-item">
-                        <a className="text-muted" href="#">Support</a>
-                    </li>
-                    <li className="list-inline-item">
-                        <a className="text-muted" href="#">Help Center</a>
-                    </li>
-                    <li className="list-inline-item">
-                        <a className="text-muted" href="#">Privacy</a>
-                    </li>
-                    <li className="list-inline-item">
-                        <a className="text-muted" href="#">Terms of Service</a>
+                        <a className="text-muted" href="javascript:void(0)" onClick={() => {
+                            Alert.modal({
+                                body : <PrivacyPolicy/>
+                            })
+                        }}>Privacy Policy</a>
                     </li>
                 </ul>
-                <div className="copyright"> Copyright © 2018. All right reserved. </div>
+                <div className="copyright"> Copyright © RSPeer 2019. All right reserved. </div>
             </footer>
         );
     }

@@ -3,8 +3,6 @@ import {OwnerPageWrapper} from "../../Components/OwnerPage/OwnerPageWrapper";
 import {UpdateBot} from "./Bot/UpdateBot";
 import {UpdateModScript} from "./Bot/UpdateModScript";
 import {ObfuscateConfig} from "./Bot/ObfuscateConfig";
-import { Editor } from '@tinymce/tinymce-react';
-import {SiteContentManager} from "./SiteContentManager";
 
 export class AdministrationDashboard extends React.Component {
 
@@ -35,15 +33,6 @@ export class AdministrationDashboard extends React.Component {
                    <ObfuscateConfig/>
                </div>
            </div>
-           <div className="card">
-               <div className="card-header">
-                   Test
-               </div>
-               <div className="card-body">
-                <SiteContentManager/>
-               </div>
-           </div>
-           
        </OwnerPageWrapper>
     }
 }

@@ -62,7 +62,7 @@ export class Modal extends React.Component<Props, State> {
                         {!this.props.hideButtons && <React.Fragment>
                             {!this.state.processing && <div className="modal-footer">
                                 <button onClick={this.onCancel} type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button onClick={this.onConfirm} type="button" className="btn btn-primary">Confirm</button>
+                                <button onClick={this.onConfirm} type="button" className="btn btn-primary">OK</button>
                             </div>}
                             {this.state.processing && <div className="modal-footer">
                                 <button type="button" className="btn btn-primary">Processing...</button>
