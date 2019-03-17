@@ -33,7 +33,6 @@ export class AddModifyScript extends React.Component<Props | any, State> {
     constructor(props: any) {
         super(props);
         const script: ScriptDto = props.script;
-        console.log(script);
         this.state = {
             scriptId: script != null ? script.id : -1,
             categories: [],

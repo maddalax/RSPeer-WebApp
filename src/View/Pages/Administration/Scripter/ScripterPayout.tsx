@@ -22,7 +22,6 @@ export class ScripterPayout extends React.Component<any, State> {
 
     async componentDidMount() {
         const payouts = await this.api.get('adminScripterPayout/calculate');
-        console.log(payouts);
         if (Array.isArray(payouts)) {
             this.setState({payouts});
         }
@@ -60,6 +59,24 @@ export class ScripterPayout extends React.Component<any, State> {
           </div>
       })  
     };
+    
+    payout = async (e : any, payout : ScripterPayoutDto) => {
+        e.preventDefault();
+        const email = window.prompt("Enter the paypal email address you paid out to for " + payout.scripter.username + ".");
+        if(!email) {
+            return Alert.show("Invalid email address.")
+        }
+        const confirm = window.confirm(`Please confirm that you paid out $${Util.formatNumber(payout.amountToPayout.toString())}.`);
+        if(!confirm) {
+            return;
+        }
+        const result = await this.api.post("adminScripterPayout/complete", payout);
+        if(result.error) {
+            return Alert.show(result.error);
+        }
+        Alert.success("Successfully confirmed pay out to " + payout.scripter.username + ".")
+        this.componentDidMount();
+    };
 
     render() {
         return <div>
@@ -93,8 +110,7 @@ export class ScripterPayout extends React.Component<any, State> {
                                         style={{color: '#e05a4c'}}>${Util.formatNumber(o.amountToPayout.toString())} USD</span></strong>
                                     </p>
                                     <p><a href={"#"} onClick={(e) => this.showOrders(e, o)}>View Orders</a></p>
-                                    <p><a href={"#"} onClick={(e) => this.showOrders(e, o)}>Pay Out</a></p>
-
+                                    <p><a href={"#"} onClick={(e) => this.payout(e, o)}>Click To Confirm Pay Out</a></p>
                                 </div>
                             </div>
                         </div>

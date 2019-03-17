@@ -2,33 +2,56 @@ import React from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {Util} from "../../Utilities/Util";
 import {HttpUtil} from "../../Utilities/HttpUtil";
+import {User} from "../../Models/User";
+import {ApiService} from "../../Common/ApiService";
 
 export type HeaderProps = {
     user: any,
-    allowedInstances : number,
-    totalClientCount : number
+    allowedInstances: number
 }
 
-export class Header extends React.Component<HeaderProps | any, any> {
+type State = {
+    totalClientCount: number,
+    interval: any
+}
+
+export class Header extends React.Component<HeaderProps | any, State> {
+
+    private readonly api: ApiService;
 
     constructor(props: HeaderProps | any) {
         super(props);
+        this.api = new ApiService();
+        this.state = {
+            totalClientCount: 0,
+            interval: null
+        }
     }
 
     async componentDidMount() {
         const isPaypalRedirect = HttpUtil.getParameterByName("paymentId") != null;
-        if(isPaypalRedirect) {
+        if (isPaypalRedirect) {
             return this.props.history.push('/store/process')
         }
+        await this.setConnectedCount();
+        if (!this.state.interval) {
+            const interval = setInterval(this.setConnectedCount, 300000);
+            this.setState({interval});
+        }
+    }
+    
+    componentWillUnmount(): void {
+        clearInterval(this.state.interval);
     }
 
-    async componentDidUpdate() {
-    }
+    private setConnectedCount = async () => {
+        const totalClientCount = await this.api.get("stats/connected");
+        this.setState({totalClientCount})
+    };
 
     private logout = () => {
         localStorage.removeItem("rspeer_session");
         sessionStorage.removeItem("rspeer_session");
-        this.setState({user: null});
         this.props.logoutCallback();
         this.props.history.push('/login')
     };
@@ -65,14 +88,17 @@ export class Header extends React.Component<HeaderProps | any, any> {
                         {/* .nav */}
                         <ul className="header-nav nav">
                             <li className="nav-item dropdown header-nav-dropdown">
-                                <a className="nav-link" href="#">Clients Online: <strong>{Util.formatNumber(this.props.totalClientCount)}</strong></a>
+                                <a className="nav-link" href="#">Clients
+                                    Online: <strong>{Util.formatNumber(this.state.totalClientCount.toString())}</strong></a>
                             </li>
                             {/* .nav-item */}
                             {this.props.user && <li className="nav-item dropdown header-nav-dropdown">
-                                <a className="nav-link" href="#">Tokens: <strong>{Util.formatNumber(this.props.user.balance)}</strong></a>
+                                <a className="nav-link"
+                                   href="#">Tokens: <strong>{Util.formatNumber(this.props.user.balance)}</strong></a>
                             </li>}
                             {this.props.user && <li className="nav-item dropdown header-nav-dropdown">
-                                <a className="nav-link" href="#">Instances Allowed: <strong>{this.formatInstances()}</strong></a>
+                                <a className="nav-link" href="#">Instances
+                                    Allowed: <strong>{this.formatInstances()}</strong></a>
                             </li>}
                             {/* /.nav-item */}
                             {/* .nav-item */}
@@ -224,14 +250,16 @@ export class Header extends React.Component<HeaderProps | any, any> {
                                 <a className="dropdown-item"
                                    href="javascript:void(0)" onClick={this.logout}><span
                                     className="dropdown-icon oi oi-account-logout"/> Logout</a>
-                                <div className="dropdown-divider"/><a
-                                className="dropdown-item" href="#">Tokens: {Util.formatNumber(this.props.user.balance)}</a>
+                                <div className="dropdown-divider"/>
+                                <a
+                                    className="dropdown-item"
+                                    href="#">Tokens: {Util.formatNumber(this.props.user.balance)}</a>
                             </div>
                             {/* /.dropdown-menu */}
                         </div>}
                         {!this.props.user && <div className="dropdown">
                             <button onClick={this.logout} className="btn-account d-none d-md-flex" type="button">
-                                    <span className="account-name">Sign In</span>
+                                <span className="account-name">Sign In</span>
                             </button>
                         </div>}
                         {/* /.btn-account */}

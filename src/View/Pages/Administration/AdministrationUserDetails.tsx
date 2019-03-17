@@ -17,11 +17,10 @@ export class AdministrationUserDetails extends React.Component<any, State> {
 
     constructor(props: any) {
         super(props);
-        const user = localStorage.getItem("adminUserSearch") || null;
         this.api = new ApiService();
         this.state = {
             query: '',
-            user: user != null ? JSON.parse(user) : null,
+            user: null,
             results: []
         }
     }
@@ -261,6 +260,10 @@ class OrdersView extends React.Component<Props, any> {
     }
 
     refund = async (order: any) => {
+        const confirm = await window.confirm("Are you sure you want to refund this order?");
+        if(!confirm) {
+            return;
+        }
         this.setState({refunding: order.id});
         const refund = await this.api.post("adminOrder/refund", {
             orderId: order.id
