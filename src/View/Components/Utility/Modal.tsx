@@ -6,7 +6,8 @@ type Props = {
     onConfirm: () => any,
     onCancel: () => any
     title : any,
-    hideButtons : boolean
+    hideButtons : boolean,
+    width : number
 }
 
 type State = {
@@ -48,7 +49,7 @@ export class Modal extends React.Component<Props, State> {
     render() {
         return <div>
             <div style={{display : 'block', opacity : 100}} className="modal fade" id="exampleModalCenter" tabIndex={-1} role="dialog">
-                <div className="modal-dialog modal-dialog-centered" role="document" style={{maxWidth : '80%'}}>
+                <div className="modal-dialog modal-dialog-centered" role="document" style={{maxWidth : '80%', width : `${this.props.width}%`}}>
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="exampleModalCenterTitle">{this.props.title}</h5>

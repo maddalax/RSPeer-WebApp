@@ -43,6 +43,18 @@ export interface Script {
     scriptContent: null;
 }
 
+export interface ScriptAccessDto {
+    id : number;
+    userId : number;
+    orderId : number;
+    timestamp : string;
+    expiration? : string;
+    isExpired : boolean;
+    recurring : boolean;
+    instances? : number;
+    script : ScriptDto;
+}
+
 export interface ScripterInfo {
     gitlabUsername : string;
     gitlabUserId : string;

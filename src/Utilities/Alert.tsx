@@ -39,10 +39,10 @@ export class Alert {
         );
     }
 
-    public static modal({title, body, onConfirm, onCancel, hideButtons} : any) {
+    public static modal({title, body, onConfirm, onCancel, hideButtons, width = 100} : any) {
         const container = document.getElementById('modal') as any;
         ReactDOM.render(
-            <Modal title={title} body={body} onConfirm={onConfirm} onCancel={onCancel} hideButtons={hideButtons}/>, 
+            <Modal title={title} body={body} onConfirm={onConfirm} onCancel={onCancel} hideButtons={hideButtons} width={width}/>, 
             container
         );
     }

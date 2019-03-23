@@ -72,6 +72,26 @@ export class StoreMenuItem extends React.Component {
     }
 }
 
+export class UserCenter extends React.Component {
+    render(): any {
+        return (<li className="menu-item has-child">
+            <a href="#" className="menu-link"><span className="menu-icon fas fa-user"/> <span
+                className="menu-text">User Center</span></a>
+            <ul className="menu">
+                <li className="menu-item">
+                    <Link to={"/user/orders"} className="menu-link">View Orders</Link>
+                </li>
+                <li className="menu-item">
+                    <Link to={"/user/balanceChanges"} className="menu-link">Balance Changes</Link>
+                </li>
+                <li className="menu-item">
+                    <Link to={"/user/scriptAccess"} className="menu-link">Script Access</Link>
+                </li>
+            </ul>
+        </li>);
+    }
+}
+
 export class DeveloperCenter extends React.Component {
     render(): any {
         return (<li className="menu-item has-child">

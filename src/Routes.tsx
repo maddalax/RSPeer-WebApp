@@ -21,6 +21,9 @@ import {AdministrationUserDetails} from "./View/Pages/Administration/Administrat
 import {AdministrationScriptList} from "./View/Pages/Administration/Scripts/AdministrationScriptList";
 import {ScripterPayout} from "./View/Pages/Administration/Scripter/ScripterPayout";
 import {SiteContentManager} from "./View/Pages/Administration/Content/SiteContentManager";
+import {UserCenterViewOrders} from "./View/Pages/UserCenter/UserCenterViewOrders";
+import {UserCenterViewBalanceChanges} from "./View/Pages/UserCenter/UserCenterViewBalanceChanges";
+import {UserCenterViewScriptAccess} from "./View/Pages/UserCenter/UserCenterViewScriptAccess";
 
 export class Routes extends React.Component {
 
@@ -40,6 +43,9 @@ export class Routes extends React.Component {
                 <Route exact path={`/developer`} component={(props : any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/addScript`} component={(props : any) => <AddModifyScript {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/register`} component={(props : any) => <RegisterGitRepository {...props} {...this.props}/>}/>
+                <Route exact path={`/user/orders`} component={(props : any) => <UserCenterViewOrders {...props} {...this.props}/>}/>
+                <Route exact path={`/user/balanceChanges`} component={(props : any) => <UserCenterViewBalanceChanges {...props} {...this.props}/>}/>
+                <Route exact path={`/user/scriptAccess`} component={(props : any) => <UserCenterViewScriptAccess {...props} {...this.props}/>}/>
                 <Route exact path={`/bot/management`} component={(props : any) => <BotPanelDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/bot/management/qs`} component={(props : any) => <QuickLaunch {...props} {...this.props}/>}/>
                 <Route exact path={`/bot/management/proxy`} component={(props : any) => <ProxyManager {...props} {...this.props}/>}/>

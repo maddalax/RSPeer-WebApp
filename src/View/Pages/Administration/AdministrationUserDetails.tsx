@@ -4,6 +4,9 @@ import {AddRemove, User} from "../../../Models/User";
 import {ApiService} from "../../../Common/ApiService";
 import {Util} from "../../../Utilities/Util";
 import {Alert} from "../../../Utilities/Alert";
+import {Order} from "../../../Models/Order";
+import {BalanceChange} from "../../../Models/BalanceChange";
+import {OrderService} from "../../../Services/Store/OrderService";
 
 type State = {
     query: string,
@@ -259,25 +262,44 @@ class OrdersView extends React.Component<Props, any> {
         }
     }
 
-    refund = async (order: any) => {
+    refund = async (order: Order) => {
         const confirm = await window.confirm("Are you sure you want to refund this order?");
         if(!confirm) {
             return;
         }
-        this.setState({refunding: order.id});
-        const refund = await this.api.post("adminOrder/refund", {
-            orderId: order.id
-        });
-        if (refund.error) {
-            return Alert.show(refund.error);
+        const doRefund = async () => {
+            this.setState({refunding: order.id});
+            const refund = await this.api.post("adminOrder/refund", {
+                orderId: order.id
+            });
+            if (refund.error) {
+                this.setState({refunding: 0});
+                return Alert.show(refund.error);
+            }
+            this.setState((prev : any) => {
+                const index = prev.orders.indexOf(order);
+                order.isRefunded = true;
+                prev.orders[index] = order;
+                return prev;
+            });
+            this.setState({refunding: 0});
+        };
+        
+        if(order.item.sku === "tokens") {
+            Alert.modal({
+                title : `Refunding ${order.item.name}`,
+                width : 50,
+                body : <div>
+                    <p>To refund tokens, you must manually refund the paypal via paypal.com</p>
+                    <p>Please click OK below once you have done so. <strong>DO NOT</strong> accept this if you did not manually refund the paypal.</p>
+                    <p>Paypal Order Id: <strong>{order.paypalId}</strong></p>
+                </div>,
+                onConfirm : doRefund
+            })
         }
-        this.setState((prev : any) => {
-            const index = prev.orders.indexOf(order);
-            order.isRefunded = true;
-            prev.orders[index] = order;
-            return prev;
-        });
-        this.setState({refunding: 0});
+        else {
+            await doRefund();
+        }
     };
 
     render() {
@@ -337,10 +359,12 @@ class OrdersView extends React.Component<Props, any> {
 class BalanceChanges extends React.Component<Props, any> {
 
     private readonly api: ApiService;
+    private readonly orderService : OrderService;
 
     constructor(props: Props) {
         super(props);
         this.api = new ApiService();
+        this.orderService = new OrderService(this.api);
         this.state = {
             changes: []
         }
@@ -360,6 +384,11 @@ class BalanceChanges extends React.Component<Props, any> {
         }
     }
 
+    showOrder = async (e : any, orderId : number) => {
+        e.preventDefault();
+        await this.orderService.showOrder(orderId);
+    };
+
     render() {
         return (
             <div>
@@ -377,16 +406,17 @@ class BalanceChanges extends React.Component<Props, any> {
                         </tr>
                         </thead>
                         <tbody>
-                        {this.state.changes.map((o: any) => {
-                            const isRemove = o.newBalance < o.oldBalance;
+                        {this.state.changes.map((o: BalanceChange) => {
+                            o.difference = o.newBalance - o.oldBalance;
                             return (<tr>
                                 <td>{Util.formatDate(o.timestamp, true)}</td>
-                                <td className={isRemove ? 'table-danger' : 'table-success'}>
-                                    <span style={{color : 'black'}}>{isRemove ? 'Remove' : 'Add'}</span>
+                                <td>
+                                    <span style={{color : o.difference < 0 ? '#ea6759' : '#0de25a'}}>{Util.formatNumber(o.difference.toString())}</span>
                                 </td>
-                                <td>{Util.formatNumber(o.oldBalance)}</td>
-                                <td>{Util.formatNumber(o.newBalance)}</td>
-                                <td>{o.orderId || ''}</td>
+                                <td>{Util.formatNumber(o.oldBalance.toString())}</td>
+                                <td>{Util.formatNumber(o.newBalance.toString())}</td>
+                                {o.orderId != 0 && <td><a href={"javascript:void(0)"} onClick={(e) => this.showOrder(e, o.orderId)}>View Order ({o.orderId})</a></td>}
+                                {o.orderId == 0 && <td>N/A</td>}
                                 <td>{o.adminUser != null ? o.adminUser.username : (o.adminUserId || '')}</td>
                                 <td>{o.reason}</td>
                             </tr>)

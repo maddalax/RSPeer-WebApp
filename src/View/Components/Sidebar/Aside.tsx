@@ -5,7 +5,7 @@ import {
     BotPanelMenuItem,
     DeveloperCenter,
     ScriptsMenuItem,
-    StoreMenuItem
+    StoreMenuItem, UserCenter
 } from "./Children/AsideMenuItems";
 import {withRouter} from "react-router";
 import {User} from "../../../Models/User";
@@ -31,6 +31,7 @@ export class Aside extends React.Component<Props | any, any> {
                                 <BotPanelMenuItem {...this.props}/>
                                 <ScriptsMenuItem {...this.props}/>
                                 <StoreMenuItem {...this.props}/>
+                                <UserCenter {...this.props}/>
                                 <li className="menu-header">Script Development</li>
                                 <DeveloperCenter {...this.props}/>
                                 {this.props.user && this.props.user.isOwner && <li className="menu-header">Administration</li>}
