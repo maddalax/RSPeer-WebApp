@@ -98,8 +98,11 @@ export class Header extends React.Component<HeaderProps | any, State> {
                                 <button className="btn-account d-none d-md-flex" type="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false"> <span
                                     className="account-summary pr-lg-4 d-none d-lg-block"><span
-                                    className="account-name">{this.props.user.username}</span> <span
-                                    className="account-description">Director</span></span></button>
+                                    className="account-name">{this.props.user.username}</span> 
+                                    {this.props.user.isOwner && <span className="account-description">Director</span>}
+                                    {!this.props.user.isOwner && <span className="account-description">Member</span>}
+                                </span>
+                                </button>
                                 <div className="dropdown-arrow dropdown-arrow-left"/>
                                 <div className="dropdown-menu">
                                     {<h6

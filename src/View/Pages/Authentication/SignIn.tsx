@@ -101,7 +101,7 @@ export class SignIn extends React.Component<any, State> {
                     <div className="form-group text-center">
                         <div className="custom-control custom-control-inline custom-checkbox">
                             <input onChange={this.setKeepSignedIn} type="checkbox" className="custom-control-input" id="remember-me"/> <label
-                            className="custom-control-label" htmlFor="remember-me">Keep me sign in</label>
+                            className="custom-control-label" htmlFor="remember-me">Keep me signed in</label>
                         </div>
                     </div>
                     <div className="text-center pt-3">

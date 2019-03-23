@@ -84,7 +84,6 @@ export class UserCenterViewScriptAccess extends React.Component<any, State> {
                                 {o.script.type === ScriptType.Premium && <td><a href={"javascript:void(0)"} onClick={(e) => this.repurchase(e, o)}>Renew</a></td>}
                                 {o.script.type !== ScriptType.Premium && <td/>}
                                 <td>{o.script.name}</td>
-                                <td>{o.script.name}</td>
                                 <td>{o.script.typeFormatted}</td>
                                 <td>{o.instances != null ? Util.formatNumber(o.instances.toString()) : 'Unlimited'}</td>
                                 <td>{o.isExpired ? 'Yes' : 'No'}</td>
