@@ -32,15 +32,10 @@ export class ConnectedLaunchers extends React.Component<any, State> {
 
     async componentDidMount() {
         this.load();
-        this.internal = setInterval(this.load, 5000)
-    }
-
-    componentWillUnmount(): void {
-        clearInterval(this.internal);
     }
 
     getClients = (machineName: string) => {
-        return this.state.clients[machineName] || [];
+        return this.state.clients[machineName.toLowerCase().trim()] || [];
     };
 
     viewLogs = (launcherId: string, hostName: string) => {
@@ -101,10 +96,14 @@ export class ConnectedLaunchers extends React.Component<any, State> {
         if(Array.isArray(clients)) {
             const mapped: any = {};
             clients.forEach((c: any) => {
-                if (!mapped[c.machineName]) {
-                    mapped[c.machineName] = [];
+                if(!c.machineName) {
+                    return;
                 }
-                mapped[c.machineName].push(c);
+                const name = c.machineName.toLowerCase().trim();
+                if (!mapped[name]) {
+                    mapped[name] = [];
+                }
+                mapped[name].push(c);
             });
             this.setState({clients: mapped});
         }
@@ -121,8 +120,12 @@ export class ConnectedLaunchers extends React.Component<any, State> {
         const launcherCount = Object.keys(this.state.launchers).length;
         return <div>
             <h3>Connected Launchers ({launcherCount})</h3>
+            <br/>
             <button type="button" className="btn btn-primary" onClick={this.load}>Refresh</button>
-            <br/><br/>
+            <small id="refreshHelp" className="form-text text-muted">Auto refresh is disabled, click refresh
+                to update connected launchers and connected clients.
+            </small>
+            <br/>
             {launcherCount > 0 &&
             <div><p>You currently have {launcherCount} launcher(s) open. You may launch clients from any of the launchers
                 by clicking the launch client(s) button.</p>
@@ -164,7 +167,9 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                         <table className="table table-bordered">
                             <thead>
                             <tr>
+                                <th scope="col">Email</th>
                                 <th scope="col">RSN</th>
+                                <th scope="col">Proxy Ip</th>
                                 <th scope="col">Script</th>
                                 <th scope="col">Options</th>
                             </tr>
@@ -172,7 +177,9 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                             <tbody>
                             {clients.map((i: any, index: number) => {
                                 return <tr key={i.id}>
+                                    <td>{i.runescapeEmail || "Not Logged In"}</td>
                                     <td>{i.rsn || "Not Logged In"}</td>
+                                    <td>{i.proxyIp || "No Proxy"}</td>
                                     <td>{i.scriptName || "No Script"}</td>
                                     <td>
                                         <button type="button" className="btn btn-danger"
@@ -183,6 +190,8 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                             })}
                             {clients.length === 0 && <tr key={launcher.host}>
                                 <td>You currently have no clients running on this computer.</td>
+                                <td/>
+                                <td/>
                                 <td/>
                                 <td/>
                             </tr>}
