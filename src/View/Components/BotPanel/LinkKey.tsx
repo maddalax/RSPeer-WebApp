@@ -27,7 +27,7 @@ export class LinkKey extends React.Component<any, any> {
         if (!confirm2) {
             return;
         }
-        const key = await this.api.post('botLauncher/getKey', {});
+        const key = await this.api.post('botLauncher/updateKey', {});
         this.setState({key});
     };
 
