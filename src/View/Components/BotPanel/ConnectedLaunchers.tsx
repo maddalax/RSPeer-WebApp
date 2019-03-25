@@ -15,7 +15,6 @@ type State = {
 export class ConnectedLaunchers extends React.Component<any, State> {
 
     private readonly api: ApiService;
-    private internal : any;
 
     constructor(props: any) {
         super(props);

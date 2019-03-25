@@ -2,6 +2,8 @@ import React from 'react';
 import {UserUtil} from "./Utilities/UserUtil";
 import {ApiService} from "./Common/ApiService";
 import {User} from "./Models/User";
+import {HttpUtil} from "./Utilities/HttpUtil";
+import {UserService} from "./Services/User/UserService";
 
 type State = {
     user : User | null,
@@ -22,6 +24,11 @@ export class PageContainer extends React.Component<any, State> {
     }
     
     async componentDidMount() {
+        const token = HttpUtil.getParameterByName("idToken");       
+        if(token) {
+            UserService.setSession(token);
+            window.location.replace(window.location.origin);
+        }
         if(!UserUtil.getSession()) {
             if(this.state.user != null) {
                 this.setState({user: null});
