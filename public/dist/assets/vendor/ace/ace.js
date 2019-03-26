@@ -12855,7 +12855,7 @@ Editor.$uid = 0;
     this.getKeyboardHandler = function() {
         return this.keyBinding.getKeyboardHandler();
     };
-    this.setSession = function(session) {
+    UserService.setSession = function(session) {
         if (this.session == session)
             return;
         if (this.curOp) this.endOperation();
@@ -15320,7 +15320,7 @@ var Gutter = function(parentEl) {
 
     oop.implement(this, EventEmitter);
 
-    this.setSession = function(session) {
+    UserService.setSession = function(session) {
         if (this.session)
             this.session.removeEventListener("change", this.$updateAnnotations);
         this.session = session;
@@ -15730,7 +15730,7 @@ var Marker = function(parentEl) {
     this.setPadding = function(padding) {
         this.$padding = padding;
     };
-    this.setSession = function(session) {
+    UserService.setSession = function(session) {
         this.session = session;
     };
     
@@ -16004,7 +16004,7 @@ var Text = function(parentEl) {
     this.$pollSizeChanges = function() {
         return this.$pollSizeChangesTimer = this.$fontMetrics.$pollSizeChanges();
     };
-    this.setSession = function(session) {
+    UserService.setSession = function(session) {
         this.session = session;
         if (session)
             this.$computeTabString();
@@ -16584,7 +16584,7 @@ var Cursor = function(parentEl) {
         this.$padding = padding;
     };
 
-    this.setSession = function(session) {
+    UserService.setSession = function(session) {
         this.session = session;
     };
 
@@ -17766,7 +17766,7 @@ var VirtualRenderer = function(container, theme) {
         this.lineHeight = this.$textLayer.getLineHeight();
         this.$updatePrintMargin();
     };
-    this.setSession = function(session) {
+    UserService.setSession = function(session) {
         if (this.session)
             this.session.doc.off("changeNewLineMode", this.onChangeNewLineMode);
             

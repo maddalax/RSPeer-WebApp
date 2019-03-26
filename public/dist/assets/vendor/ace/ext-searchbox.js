@@ -205,7 +205,7 @@ var SearchBox = function(editor, range, showReplaceForm) {
         this.editor = editor;
     };
     
-    this.setSession = function(e) {
+    UserService.setSession = function(e) {
         this.searchRange = null;
         this.$syncOptions(true);
     };

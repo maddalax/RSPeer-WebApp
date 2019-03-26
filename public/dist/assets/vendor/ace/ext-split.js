@@ -133,7 +133,7 @@ var Split = function(container, theme, splits) {
 
         return s;
     };
-    this.setSession = function(session, idx) {
+    UserService.setSession = function(session, idx) {
         var editor;
         if (idx == null) {
             editor = this.$cEditor;
