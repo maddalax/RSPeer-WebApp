@@ -22,7 +22,7 @@ export class BotPanelDashboard extends React.Component<Props, State> {
     render() {
         if(!this.props.user) {
             return <div>
-                <h4>You must be logged in to view this page.</h4>
+                <h5>Click sign in on the top right to view this page.</h5>
             </div>
         }
         return (

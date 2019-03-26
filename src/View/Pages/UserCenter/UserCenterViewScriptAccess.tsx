@@ -25,6 +25,9 @@ export class UserCenterViewScriptAccess extends React.Component<any, State> {
     }
 
     async componentDidMount() {
+        if(!this.props.user) {
+            return;
+        }
         const access = await this.api.post("script/listAccess", {
             includeScript : true,
             nonExpired : this.state.filter === 'nonExpired'
@@ -58,6 +61,11 @@ export class UserCenterViewScriptAccess extends React.Component<any, State> {
     };
     
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         return <div>
             <div>
                 <h6>Currently viewing <strong>{this.state.filter === 'all' ? 'all' : 'only non expired'} script access.</strong></h6>

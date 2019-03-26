@@ -21,7 +21,9 @@ export class ProxyManager extends React.Component<any, any> {
     }
 
     async componentDidMount() {
-        this.loadProxies();
+        if(this.props.user) {
+            this.loadProxies();
+        }
     }
 
     loadProxies = async () => {
@@ -44,6 +46,11 @@ export class ProxyManager extends React.Component<any, any> {
     };
 
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         if(this.state.adding) {
             return <AddProxyModal onClose={this.onClose} proxy={this.state.selectedProxy}/>;
         }

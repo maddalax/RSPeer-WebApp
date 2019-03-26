@@ -29,6 +29,9 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
     }
 
     async componentDidMount() {
+        if(!this.props.user) {
+            return;
+        }
         const scripterInfo = await this.api.get("scriptDevelopment/scripterInfo");
         this.setState({scripterInfo});
         const scripts: ScriptDto[] = await this.api.get("scriptDevelopment/listForScripter");
@@ -90,6 +93,11 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
     };
 
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         return <div>
             <h6>Script Management Dashboard</h6>
             <hr/>

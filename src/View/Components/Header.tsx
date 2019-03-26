@@ -53,7 +53,7 @@ export class Header extends React.Component<HeaderProps | any, State> {
         localStorage.removeItem("rspeer_session");
         sessionStorage.removeItem("rspeer_session");
         this.props.logoutCallback();
-        this.props.history.push('/login')
+        this.props.history.push('/')
     };
 
     private formatInstances = () => {

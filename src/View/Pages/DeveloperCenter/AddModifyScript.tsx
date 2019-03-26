@@ -140,6 +140,11 @@ export class AddModifyScript extends React.Component<Props | any, State> {
     };
 
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         // @ts-ignore
         return <div>
             <div className="card" style={{maxHeight: '100%'}}>

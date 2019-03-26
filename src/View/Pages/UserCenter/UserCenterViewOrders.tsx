@@ -22,6 +22,9 @@ export class UserCenterViewOrders extends React.Component<any, State> {
     }
 
     async componentDidMount() {
+        if(!this.props.user) {
+            return;
+        }
         const orders = await this.api.get("order/list");
         if (Array.isArray(orders)) {
             this.setState({orders});
@@ -50,6 +53,11 @@ export class UserCenterViewOrders extends React.Component<any, State> {
     };
 
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         return <div>
             <div>
                 <p>Total Orders: <strong>{this.state.orders.length}</strong></p>

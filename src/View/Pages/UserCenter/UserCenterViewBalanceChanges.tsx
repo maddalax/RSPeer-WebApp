@@ -27,6 +27,9 @@ export class UserCenterViewBalanceChanges extends React.Component<any, State> {
     }
 
     async componentDidMount() {
+        if(!this.props.user) {
+            return;
+        }
         const changes = await this.api.get("user/balanceChanges");
         if (!Array.isArray(changes)) {
            return;
@@ -53,6 +56,11 @@ export class UserCenterViewBalanceChanges extends React.Component<any, State> {
     };
     
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         return <div>
             <p>Total Balance Added: {Util.formatNumber(this.state.added.toString())}</p>
             <p>Total Balance Removed: {Util.formatNumber(this.state.removed.toString())}</p>

@@ -22,7 +22,9 @@ export class QuickLaunch extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        this.loadQuickLaunches();
+        if(this.props.user) {
+            this.loadQuickLaunches();
+        }
     }
 
     loadQuickLaunches = async () => {
@@ -106,6 +108,11 @@ export class QuickLaunch extends React.Component<any, any> {
     };
 
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         if (this.state.addingClient) {
             return <AddClientModal qs={this.state.selectedQs} client={this.state.selectedClient}
                                    onClose={this.onClose}/>;

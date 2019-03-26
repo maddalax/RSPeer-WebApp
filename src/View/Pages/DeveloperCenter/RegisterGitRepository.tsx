@@ -68,6 +68,11 @@ export class RegisterGitRepository extends React.Component<any, State> {
     };
 
     render(): any {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         if(this.state.creating) {
             return <div>
                 <p>Creating GitLab script repository projects... please wait.</p>

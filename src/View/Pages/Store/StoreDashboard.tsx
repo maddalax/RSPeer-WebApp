@@ -1,11 +1,12 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
+import {Alert} from "../../../Utilities/Alert";
 
 type State = {
     tokenQuantities: number[],
     processing: number,
-    instancesToPurchase : string,
-    instancePrice : number
+    instancesToPurchase: string,
+    instancePrice: number
 }
 
 export class StoreDashboard extends React.Component<any, State> {
@@ -18,8 +19,8 @@ export class StoreDashboard extends React.Component<any, State> {
         this.state = {
             tokenQuantities: [],
             processing: 0,
-            instancesToPurchase : '5',
-            instancePrice : 100
+            instancesToPurchase: '5',
+            instancePrice: 100
         }
     }
 
@@ -27,20 +28,34 @@ export class StoreDashboard extends React.Component<any, State> {
         this.setState({tokenQuantities: [500, 1000, 1500, 2000, 2500, 5000, 7500]})
     }
 
+    private assertCanPurchase = () => {
+        if (this.props.user) {
+            return true;
+        }
+        this.props.history.push('/login');
+        return false;
+    };
+
     private purchaseInstances = async () => {
-        this.props.history.push(`/store/checkout?sku=instances&quantity=${this.state.instancesToPurchase}`)
+        if (this.assertCanPurchase()) {
+            this.props.history.push(`/store/checkout?sku=instances&quantity=${this.state.instancesToPurchase}`)
+        }
     };
 
     private purchaseUnlimitedInstances = async () => {
-        this.props.history.push(`/store/checkout?sku=unlimitedInstances&quantity=1`)
+        if (this.assertCanPurchase()) {
+            this.props.history.push(`/store/checkout?sku=unlimitedInstances&quantity=1`)
+        }
     };
 
-    private setInstancesToPurchase = (e : any) => {
-        this.setState({instancesToPurchase : e.target.value})
+    private setInstancesToPurchase = (e: any) => {
+        this.setState({instancesToPurchase: e.target.value})
     };
 
     private purchaseTokens = async (quantity: number) => {
-        this.props.history.push(`/store/checkout?sku=tokens&quantity=${quantity}`)
+        if (this.assertCanPurchase()) {
+            this.props.history.push(`/store/checkout?sku=tokens&quantity=${quantity}`)
+        }
     };
 
     render() {
@@ -72,14 +87,24 @@ export class StoreDashboard extends React.Component<any, State> {
                         </div>
                         <input type="number" className="form-control"
                                min={1}
-                               aria-describedby="basic-addon3" onChange={this.setInstancesToPurchase} value={this.state.instancesToPurchase}/>
+                               aria-describedby="basic-addon3" onChange={this.setInstancesToPurchase}
+                               value={this.state.instancesToPurchase}/>
                     </div>
-                    {isNaN(parseInt(this.state.instancesToPurchase)) && <button type={"button"} className={"btn btn-primary"}>Type in a quantity of instances to purchase.</button>}
-                    {!isNaN(parseInt(this.state.instancesToPurchase)) && <button onClick={this.purchaseInstances} type={"button"} className={"btn btn-primary"}>Purchase {this.state.instancesToPurchase} Instances Now For {parseInt(this.state.instancesToPurchase) * this.state.instancePrice} Tokens</button>}
+                    {isNaN(parseInt(this.state.instancesToPurchase)) &&
+                    <button type={"button"} className={"btn btn-primary"}>Type in a quantity of instances to
+                        purchase.</button>}
+                    {!isNaN(parseInt(this.state.instancesToPurchase)) &&
+                    <button onClick={this.purchaseInstances} type={"button"}
+                            className={"btn btn-primary"}>Purchase {this.state.instancesToPurchase} Instances Now
+                        For {parseInt(this.state.instancesToPurchase) * this.state.instancePrice} Tokens</button>}
                     <br/><br/>
-                    <p>Running a large amount of clients? Purchase unlimited instances now for <strong>7500</strong> tokens per month.</p>
-                    <p><strong>Note: </strong> Unlimited instances have the same expiration date as regular instances, you just will not be limited to how many you can actually run.</p>
-                    <button onClick={this.purchaseUnlimitedInstances} type={"button"} className={"btn btn-success"}>Purchase Unlimited Instances For 7500 Tokens</button>
+                    <p>Running a large amount of clients? Purchase unlimited instances now
+                        for <strong>7500</strong> tokens per month.</p>
+                    <p><strong>Note: </strong> Unlimited instances have the same expiration date as regular instances,
+                        you just will not be limited to how many you can actually run.</p>
+                    <button onClick={this.purchaseUnlimitedInstances} type={"button"}
+                            className={"btn btn-success"}>Purchase Unlimited Instances For 7500 Tokens
+                    </button>
                     <br/><br/>
                 </div>
             </div>

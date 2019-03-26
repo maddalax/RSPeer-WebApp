@@ -1,5 +1,4 @@
 import React from 'react';
-import toastr from 'toastr';
 import {ApiService} from "../../../Common/ApiService";
 import {LogService} from "../../../Services/BotPanel/LogService";
 
@@ -28,6 +27,9 @@ export class ViewLogs extends React.Component<any, any> {
     };
 
     async componentDidMount() {
+        if(!this.props.user) {
+            return;
+        }
         const launcher = this.props.match.params.launcherId;
         if (!launcher) {
             const launchers = await this.api.get("botLauncher/connected");
@@ -103,6 +105,11 @@ export class ViewLogs extends React.Component<any, any> {
     };
     
     render() {
+        if(!this.props.user) {
+            return <div>
+                <h5>Click sign in on the top right to view this page.</h5>
+            </div>
+        }
         if(!this.state.launcher) {
             return <div>
                 <div className={"container"}>
