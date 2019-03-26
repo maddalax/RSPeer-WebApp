@@ -56,6 +56,10 @@ export class Header extends React.Component<HeaderProps | any, State> {
         this.props.history.push('/')
     };
 
+    private login = () => {
+        this.props.history.push('/login')
+    };
+    
     private formatInstances = () => {
         const count = this.props.allowedInstances;
         return count >= 1000000 ? 'Unlimited' : Util.formatNumber(count);
@@ -120,7 +124,7 @@ export class Header extends React.Component<HeaderProps | any, State> {
                                 </div>
                             </div>}
                             {!this.props.user && <div className="dropdown">
-                                <button onClick={this.logout} className="btn-account d-none d-md-flex" type="button">
+                                <button onClick={this.login} className="btn-account d-none d-md-flex" type="button">
                                     <span className="account-name">Sign In</span>
                                 </button>
                             </div>}

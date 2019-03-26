@@ -3,11 +3,14 @@ import {HttpUtil} from "../../../Utilities/HttpUtil";
 import {ApiService} from "../../../Common/ApiService";
 import {OrderStatus, PaymentMethod, StoreItem} from "../../../Models/StoreItem";
 import {Alert} from "../../../Utilities/Alert";
+import {Item} from "../../../Models/Order";
+import {ScriptDto} from "../../../Models/ScriptDto";
 
 type State = {
     sku : string,
     quantity : number,
     item : StoreItem | null,
+    script : ScriptDto | null,
     processing : boolean,
     success : boolean
 }
@@ -22,6 +25,7 @@ export class StoreCheckout extends React.Component<any, State> {
         this.state = {
             sku : HttpUtil.getParameterByName("sku") as string,
             quantity : parseInt(HttpUtil.getParameterByName("quantity") as string),
+            script : null,
             item : null,
             processing : false,
             success : false
@@ -30,7 +34,15 @@ export class StoreCheckout extends React.Component<any, State> {
 
     async componentDidMount() {
         if(this.state.sku) {
-            const item = await this.api.get("store/getItem?sku=" + this.state.sku);
+            const item = await this.api.get("store/getItem?sku=" + this.state.sku) as StoreItem;
+            if(item == null) {
+                return;
+            }
+            if(item.sku.startsWith("premium-script")) {
+                const scriptId = item.sku.replace("premium-script-", "");
+                const script = await this.api.get("script/getScriptById?id=" + scriptId);
+                this.setState({script});
+            }
             this.setState({item})
         }
     }
@@ -96,9 +108,14 @@ export class StoreCheckout extends React.Component<any, State> {
                         <p>{this.state.item.description}</p>
                         <p>Price: <strong>{this.formatPrice()}</strong></p>
                         <p>Quantity: <strong>{this.state.quantity}</strong></p>
-                        <hr className="mb-4" />
-                        <h5 className="mb-3">Additional Information</h5>
-                        <p>{this.state.item.description}</p>
+                        {this.state.script && <div>
+                            <hr className="mb-4" />
+                            <h5 className="mb-3">Additional Information</h5>
+                            <p>Instances Given Per 30 Days: <strong>{this.state.script.instances}</strong></p>
+                            <p>Access Length: <strong>30 Days</strong></p>
+                            <p>Script Developer: <strong>{this.state.script.author}</strong></p>
+                            <p>Script Type: <strong>{this.state.script.typeFormatted}</strong></p>
+                        </div>}
                         <hr className="mb-4" />
                         {!this.state.processing && <button onClick={this.purchaseNow} className="btn btn-primary btn-lg btn-block" type="submit">Purchase Now For {this.formatPrice()}</button>}
                         {this.state.processing && <button className="btn btn-primary btn-lg btn-block" type="submit">Processing... Please Wait.</button>}

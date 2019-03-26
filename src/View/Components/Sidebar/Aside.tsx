@@ -2,7 +2,7 @@ import React from 'react';
 import profile from '../../../assets/images/avatars/profile.jpg';
 import {
     AdminCenter,
-    BotPanelMenuItem,
+    BotPanelMenuItem, Community,
     DeveloperCenter,
     ScriptsMenuItem,
     StoreMenuItem, UserCenter
@@ -32,6 +32,8 @@ export class Aside extends React.Component<Props | any, any> {
                                 <ScriptsMenuItem {...this.props}/>
                                 <StoreMenuItem {...this.props}/>
                                 <UserCenter {...this.props}/>
+                                <li className="menu-header">Community</li>
+                                <Community {...this.props}/>
                                 <li className="menu-header">Script Development</li>
                                 <DeveloperCenter {...this.props}/>
                                 {this.props.user && this.props.user.isOwner && <li className="menu-header">Administration</li>}
