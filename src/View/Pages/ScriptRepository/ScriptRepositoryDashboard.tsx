@@ -283,11 +283,7 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
         await this.props.onAccessChange();
         this.setState({processing: false});
     };
-
-    private onMoreInfo = () => {
-
-    };
-
+    
     render(): any {
         const typeStyles = this.scriptTypeStyles();
         const addButtonText = this.addButtonText();
@@ -320,9 +316,9 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
                                     className={addButtonClass}>{addButtonText}</button>
                         </div>
                         <div className="btn-group" role="group" aria-label="Third group">
-                            <button type="button" style={this.button} onClick={this.onMoreInfo}
+                            <a href={this.props.script.forumThread} target={'_blank'} style={this.button}
                                     className={"btn btn-info"}>More Info
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
