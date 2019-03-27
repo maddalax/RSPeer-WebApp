@@ -13,7 +13,8 @@ type State = {
     orderBy: string,
     category: string,
     [key: string]: any
-    loggedIn: boolean
+    loggedIn: boolean,
+    originalQueryType : string
 }
 
 export class ScriptRepositoryDashboard extends React.Component<any, State> {
@@ -24,11 +25,13 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
         super(props);
         const queryRaw: any = HttpUtil.getParameterByName("q") || "";
         this.apiService = new ApiService();
+        const queryType = ScriptTypes[queryRaw] == null ? 'free' : queryRaw;
         this.state = {
             scripts: [],
             loading: true,
             search: '',
-            queryType: ScriptTypes[queryRaw] == null ? 'free' : queryRaw,
+            originalQueryType : queryType,
+            queryType: queryType,
             orderBy: 'featured',
             category: 'All',
             loggedIn: true
@@ -38,6 +41,17 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
     async componentDidMount() {
         this.setState({loggedIn: UserUtil.getSession() != null});
         this.load();
+    }
+    
+    componentDidUpdate() {
+        const queryRaw: any = HttpUtil.getParameterByName("q") || "";
+        let queryType = ScriptTypes[queryRaw];
+        queryType = queryType == null ? 'free' : queryRaw;
+        if(queryType !== this.state.originalQueryType) {
+            if(this.state.queryType !== queryType) {
+                this.setState({queryType, originalQueryType : queryType}, this.load)
+            }
+        }
     }
 
     private load = async () => {
