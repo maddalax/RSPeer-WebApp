@@ -31,4 +31,6 @@ export class FileConstants {
     public static readonly DASHBOARD_RECENT_NEWS = "dashboard_recent_news.html";
     public static readonly DASHBOARD_QUICK_LINKS = "dashboard_quick_links.html";
     public static readonly PRIVACY_POLICY = "privacy_policy.html";
+    public static readonly GET_STARTED = "get_started.html";
+
 }

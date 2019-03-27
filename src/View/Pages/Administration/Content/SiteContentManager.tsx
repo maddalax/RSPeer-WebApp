@@ -19,10 +19,12 @@ export class SiteContentManager extends React.Component<any, any> {
         const recentNews = await this.fileService.getFile(FileConstants.DASHBOARD_RECENT_NEWS);
         const quickLinks = await this.fileService.getFile(FileConstants.DASHBOARD_QUICK_LINKS);
         const privacyPolicy = await this.fileService.getFile(FileConstants.PRIVACY_POLICY);
+        const getStarted = await this.fileService.getFile(FileConstants.GET_STARTED);
         this.setState((prev: any) => {
             prev.content[FileConstants.DASHBOARD_RECENT_NEWS] = recentNews;
             prev.content[FileConstants.DASHBOARD_QUICK_LINKS] = quickLinks;
             prev.content[FileConstants.PRIVACY_POLICY] = privacyPolicy;
+            prev.content[FileConstants.GET_STARTED] = getStarted;
             return prev;
         })
     }
@@ -47,7 +49,7 @@ export class SiteContentManager extends React.Component<any, any> {
             </div>
             <div className="card-body">
                 <Editor apiKey={this.apiKey} value={this.state.content[name]}
-                        onEditorChange={(content) =>
+                        onEditorChange={(content : any) =>
                             this.onChange(name, content)}/>
                 <br/>
                 <button onClick={(e) => this.onSave(e, name)}
@@ -62,6 +64,7 @@ export class SiteContentManager extends React.Component<any, any> {
             {this.buildEditor("Dashboard Recent News", FileConstants.DASHBOARD_RECENT_NEWS)}
             {this.buildEditor("Quick Links", FileConstants.DASHBOARD_QUICK_LINKS)}
             {this.buildEditor("Privacy Policy", FileConstants.PRIVACY_POLICY)}
+            {this.buildEditor("Getting Started", FileConstants.GET_STARTED)}
         </div>
     }
 

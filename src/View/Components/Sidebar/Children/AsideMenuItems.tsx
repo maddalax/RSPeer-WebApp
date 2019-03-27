@@ -115,7 +115,26 @@ export class DeveloperCenter extends React.Component {
                 <li className="menu-item">
                     <Link to={"/developer/addScript"} className="menu-link">Add New Script</Link>
                 </li>
+                <li className="menu-item">
+                    <a href="https://forums.rspeer.org/topic/54/video-guide-how-to-add-a-script-to-the-rspeer-script-repository-a-step-by-step-video-guide" target={"_blank"} className="menu-link">Setup Guide</a>
+                </li>
+                <li className="menu-item">
+                    <a href="https://forums.rspeer.org/topic/632/compile-rspeer-script-as-a-jar-in-intellij-idea" target={"_blank"} className="menu-link">Building Local Script</a>
+                </li>
             </ul>
+        </li>);
+    }
+}
+
+export class Downloads extends React.Component {
+    render(): any {
+        return (<li className="menu-item">
+            <a href="https://forums.rspeer.org/topic/551/rspeer-download-links" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-desktop"/> <span
+                className="menu-text">Download Client</span></a>
+            <a href="https://ninite.com/adoptjdkx11/" target={"_blank"} className="menu-link"><span className="menu-icon fab fa-java"/> <span
+                className="menu-text">OpenJDK 11</span></a>
+            <a href="https://johann.loefflmann.net/en/software/jarfix/" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-tools"/> <span
+                className="menu-text">Java Jar Fix</span></a>
         </li>);
     }
 }

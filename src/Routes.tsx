@@ -24,6 +24,7 @@ import {SiteContentManager} from "./View/Pages/Administration/Content/SiteConten
 import {UserCenterViewOrders} from "./View/Pages/UserCenter/UserCenterViewOrders";
 import {UserCenterViewBalanceChanges} from "./View/Pages/UserCenter/UserCenterViewBalanceChanges";
 import {UserCenterViewScriptAccess} from "./View/Pages/UserCenter/UserCenterViewScriptAccess";
+import {GettingStarted} from "./View/Pages/GettingStarted";
 
 export class Routes extends React.Component {
     
@@ -31,6 +32,7 @@ export class Routes extends React.Component {
         return (
             <Switch>
                 <Route exact path={`/`} component={(props : any) => <Dashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/started`} component={(props : any) => <GettingStarted {...props} {...this.props}/>}/>
                 <Route exact path={`/login`} component={(props : any) => <SignIn {...props} {...this.props}/>}/>
                 <Route exact path={`/scripts`} component={(props : any) => <ScriptRepositoryDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/store`} component={(props : any) => <StoreDashboard {...props} {...this.props}/>}/>
