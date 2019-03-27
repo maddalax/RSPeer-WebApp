@@ -4,8 +4,7 @@ import {AsideWithRouter} from "./View/Components/Sidebar/Aside";
 import {Footer} from "./View/Components/Footer";
 import {Routes} from "./Routes";
 import {
-   HashRouter
-} from 'react-router-dom';
+    BrowserRouter as Router} from 'react-router-dom';
 import {PageContainer} from "./PageContainer";
 
 class App extends Component {
@@ -14,13 +13,13 @@ class App extends Component {
             <React.Fragment>
                 <div className="app">
                     <div id="modal"/>
-                    <HashRouter>
-                       <PageContainer>
-                           <HeaderWithRouter/>
-                           <AsideWithRouter/>
-                           <Page/>
-                       </PageContainer>
-                    </HashRouter>
+                    <Router>
+                        <PageContainer>
+                            <HeaderWithRouter/>
+                            <AsideWithRouter/>
+                            <Page/>
+                        </PageContainer>
+                    </Router>
                 </div>
             </React.Fragment>
         );

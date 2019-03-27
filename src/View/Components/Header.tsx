@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {Util} from "../../Utilities/Util";
 import {HttpUtil} from "../../Utilities/HttpUtil";
-import logo from './../../assets/images/logo.png'
+import logo from '../../assets/images/logo.png'
 import {ApiService} from "../../Common/ApiService";
 
 export type HeaderProps = {

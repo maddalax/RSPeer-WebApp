@@ -1,5 +1,4 @@
 import React from 'react';
-import toastr from 'toastr';
 import {ApiService} from "../../../Common/ApiService";
 import {Alert} from "../../../Utilities/Alert";
 

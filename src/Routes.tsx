@@ -26,10 +26,7 @@ import {UserCenterViewBalanceChanges} from "./View/Pages/UserCenter/UserCenterVi
 import {UserCenterViewScriptAccess} from "./View/Pages/UserCenter/UserCenterViewScriptAccess";
 
 export class Routes extends React.Component {
-
-    componentDidMount(): void {
-    }
-
+    
     render() : any {
         return (
             <Switch>

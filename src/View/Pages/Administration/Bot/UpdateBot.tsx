@@ -45,7 +45,7 @@ export class UpdateBot extends React.Component<any, any> {
             return;
 
         if (file.name.indexOf('.jar') === -1) {
-            return toastr.error("File must be a .jar.");
+            return Alert.show("File must be a .jar.")
         }
 
         this.setState({

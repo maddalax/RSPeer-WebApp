@@ -7,7 +7,7 @@ import {
     ScriptsMenuItem,
     StoreMenuItem, UserCenter
 } from "./Children/AsideMenuItems";
-import {withRouter} from "react-router";
+import {withRouter} from "react-router-dom";
 import {User} from "../../../Models/User";
 import {Link} from "react-router-dom";
 
@@ -72,14 +72,10 @@ export class UserProfileDropdown extends React.Component {
             </button>
             <div id="dropdown-aside" className="dropdown-aside collapse">
                 <div className="pb-3">
-                    <a className="dropdown-item" href="user-profile.html"><span
+                    <a className="dropdown-item" href="#"><span
                         className="dropdown-icon oi oi-person"/> Profile</a> <a className="dropdown-item"
-                                                                                href="auth-signin-v1.html"><span
+                                                                                href="#"><span
                     className="dropdown-icon oi oi-account-logout"/> Logout</a>
-                    <div className="dropdown-divider"/>
-                    <a className="dropdown-item" href="#">Help Center</a> <a className="dropdown-item"
-                                                                             href="#">Ask Forum</a> <a
-                    className="dropdown-item" href="#">Keyboard Shortcuts</a>
                 </div>
             </div>
         </header>)
