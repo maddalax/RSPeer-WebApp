@@ -111,9 +111,6 @@ export class Header extends React.Component<HeaderProps | any, State> {
                                 <div className="dropdown-menu">
                                     {<h6
                                         className="dropdown-header d-none d-md-block d-lg-none"> {this.props.user.username} </h6>}
-                                    <Link
-                                        className="dropdown-item" to="/scripts"><span
-                                        className="dropdown-icon oi oi-person"/> Profile</Link>
                                     <a className="dropdown-item"
                                        href="javascript:void(0)" onClick={this.logout}><span
                                         className="dropdown-icon oi oi-account-logout"/> Logout</a>

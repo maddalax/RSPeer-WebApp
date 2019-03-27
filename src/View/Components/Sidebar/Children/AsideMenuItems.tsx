@@ -92,10 +92,24 @@ export class UserCenter extends React.Component {
     }
 }
 
-export class Community extends React.Component {
+export class Community extends React.Component<any, any> {
+    
+    constructor(props : any) {
+        super(props);
+        const session = localStorage.getItem("rspeer_session");
+        this.state = {
+            session
+        }
+    }
+    
+    private getForumLink = () => {
+        const url = "https://forums.rspeer.org";
+        return this.state.session != null ? `${url}?idToken=${this.state.session}` : url;
+    };
+    
     render(): any {
         return (<li className="menu-item">
-            <a href={"https://forums.rspeer.org"} target={"_blank"} className="menu-link"><span className="menu-icon fas fa-users"/> <span
+            <a href={this.getForumLink()} target={"_blank"} className="menu-link"><span className="menu-icon fas fa-users"/> <span
                 className="menu-text">Visit Forums</span></a>
             <a href="https://discordapp.com/invite/rMTTpsU" target={"_blank"} className="menu-link"><span className="menu-icon fab fa-discord"/> <span
                 className="menu-text">Join Our Discord</span></a>
