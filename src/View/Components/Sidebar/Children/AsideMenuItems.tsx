@@ -103,7 +103,7 @@ export class Community extends React.Component<any, any> {
     }
     
     private getForumLink = () => {
-        const url = "https://community.rspeer.org";
+        const url = "https://forums.rspeer.org";
         return this.state.session != null ? `${url}?idToken=${this.state.session}` : url;
     };
     
