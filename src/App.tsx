@@ -4,7 +4,7 @@ import {AsideWithRouter} from "./View/Components/Sidebar/Aside";
 import {Footer} from "./View/Components/Footer";
 import {Routes} from "./Routes";
 import {
-    BrowserRouter as Router} from 'react-router-dom';
+    HashRouter as Router} from 'react-router-dom';
 import {PageContainer} from "./PageContainer";
 
 class App extends Component {
