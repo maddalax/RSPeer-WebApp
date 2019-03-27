@@ -182,7 +182,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
                     <h3>There are no scripts that match your filter.</h3>
                 </div>
             </React.Fragment>}
-            {!this.state.loading && <div className={"card-columns"} style={{columnCount: 4}}>
+            {!this.state.loading && <div>
                 {this.state.scripts.map((script: any) => {
                     return <ScriptCard key={script.id} history={this.props.history} loggedIn={this.state.loggedIn}
                                        onAccessChange={this.setAccessIds} api={this.apiService} script={script}/>
