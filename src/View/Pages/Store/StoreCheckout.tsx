@@ -3,7 +3,6 @@ import {HttpUtil} from "../../../Utilities/HttpUtil";
 import {ApiService} from "../../../Common/ApiService";
 import {OrderStatus, PaymentMethod, StoreItem} from "../../../Models/StoreItem";
 import {Alert} from "../../../Utilities/Alert";
-import {Item} from "../../../Models/Order";
 import {ScriptDto} from "../../../Models/ScriptDto";
 
 type State = {

@@ -53,7 +53,11 @@
         apiUrl : 'https://services.rspeer.org/api/'
       };
     </script>
-    <script> var skin = localStorage.getItem('skin') || 'dark';
+    <script> 
+      if(!localStorage.getItem("skin")) {
+        localStorage.setItem("skin", "dark");
+      }
+      var skin = localStorage.getItem('skin');
     var unusedLink = document.querySelector('link[data-skin]:not([data-skin="'+ skin +'"])');
 
     unusedLink.setAttribute('rel', '');
