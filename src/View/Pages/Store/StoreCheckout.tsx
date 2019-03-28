@@ -79,7 +79,7 @@ export class StoreCheckout extends React.Component<any, State> {
         }
         if(result.status === OrderStatus.Completed) {
             this.props.reloadUser();
-            this.props.history.push('/store/success');
+            this.props.history.push("/#/store/success")
         }
     };
 
