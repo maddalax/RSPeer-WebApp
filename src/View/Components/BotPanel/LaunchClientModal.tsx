@@ -104,7 +104,7 @@ export class LaunchClientModal extends React.Component<any, State> {
             }
             await this.sendMessage(this.props.socket, {
                 type: 'start:client',
-                session: localStorage.getItem("session"),
+                session: localStorage.getItem("rspeer_session"),
                 qs: this.state.selectedQs,
                 jvmArgs: this.state.jvmArgs,
                 sleep: this.state.sleep,
