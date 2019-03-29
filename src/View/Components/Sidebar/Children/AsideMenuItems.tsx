@@ -152,7 +152,7 @@ export class Downloads extends React.Component {
                 className="menu-text">OpenJDK 11</span></a>
             <a href="https://johann.loefflmann.net/en/software/jarfix/" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-tools"/> <span
                 className="menu-text">Java Jar Fix</span></a>
-            <a href="https://download.rspeer.org/front-site/javadocs/index.html" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-tools"/> <span
+            <a href="https://download.rspeer.org/front-site/javadocs/index.html" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-file-alt"/> <span
                 className="menu-text">JavaDocs</span></a>
         </li>);
     }
