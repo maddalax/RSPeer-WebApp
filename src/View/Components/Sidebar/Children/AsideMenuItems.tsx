@@ -135,6 +135,9 @@ export class DeveloperCenter extends React.Component {
                 <li className="menu-item">
                     <a href="https://forums.rspeer.org/topic/632/compile-rspeer-script-as-a-jar-in-intellij-idea" target={"_blank"} className="menu-link">Building Local Script</a>
                 </li>
+                <li className="menu-item">
+                    <a href="https://download.rspeer.org/front-site/javadocs/index.html" target={"_blank"} className="menu-link">JavaDocs</a>
+                </li>
             </ul>
         </li>);
     }
@@ -149,6 +152,8 @@ export class Downloads extends React.Component {
                 className="menu-text">OpenJDK 11</span></a>
             <a href="https://johann.loefflmann.net/en/software/jarfix/" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-tools"/> <span
                 className="menu-text">Java Jar Fix</span></a>
+            <a href="https://download.rspeer.org/front-site/javadocs/index.html" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-tools"/> <span
+                className="menu-text">JavaDocs</span></a>
         </li>);
     }
 }
