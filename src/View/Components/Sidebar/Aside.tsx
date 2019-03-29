@@ -20,7 +20,7 @@ export class Aside extends React.Component<Props | any, any> {
     render(): any {
         return (<aside className="app-aside app-aside-expand-md app-aside-light">
                 <div className="aside-content">
-                    <UserProfileDropdown/>
+                    <UserProfileDropdown {...this.props}/>
                     <div className="aside-menu overflow-hidden">
                         <nav id="stacked-menu" className="stacked-menu">
                             <ul className="menu">
@@ -63,14 +63,24 @@ export class ToggleSkin extends React.Component {
     }
 }
 
-export class UserProfileDropdown extends React.Component {
+export class UserProfileDropdown extends React.Component<any, any> {
+    
+    private user = () => {
+       return this.props.user || {
+            username : 'Loading...',
+            isOwner : false
+        }
+    };
+    
     render(): any {
+        const user = this.user();
         return (<header className="aside-header d-block d-md-none">
             <button className="btn-account" type="button" data-toggle="collapse"
-                    data-target="#dropdown-aside"><span className="user-avatar user-avatar-lg"><img
-                src={profile}/></span> <span className="account-icon"><span
-                className="fa fa-caret-down fa-lg"/></span> <span className="account-summary"><span
-                className="account-name">MadDev</span> <span className="account-description">Director</span></span>
+                    data-target="#dropdown-aside"><span className="account-summary"><span
+                className="account-name">{user.username}</span>
+                {user.isOwner && <span className="account-description">Director</span>}
+                {!user.isOwner && <span className="account-description">Member</span>}
+                    </span>
             </button>
             <div id="dropdown-aside" className="dropdown-aside collapse">
                 <div className="pb-3">
