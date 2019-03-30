@@ -110,7 +110,7 @@ export class StoreCheckout extends React.Component<any, State> {
                         {this.state.script && <div>
                             <hr className="mb-4" />
                             <h5 className="mb-3">Additional Information</h5>
-                            <p>Instances Given Per 30 Days: <strong>{this.state.script.instances}</strong></p>
+                            <p>Instances Given Per 30 Days: <strong>{this.state.script.instances || 'Unlimited'}</strong></p>
                             <p>Access Length: <strong>30 Days</strong></p>
                             <p>Script Developer: <strong>{this.state.script.author}</strong></p>
                             <p>Script Type: <strong>{this.state.script.typeFormatted}</strong></p>
