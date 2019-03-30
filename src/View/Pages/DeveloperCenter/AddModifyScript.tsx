@@ -131,14 +131,15 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         }
         this.props.onConfirm && this.props.onConfirm();
         if (!this.props.isAdminView) {
+            Alert.success("Successfully submitted script update.");
             this.exit();
         }
     };
 
     cancel = (e: any) => {
         e && e.preventDefault();
+        this.props.onCancel && this.props.onCancel();
         if (this.props.isAdminView) {
-            this.props.onCancel && this.props.onCancel();
             return;
         }
         this.exit();

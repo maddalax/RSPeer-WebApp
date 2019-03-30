@@ -124,7 +124,11 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
                 {this.renderTable(this.state.pending)}
             </div>}
             {this.state.selectedScript && <div>
-                <AddModifyScript script={this.state.selectedScript} {...this.props}/>
+                <AddModifyScript script={this.state.selectedScript} {...this.props} onConfirm={() => {
+                    this.setState({selectedScript : null})
+                }} onCancel={() => {
+                    this.setState({selectedScript : null})
+                }}/>
             </div>}
         </div>;
     }
