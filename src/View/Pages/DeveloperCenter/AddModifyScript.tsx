@@ -94,6 +94,19 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         if (!this.state.forumThread) {
             return Alert.show("Please enter a valid forum thread for your script. Visit https://rspeer.org/forums/ to create one.");
         }
+        
+        if(!this.state.isPremium) {
+            this.setState({
+                price : 0,
+                instances : 0
+            }, this.submit);
+            return;
+        }
+        
+        await this.submit();
+    };
+    
+    private submit = async () => {
         this.setState({processing: true});
         const script: any = {
             Id: this.state.scriptId,
