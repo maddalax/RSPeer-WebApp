@@ -87,7 +87,8 @@ export class AddClientModal extends React.Component<any, State> {
         this.props.onClose(res);
     };
 
-    saveAccount = async () => {
+    saveAccount = async (e : any) => {
+        e.preventDefault();
         const res = this.props.qs;
         const parsed = {
             RsUsername: this.state.rsUsername,
@@ -120,6 +121,7 @@ export class AddClientModal extends React.Component<any, State> {
             return Alert.show(i.error);
         }
         const camel = Util.toCamel(res);
+        Alert.success("Successfully updated client.", 3000);
         this.close(camel);
     };
 

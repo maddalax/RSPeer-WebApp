@@ -9,7 +9,8 @@ type State = {
     isLaunching: boolean,
     selectedLauncher: any,
     launchingSocket: string | null,
-    viewingLogs: boolean
+    viewingLogs: boolean,
+    refreshing : boolean
 };
 
 export class ConnectedLaunchers extends React.Component<any, State> {
@@ -25,7 +26,8 @@ export class ConnectedLaunchers extends React.Component<any, State> {
             isLaunching: false,
             selectedLauncher: null,
             launchingSocket: null,
-            viewingLogs : false
+            viewingLogs : false,
+            refreshing : false
         }
     }
 
@@ -86,12 +88,18 @@ export class ConnectedLaunchers extends React.Component<any, State> {
     };
 
     load = async () => {
+        if(this.state.refreshing) {
+            return;
+        }
+        this.setState({refreshing : true});
         const launchers = await this.api.get("botLauncher/connected");
         if(launchers.error) {
+            this.setState({refreshing : false});
             return Alert.show(launchers.error);
         }
         this.setState({launchers});
         const clients = await this.api.get("botLauncher/connectedClients");
+        this.setState({refreshing : false});
         if(Array.isArray(clients)) {
             const mapped: any = {};
             clients.forEach((c: any) => {
@@ -120,7 +128,8 @@ export class ConnectedLaunchers extends React.Component<any, State> {
         return <div>
             <h3>Connected Launchers ({launcherCount})</h3>
             <br/>
-            <button type="button" className="btn btn-primary" onClick={this.load}>Refresh</button>
+            {!this.state.refreshing && <button type="button" className="btn btn-primary" onClick={this.load}>Refresh</button>}
+            {this.state.refreshing && <button type="button" className="btn btn-primary">Loading Connected Launchers, Please Wait...</button>}
             <small id="refreshHelp" className="form-text text-muted">Auto refresh is disabled, click refresh
                 to update connected launchers and connected clients.
             </small>
@@ -133,7 +142,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
             {launcherCount === 0 && <div>
                 <p>You currently have no running launchers on any computers, please open rspeer-launcher to connect your
                     computer.</p>
-                <p>Need help? Click <a href="#">here.</a></p>
+                <p>Need help? Click <a href="https://forums.rspeer.org/topic/550/bot-management-panel-instructions" target={"_blank"}>here.</a></p>
             </div>}
             {Object.entries(this.state.launchers).map(entry => {
                 const key = entry[0];

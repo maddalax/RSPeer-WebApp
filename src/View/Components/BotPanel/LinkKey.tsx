@@ -18,7 +18,8 @@ export class LinkKey extends React.Component<any, any> {
         this.setState({key});
     }
 
-    generateNewKey = async () => {
+    generateNewKey = async (e : any) => {
+        e.preventDefault();
         const confirm = window.confirm("WARNING: This will stop all current launchers from being visible here until you re-install the launcher on each computer with the new key. Continue?");
         if (!confirm) {
             return;

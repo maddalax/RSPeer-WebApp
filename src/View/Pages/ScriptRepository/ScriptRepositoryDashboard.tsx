@@ -54,7 +54,9 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
         }
     }
 
-    private load = async () => {
+    private load = async (e : any = null) => {
+        e && e.preventDefault();
+        this.setState({loading : true});
         let scripts = await this.apiService.post("script/list", {
             type: this.state.queryType,
             search: this.state.search,
@@ -62,6 +64,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             //Subtract 1 off index because 'All' is added to beginning of the list.
             category: this.state.category === 'All' ? null : ScriptCategories.indexOf(this.state.category) - 1
         });
+        this.setState({loading : false});
         if (scripts.error) {
             Alert.show(scripts.error + " Please refresh the page.");
             return;
@@ -69,7 +72,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
         if (!Array.isArray(scripts)) {
             return;
         }
-        this.setState({scripts, loading: false}, () => {
+        this.setState({scripts}, () => {
             this.setAccessIds();
         })
     };
@@ -100,7 +103,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
 
     private setSearch(e: any) {
         if (e.key === 'Enter') {
-            this.load();
+            this.load(e);
             return;
         }
         this.setState({search: e.target.value})
