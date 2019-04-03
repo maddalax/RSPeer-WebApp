@@ -40,8 +40,7 @@ export class ProxyManager extends React.Component<any, any> {
     };
 
     deleteProxy = async (proxy : any) => {
-        console.log(proxy);
-       await this.api.post("botLauncher/deleteProxy?id=" + proxy.proxyId.toString(), {});
+       await this.api.post("botLauncher/deleteProxy?id=" + (proxy.proxyId || proxy.name).toString(), {});
        this.loadProxies();
     };
 

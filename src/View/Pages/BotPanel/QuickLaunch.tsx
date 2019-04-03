@@ -3,6 +3,7 @@ import {ImportQsJson} from "./ImportJson";
 import {ApiService} from "../../../Common/ApiService";
 import {AddClientModal} from "../../Components/BotPanel/AddClientModal";
 import {Alert} from "../../../Utilities/Alert";
+import {Util} from "../../../Utilities/Util";
 
 export class QuickLaunch extends React.Component<any, any> {
 
@@ -40,8 +41,9 @@ export class QuickLaunch extends React.Component<any, any> {
         const confirm = window.confirm("Are you sure you want to delete " + qs.name + "?");
         if (!confirm)
             return;
-        await this.api.post("botLauncher/deleteQuickLaunch?id=" + (qs.quickLaunchId), {});
+        await this.api.post("botLauncher/deleteQuickLaunch?id=" + (qs.quickLaunchId || qs.name), {});
         this.setState({selectedQs: null});
+        await Util.sleep(100);
         await this.loadQuickLaunches();
     };
 
@@ -159,7 +161,7 @@ export class QuickLaunch extends React.Component<any, any> {
                         onClick={() => this.addNewClient(null)}>
                     Add New Client
                 </button>
-                <button className="btn btn-dark button-spacing" type="button" id="deleteQs"
+                <button className="btn btn-dark button-spacing" type="button" id="importJson"
                         onClick={() => this.importJson(this.state.selectedQs)}>
                     Import JSON
                 </button>
