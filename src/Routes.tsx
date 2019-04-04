@@ -26,6 +26,7 @@ import {UserCenterViewBalanceChanges} from "./View/Pages/UserCenter/UserCenterVi
 import {UserCenterViewScriptAccess} from "./View/Pages/UserCenter/UserCenterViewScriptAccess";
 import {GettingStarted} from "./View/Pages/GettingStarted";
 import {OrderManager} from "./View/Pages/Administration/Order/OrderManager";
+import {AdministrationStatsDashboard} from "./View/Pages/Administration/Stats/AdministrationStatsDashboard";
 
 export class Routes extends React.Component {
     
@@ -57,6 +58,7 @@ export class Routes extends React.Component {
                 <Route exact path={`/administration/scripter/payout`} component={(props : any) => <ScripterPayout {...props} {...this.props}/>}/>
                 <Route exact path={`/administration/content`} component={(props : any) => <SiteContentManager {...props} {...this.props}/>}/>
                 <Route exact path={`/administration/orders`} component={(props : any) => <OrderManager {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/stats`} component={(props : any) => <AdministrationStatsDashboard {...props} {...this.props}/>}/>
             </Switch>
         )
     }

@@ -188,6 +188,9 @@ export class AdminCenter extends React.Component<any, any> {
                 <li className="menu-item">
                     <Link to={"/administration/orders"} className="menu-link">Orders</Link>
                 </li>
+                <li className="menu-item">
+                    <Link to={"/administration/stats"} className="menu-link">Stats</Link>
+                </li>
             </ul>
         </li>);
     }

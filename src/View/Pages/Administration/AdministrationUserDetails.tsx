@@ -58,6 +58,14 @@ export class AdministrationUserDetails extends React.Component<any, State> {
         localStorage.setItem("adminUserSearch", JSON.stringify(fullUser));
         this.setState({user: fullUser, results: []});
     };
+    
+    async componentDidMount() {
+        if(this.props.userId) {
+            const fullUser: User = await this.api.get(`user/byId?id=${this.props.userId}&groups=true`);
+            console.log(fullUser);
+            this.setState({user: fullUser, results: []});
+        }
+    }
 
     render() {
         return <OwnerPageWrapper {...this.props}>
@@ -136,7 +144,12 @@ class UserDetailsTabs extends React.Component<Props, any> {
                     <li className="nav-item">
                         <a onClick={() => this.setSelected(2)} className="nav-link" id="balancechanges-tab" data-toggle="tab"
                            href="#balancechanges" role="tab"
-                           aria-controls="orders" aria-selected="false">Balance Changes</a>
+                           aria-controls="balancechanges" aria-selected="false">Balance Changes</a>
+                    </li>
+                    <li className="nav-item">
+                        <a onClick={() => this.setSelected(3)} className="nav-link" id="runescapeclients-tab" data-toggle="tab"
+                           href="#runescapeclients" role="tab"
+                           aria-controls="runescapeclients" aria-selected="false">Online Clients</a>
                     </li>
                 </ul>
                 <div className="tab-content" id="myTabContent">
@@ -150,6 +163,9 @@ class UserDetailsTabs extends React.Component<Props, any> {
                     </div>
                     <div className="tab-pane fade" id="balancechanges" role="tabpanel" aria-labelledby="balancechanges-tab">
                         {this.state.selected === 2 && <div><BalanceChanges user={this.props.user!} reloadUser={this.props.reloadUser}/></div>}
+                    </div>
+                    <div className="tab-pane fade" id="runescapeclients" role="tabpanel" aria-labelledby="runescapeclients-tab">
+                        {this.state.selected === 3 && <div><RunescapeClients user={this.props.user!} reloadUser={this.props.reloadUser}/></div>}
                     </div>
                 </div>
             </React.Fragment>
@@ -419,6 +435,76 @@ class BalanceChanges extends React.Component<Props, any> {
                                 {o.orderId == 0 && <td>N/A</td>}
                                 <td>{o.adminUser != null ? o.adminUser.username : (o.adminUserId || '')}</td>
                                 <td>{o.reason}</td>
+                            </tr>)
+                        })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    }
+
+}
+
+class RunescapeClients extends React.Component<Props, any> {
+
+    private readonly api: ApiService;
+
+    constructor(props: Props) {
+        super(props);
+        this.api = new ApiService();
+        this.state = {
+            clients: []
+        }
+    }
+
+    async componentDidMount() {
+        const clients = await this.api.get("adminClient/runningClients?userId=" + this.props.user.id);
+        if(Array.isArray(clients)) {
+            this.setState({clients});
+        }
+    }
+
+    componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<any>, snapshot?: any): void {
+        if (prevProps.user.id != this.props.user.id) {
+            this.componentDidMount();
+        }
+    }
+    
+    render() {
+        return (
+            <div>
+                <div className="table-responsive">
+                    <table className="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">RSN</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Script</th>
+                            <th scope="col">Script Developer</th>
+                            <th scope="col">Repository Script</th>
+                            <th scope="col">Machine</th>
+                            <th scope="col">OS</th>
+                            <th scope="col">Proxy Ip</th>
+                            <th scope="col">Ip</th>
+                            <th scope="col">Main Class</th>
+                            <th scope="col">Last Update</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.state.clients.map((o: any) => {
+                            return (<tr>
+                                <td>{o.rsn}</td>
+                                <td>{o.runescapeEmail}</td>
+                                <td>{o.scriptName}</td>
+                                <td>{o.scriptDeveloper}</td>
+                                <td>{o.isRepoScript ? 'Yes' : 'No'}</td>
+                                <td>{o.machineName} - {o.machineUsername}</td>
+                                <td>{o.operatingSystem}</td>
+                                <td>{o.proxyIp}</td>
+                                <td>{o.ip}</td>
+                                <td>{o.scriptClassName}</td>
+                                <td>{Util.formatDate(o.lastUpdate, true)}</td>
                             </tr>)
                         })}
                         </tbody>
