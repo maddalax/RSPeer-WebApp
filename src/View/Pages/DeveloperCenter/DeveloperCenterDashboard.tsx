@@ -79,8 +79,8 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
                         <td>{s.description}</td>
                         <td>{s.version}</td>
                         <td>{s.typeFormatted}</td>
-                        <td>{s.type === ScriptType.Free ? 'N/A' : Util.formatNumber(s.price.toString())}</td>
-                        <td>{s.type === ScriptType.Free ? 'N/A' : (s.instances || 'Unlimited')}</td>
+                        <td>{s.price != null ? Util.formatNumber(s.price.toString()) : 'N/A'}</td>
+                        <td>{s.type === ScriptType.Premium ? s.instances || 'Unlimited' : 'N/A'}</td>
                         <td>{s.categoryFormatted}</td>
                         <td>{s.totalUsers}</td>
                         <td className={color(s)}><span style={{color : 'black'}}>{s.statusFormatted}</span></td>

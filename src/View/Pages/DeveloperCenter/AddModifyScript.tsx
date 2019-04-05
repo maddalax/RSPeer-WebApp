@@ -1,7 +1,8 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
-import {ScriptDto, ScriptType} from "../../../Models/ScriptDto";
+import {ScriptDto, ScriptType, ScriptTypeFormatted} from "../../../Models/ScriptDto";
 import {Alert} from "../../../Utilities/Alert";
+import {Util} from "../../../Utilities/Util";
 
 type State = {
     scriptId: number,
@@ -13,10 +14,12 @@ type State = {
     forumThread: string,
     price: number,
     instances: number,
-    isPremium: boolean
     [key: string]: any,
     recompile: boolean,
-    processing: boolean
+    processing: boolean,
+    type: ScriptType,
+    obfuscate: boolean,
+    scriptJar : any
 }
 
 type Props = {
@@ -43,9 +46,11 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             forumThread: script != null ? script.forumThread : '',
             price: script != null ? script.price : 300,
             instances: script != null ? script.instances : 5,
-            isPremium: script != null ? script.type === ScriptType.Premium : false,
             recompile: !this.props.isAdminView,
-            processing: false
+            processing: false,
+            type: script != null ? script.type : ScriptType.Free,
+            obfuscate: true,
+            scriptJar : null
         };
         this.api = new ApiService();
     }
@@ -64,6 +69,11 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         this.setState({category})
     };
 
+    setScriptType = (e: any, type: ScriptType) => {
+        e.preventDefault();
+        this.setState({type});
+    };
+
     deleteScript = async (e: any) => {
         e.preventDefault();
         const confirm = await window.confirm(`Are you sure you want to delete ${this.state.name}? This will remove the script from the SDN and all users access.`);
@@ -73,41 +83,65 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         if (this.state.processing) {
             return;
         }
-        this.setState({processing : true});
+        this.setState({processing: true});
         const res = await this.api.post("adminScript/delete?id=" + this.state.scriptId, {});
-        if(res.error) {
-            this.setState({processing : false});
+        if (res.error) {
+            this.setState({processing: false});
             return Alert.show(res.error);
         }
-        this.setState({processing : false});
+        this.setState({processing: false});
         this.props.onConfirm && this.props.onConfirm();
     };
 
+    uploadPrivateScript = async (e: any) => {
+        let file = e.target.files[0];
+        if (!file)
+            return;
+
+        if (file.name.indexOf('.jar') === -1) {
+            return Alert.show("File must be a .jar.")
+        }
+
+        this.setState({scriptJar : file});
+    };
+    
+    clearPrivateScript = (e : any) => {
+        e.preventDefault();
+        this.setState({scriptJar : null})
+    };
+    
     onFormSubmit = async (e: any) => {
         e && e.preventDefault();
         if (this.state.processing) {
             return;
         }
+        
         if (!this.state.category) {
             return Alert.show("Please select a script category.");
         }
-        if (!this.state.forumThread) {
+        
+        if (this.state.type !== ScriptType.Private && !this.state.forumThread) {
             return Alert.show("Please enter a valid forum thread for your script. Visit https://rspeer.org/forums/ to create one.");
         }
-        
-        if(!this.state.isPremium) {
+
+        if (this.state.type !== ScriptType.Premium) {
             this.setState({
-                price : 0,
-                instances : 0
+                price: 0,
+                instances: 0
             }, this.submit);
             return;
         }
-        
-        await this.submit();
+        this.submit();
     };
-    
+
     private submit = async () => {
+
         this.setState({processing: true});
+
+        if(this.state.type === ScriptType.Private) {
+            return await this.submitPrivate();
+        }
+        
         const script: any = {
             Id: this.state.scriptId,
             RepositoryUrl: this.state.repoUrl,
@@ -117,7 +151,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             ForumThread: this.state.forumThread,
             Price: this.state.price,
             Instances: this.state.instances,
-            Type: this.state.isPremium ? ScriptType.Premium : ScriptType.Free
+            Type: this.state.type
         };
 
         const path = this.props.isAdminView ? 'adminScript/update' : 'script/create';
@@ -134,6 +168,31 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             Alert.success("Successfully submitted script update.");
             this.exit();
         }
+    };
+    
+    private submitPrivate = async () => {
+        if(!this.state.scriptJar || this.state.scriptJar.size === 0) {
+            Alert.show("You must upload a script jar file!");
+            return;
+        }
+        const res = await this.api.postFormData("script/createPrivate", {
+            command : JSON.stringify({
+                Script : {
+                    Id: this.state.scriptId,
+                    Name : this.state.name,
+                    Description: this.state.description,
+                    Category: this.state.category,
+                    Type: this.state.type
+                }
+            }),
+            file : this.state.scriptJar
+        });
+        this.setState({processing: false});
+        if(res.error) {
+            return;
+        }
+        Alert.success("Successfully submitted / updated private script. Visit Private Script Access on sidebar to give users access.", 9000);
+        this.props.history.push('/developer')
     };
 
     cancel = (e: any) => {
@@ -154,12 +213,12 @@ export class AddModifyScript extends React.Component<Props | any, State> {
     };
 
     render() {
-        if(!this.props.isAdminView && !this.props.user) {
+        if (!this.props.isAdminView && !this.props.user) {
             return <div>
                 <h5>Click sign in on the top right to view this page.</h5>
             </div>
         }
-        // @ts-ignore
+
         return <div>
             <div className="card" style={{maxHeight: '100%'}}>
                 <div className="card-body">
@@ -167,16 +226,32 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                         <h5 className="card-title">Submit Script To Add To Repository</h5>
                         <div className="card-text">
                             <p>Fill in the form below to request to add a script to the repository.</p>
-                            <p>Your script will go through a formal verification process by staff to ensure your script
-                                is
-                                safe.</p>
-                            <p>Once that process is completed, your script will be added to the repository for use by
-                                all
-                                RSPeer users.</p>
                         </div>
                     </div>}
                     <br/>
                     <form onSubmit={this.onFormSubmit}>
+                        <div className="form-group">
+                            <label>Script Type</label>
+                            <div className="dropdown">
+                                <button className="btn btn-secondary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                    {ScriptTypeFormatted(this.state.type)}
+                                </button>
+                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                    style={{"height": "auto", "maxHeight": "200px", "overflow-y": "scroll"}}>
+                                    <li key={"free"} onClick={(e) => this.setScriptType(e, ScriptType.Free)}
+                                        className="dropdown-item">Free
+                                    </li>
+                                    <li key={"premium"} onClick={(e) => this.setScriptType(e, ScriptType.Premium)}
+                                        className="dropdown-item">Premium
+                                    </li>
+                                    <li key={"private"} onClick={(e) => this.setScriptType(e, ScriptType.Private)}
+                                        className="dropdown-item">Private
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <div className="form-group">
                             <label htmlFor="scriptName">Name</label>
                             <input type="text" onChange={(e) => this.setValue(e, 'name')} value={this.state.name}
@@ -194,7 +269,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 on what your script does. Script requests may be denied due to low quality descriptions.
                             </p>
                         </div>
-                        <div className="form-group">
+                        {this.state.type !== ScriptType.Private && <div className="form-group">
                             <label htmlFor="repoUrl">Repository URL</label>
                             <input onChange={(e) => this.setValue(e, 'repoUrl')} value={this.state.repoUrl} type="text"
                                    className="form-control" id="repoUrl"
@@ -204,8 +279,8 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 where your code is contained. This should <strong>not</strong> be the actual .git url to
                                 clone the repository.
                             </p>
-                        </div>
-                        <div className="form-group">
+                        </div>}
+                        {this.state.type !== ScriptType.Private && <div className="form-group">
                             <label htmlFor="forumThread">Forum Thread URL</label>
                             <input onChange={(e) => this.setValue(e, 'forumThread')} value={this.state.forumThread}
                                    type="text" className="form-control" id="forumThread"
@@ -214,13 +289,14 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 thread related to your script.
                                 This will be used for you to advertise your script, provide customer support, etc.
                             </p>
-                        </div>
+                        </div>}
                         <div className="form-group">
+                            <label>Script Category</label>
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button"
                                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
-                                    {this.state.category || 'Script Category'}
+                                    {this.state.category || 'Select a category'}
                                 </button>
                                 <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton"
                                     style={{"height": "auto", "maxHeight": "200px", "overflow-y": "scroll"}}>
@@ -231,18 +307,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 </ul>
                             </div>
                         </div>
-                        <div className="form-group">
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" id="premiumScriptCheck"
-                                       checked={this.state.isPremium}
-                                       onChange={(e) => {
-                                           this.setState({isPremium: e.target.checked})
-                                       }}/>
-                                <label className="form-check-label" htmlFor="premiumScriptCheck">Submit As Premium
-                                    Script</label>
-                            </div>
-                        </div>
-                        {this.state.isPremium && <React.Fragment>
+                        {this.state.type === ScriptType.Premium && <React.Fragment>
                             <div className="form-group">
                                 <label htmlFor="forumThread">Token Price Per Month</label>
                                 <input onChange={(e) => this.setValue(e, 'price')} value={this.state.price}
@@ -265,11 +330,51 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 </p>
                             </div>
                         </React.Fragment>}
-                        {!this.props.isAdminView && <React.Fragment>
+                        {this.state.type !== ScriptType.Private && !this.props.isAdminView && <React.Fragment>
+                            <p>Your script will go through a formal verification process by staff to ensure your script
+                                is
+                                safe.</p>
+                            <p>Once that process is completed, your script will be added to the repository for use by
+                                all
+                                RSPeer users.</p>
                             {!this.state.processing && !this.state.scriptId &&
                             <button type="submit" className="btn btn-primary">Submit Script For Review</button>}
                             {!this.state.processing && this.state.scriptId &&
                             <button type="submit" className="btn btn-primary">Submit Update For Review</button>}
+                            {this.state.processing &&
+                            <button type="submit" className="btn btn-primary">Processing...</button>}
+                        </React.Fragment>}
+                        {this.state.type === ScriptType.Private && !this.props.isAdminView && <React.Fragment>
+                            {!this.state.processing && !this.state.scriptJar && 
+                            <React.Fragment>
+                                <label style={{marginTop: '8px'}} htmlFor="hidden-new-file" className="btn btn-primary">
+                                    Click To Upload Script Jar
+                                </label>
+                                <input type="file" onChange={this.uploadPrivateScript} id="hidden-new-file"
+                                       style={{display: "none"}}/>
+                            </React.Fragment>}
+                            {!this.state.processing && this.state.scriptJar &&
+                            <React.Fragment>
+                                <label style={{marginTop: '8px'}} htmlFor="hidden-new-file" className="btn btn-primary">
+                                    {this.state.scriptJar.name} ({Util.formatBytes(this.state.scriptJar.size)})
+                                </label>
+                                <button type={"submit"} onClick={this.clearPrivateScript} className="btn btn-danger">
+                                    Clear Upload
+                                </button>
+                            </React.Fragment>}
+                            {this.state.processing &&
+                            <button type="submit" className="btn btn-primary">Processing...</button>}
+                        </React.Fragment>}
+                        {this.state.type === ScriptType.Private && !this.props.isAdminView && <React.Fragment>
+                            <p>Private scripts are not reviewed by RSPeer staff.</p>
+                            <p>We do not compile private scripts on our servers, please upload a compiled jar
+                                file of the private script.</p>
+                            {!this.state.processing &&
+                            <React.Fragment>
+                                <button type={"submit"} className="btn btn-success">
+                                    Submit Script
+                                </button>
+                            </React.Fragment>}
                             {this.state.processing &&
                             <button type="submit" className="btn btn-primary">Processing...</button>}
                         </React.Fragment>}

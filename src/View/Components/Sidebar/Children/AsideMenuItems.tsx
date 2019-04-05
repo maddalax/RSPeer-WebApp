@@ -20,6 +20,10 @@ export class ScriptsMenuItem extends React.Component {
                         Scripts</Link>
                 </li>
                 <li className="menu-item">
+                    <Link to={"/scripts?q=private"} className="menu-link"><i className="fab fa-app-store"/> Private
+                        Scripts</Link>
+                </li>
+                <li className="menu-item">
                     <Link to={"/scripts?q=free"} className="menu-link"><i className="fas fa-tree"/> Free Scripts</Link>
                 </li>
             </ul>
@@ -130,6 +134,9 @@ export class DeveloperCenter extends React.Component {
                     <Link to={"/developer/addScript"} className="menu-link">Add New Script</Link>
                 </li>
                 <li className="menu-item">
+                    <Link to={"/developer/privateScript"} className="menu-link">Private Script Access</Link>
+                </li>
+                <li className="menu-item">
                     <a href="https://forums.rspeer.org/topic/54/video-guide-how-to-add-a-script-to-the-rspeer-script-repository-a-step-by-step-video-guide" target={"_blank"} className="menu-link">Setup Guide</a>
                 </li>
                 <li className="menu-item">
@@ -138,6 +145,7 @@ export class DeveloperCenter extends React.Component {
                 <li className="menu-item">
                     <a href="https://download.rspeer.org/front-site/javadocs/index.html" target={"_blank"} className="menu-link">JavaDocs</a>
                 </li>
+                
             </ul>
         </li>);
     }

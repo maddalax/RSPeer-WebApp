@@ -99,7 +99,7 @@ export class RegisterGitRepository extends React.Component<any, State> {
                 your project.</p>
             <img height="75%" width="75%" src={"https://i.imgur.com/0Jf9Ae6.png"}/>
             <br/><br/>
-            {this.state.results.length > 1 && <div>
+            {this.state.results.length > 0 && <div>
                 <p>Please select your account from the table below.</p>
                 <table className="table">
                 <thead>

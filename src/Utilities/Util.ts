@@ -21,6 +21,13 @@ export class Util {
         }
         return arr;
     }
+    
+    public static formatBytes(a : any) {
+        if (0 == a) return "0 Bytes";
+        const c = 1024, d = 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+            f = Math.floor(Math.log(a) / Math.log(c));
+        return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
+    }
 
     public static toCamel(o: any) {
         let newO : any, origKey, newKey, value;

@@ -27,6 +27,7 @@ import {UserCenterViewScriptAccess} from "./View/Pages/UserCenter/UserCenterView
 import {GettingStarted} from "./View/Pages/GettingStarted";
 import {OrderManager} from "./View/Pages/Administration/Order/OrderManager";
 import {AdministrationStatsDashboard} from "./View/Pages/Administration/Stats/AdministrationStatsDashboard";
+import {ManagePrivateScriptAccess} from "./View/Pages/DeveloperCenter/ManagePrivateScriptAccess";
 
 export class Routes extends React.Component {
     
@@ -43,6 +44,7 @@ export class Routes extends React.Component {
                 <Route exact path={`/store/process`} component={(props : any) => <StoreProcess {...props} {...this.props}/>}/>
                 <Route exact path={`/developer`} component={(props : any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/addScript`} component={(props : any) => <AddModifyScript {...props} {...this.props}/>}/>
+                <Route exact path={`/developer/privateScript`} component={(props : any) => <ManagePrivateScriptAccess {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/register`} component={(props : any) => <RegisterGitRepository {...props} {...this.props}/>}/>
                 <Route exact path={`/user/orders`} component={(props : any) => <UserCenterViewOrders {...props} {...this.props}/>}/>
                 <Route exact path={`/user/balanceChanges`} component={(props : any) => <UserCenterViewBalanceChanges {...props} {...this.props}/>}/>

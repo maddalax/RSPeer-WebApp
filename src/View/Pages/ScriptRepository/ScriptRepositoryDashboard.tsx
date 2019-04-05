@@ -181,9 +181,13 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
                 </div>
             </div>}
             {!this.state.loading && this.state.scripts.length === 0 && <React.Fragment>
-                <div className="d-flex justify-content-center">
+                {this.state.queryType !== "private" && <div className="d-flex justify-content-center">
                     <h3>There are no scripts that match your filter.</h3>
-                </div>
+                </div>}
+                {this.state.queryType === "private" && <div className="d-flex justify-content-center">
+                    <h6>Private scripts that have been shared with you will appear here. As of now, your current
+                    filter settings show zero private scripts. You may not have any shared.</h6>
+                </div>}
             </React.Fragment>}
             {!this.state.loading && <div>
                 {this.state.scripts.map((script: any) => {

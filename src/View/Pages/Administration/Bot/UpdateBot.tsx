@@ -1,6 +1,7 @@
 import React from 'react';
 import {ApiService} from "../../../../Common/ApiService";
 import {Alert} from "../../../../Utilities/Alert";
+import {Util} from "../../../../Utilities/Util";
 
 export class UpdateBot extends React.Component<any, any> {
 
@@ -21,13 +22,6 @@ export class UpdateBot extends React.Component<any, any> {
         this.setCurrentVersion();
     }
 
-    private formatBytes(a: any) {
-        if (0 == a) return "0 Bytes";
-        const c = 1024, d = 2, e = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
-            f = Math.floor(Math.log(a) / Math.log(c));
-        return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
-    }
-    
     setCustomVersion = (e : any) => {
         this.setState({newVersion : e.target.value});
     };
@@ -112,7 +106,7 @@ export class UpdateBot extends React.Component<any, any> {
             <div>
                 <label htmlFor="hidden-new-file" className="ui large basic label">
                     <strong>File
-                        Name:</strong> {this.state.uploadedMod.name} ({this.formatBytes(this.state.uploadedMod.size)})
+                        Name:</strong> {this.state.uploadedMod.name} ({Util.formatBytes(this.state.uploadedMod.size)})
                 </label>
                 <button className={"btn btn-danger"} onClick={this.clearUpload}>Reset Upload</button>
                 <button className={"btn btn-success"} onClick={this.submitUpdate}>Submit Update</button>

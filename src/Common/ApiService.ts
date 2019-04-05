@@ -44,6 +44,19 @@ export class ApiService {
         });
     }
 
+    public async postFormData(path : string, body : any) : Promise<any> {
+        const formData = new FormData();
+        Object.keys(body).forEach(key => {
+            formData.append(key, body[key])
+        });
+        return this.execute(async () => {
+            let config = this.buildConfig();
+            config.headers['content-type'] = 'multipart/form-data';
+            const {data} = await axios.post(this.buildPath(path), formData, config);
+            return data;
+        });
+    }
+
     public async get(path : string) : Promise<any> {
         return await this.execute(async () => {
             const {data} = await axios.get(this.buildPath(path), this.buildConfig());
