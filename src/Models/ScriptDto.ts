@@ -72,7 +72,7 @@ export const ScriptTypes : any = {
 
 export const ScriptOrderBy : any = {
     'featured' : 'Most Popular (24 Hours)',
-    'featuredAllTime' : 'Most Popular All Time',
+    'featuredAllTime' : 'Most Popular (30 Days)',
     'newest' : 'Newest',
     'users' : 'Users',
     'alphabetical' : 'Alphabetical',
