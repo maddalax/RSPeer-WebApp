@@ -116,8 +116,8 @@ export class AdministrationScriptList extends React.Component<any, State> {
                             <th scope="row"><a href={s.forumThread} target={"_blank"}>View Forum</a></th>
                             <td>{s.version}</td>
                             <td className={color(s)} style={style(s)}>{s.typeFormatted}</td>
-                            <td>{s.type === ScriptType.Free ? 'N/A' : Util.formatNumber(s.price.toString())}</td>
-                            <td>{s.type === ScriptType.Free ? 'N/A' : (s.instances || 'Unlimited')}</td>
+                            <td>{s.price != null ? Util.formatNumber(s.price.toString()) : 'N/A'}</td>
+                            <td>{s.type === ScriptType.Premium ? s.instances || 'Unlimited' : 'N/A'}</td>
                             <td>{s.categoryFormatted}</td>
                             <td>{s.totalUsers}</td>
                             <th scope="col"><a href={"javascript:void(0)"} onClick={() => this.manageScript(s)}>Manage</a></th>
