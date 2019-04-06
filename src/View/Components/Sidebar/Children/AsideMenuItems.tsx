@@ -20,7 +20,7 @@ export class ScriptsMenuItem extends React.Component {
                         Scripts</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/scripts?q=private"} className="menu-link"><i className="fab fa-user-secret"/> Private
+                    <Link to={"/scripts?q=private"} className="menu-link"><i className="fas fa-user-secret"/> Private
                         Scripts</Link>
                 </li>
                 <li className="menu-item">
