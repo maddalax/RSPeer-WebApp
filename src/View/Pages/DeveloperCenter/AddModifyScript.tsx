@@ -52,7 +52,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             obfuscate: true,
             scriptJar : null
         };
-        this.api = new ApiService();
+        this.api = new ApiService({throwError : true, supressAlert : true});
     }
 
     componentDidMount(): void {
@@ -155,18 +155,38 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         };
 
         const path = this.props.isAdminView ? 'adminScript/update' : 'script/create';
-        const res = await this.api.post(path, {
-            Script: script,
-            Recompile: this.state.recompile
-        });
-        this.setState({processing: false});
-        if (res.error) {
-            return Alert.show(res.error);
-        }
-        this.props.onConfirm && this.props.onConfirm();
-        if (!this.props.isAdminView) {
-            Alert.success("Successfully submitted script update.");
-            this.exit();
+        try {
+            await this.api.post(path, {
+                Script: script,
+                Recompile: this.state.recompile
+            });
+            this.setState({processing: false});
+            this.props.onConfirm && this.props.onConfirm();
+            if (!this.props.isAdminView) {
+                Alert.success("Successfully submitted script update.");
+                this.exit();
+            }
+        } catch (e) {
+            this.setState({processing : false});
+            console.error(e.response.data);
+            const data = e.response.data;
+            if(data.error) {
+                Alert.show(data.error);
+                return;
+            }
+            if(!data.Logs && !data.Errors) {
+                Alert.show("Failed to compile script. " + JSON.stringify(data));
+                return;
+            }
+            Alert.modal({
+                title : 'Failed to compile script.',
+                body : <div>
+                    <h3>Logs</h3>
+                    {<p>{data.Logs}</p>}
+                    <br/>
+                    {<p>{data.Errors}</p>}
+                </div>
+            })
         }
     };
     

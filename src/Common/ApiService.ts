@@ -9,14 +9,15 @@ declare global {
 window.rspeer = window.rspeer || {};
 
 export interface ApiConfig {
-    supressAlert : boolean
+    supressAlert? : boolean
+    throwError? : boolean
 }
 
 export class ApiService {
 
     private apiConfig : ApiConfig;
 
-    constructor(config : ApiConfig = {supressAlert : false}) {
+    constructor(config : ApiConfig = {supressAlert : false, throwError : false}) {
         this.apiConfig = config;
     }
 
@@ -68,6 +69,9 @@ export class ApiService {
         try {
             return await func();
         } catch (e) {
+            if(this.apiConfig.throwError) {
+                throw e;
+            }
             const error = this.parseError(e);
             if(!this.apiConfig.supressAlert) {
                 Alert.show(error.error);
@@ -77,7 +81,7 @@ export class ApiService {
     }
 
     private parseError = (ex : any) => {
-        console.log(ex);
+        console.error(ex);
         if(!ex.response) {
             return {error : "Something went wrong."};
         }
