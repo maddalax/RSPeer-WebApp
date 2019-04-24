@@ -23,13 +23,14 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
 
     constructor(props: any) {
         super(props);
+        const search: any = HttpUtil.getParameterByName("s") || "";
         const queryRaw: any = HttpUtil.getParameterByName("q") || "";
         this.apiService = new ApiService();
         const queryType = ScriptTypes[queryRaw] == null ? 'free' : queryRaw;
         this.state = {
             scripts: [],
             loading: true,
-            search: '',
+            search: search,
             originalQueryType : queryType,
             queryType: queryType,
             orderBy: 'featured',
