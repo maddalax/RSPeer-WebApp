@@ -120,7 +120,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             return Alert.show("Please select a script category.");
         }
         
-        if (this.state.type !== ScriptType.Private && !this.state.forumThread) {
+        if (!this.allowsJar() && !this.state.forumThread) {
             return Alert.show("Please enter a valid forum thread for your script. Visit https://rspeer.org/forums/ to create one.");
         }
 
@@ -138,8 +138,8 @@ export class AddModifyScript extends React.Component<Props | any, State> {
 
         this.setState({processing: true});
 
-        if(this.state.type === ScriptType.Private) {
-            return await this.submitPrivate();
+        if(this.allowsJar()) {
+            return await this.submitJar();
         }
         
         const script: any = {
@@ -190,12 +190,13 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         }
     };
     
-    private submitPrivate = async () => {
+    private submitJar = async () => {
         if(!this.state.scriptJar || this.state.scriptJar.size === 0) {
             Alert.show("You must upload a script jar file!");
             return;
         }
-        const res = await this.api.postFormData("script/createPrivate", {
+        const path = this.state.type === ScriptType.Private ? "script/createPrivate" : "script/createPublicHidden";
+        const res = await this.api.postFormData(path, {
             command : JSON.stringify({
                 Script : {
                     Id: this.state.scriptId,
@@ -211,7 +212,12 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         if(res.error) {
             return;
         }
-        Alert.success("Successfully submitted / updated private script. Visit Private Script Access on sidebar to give users access.", 9000);
+        
+        const message = this.state.type === ScriptType.Private 
+            ? "Successfully submitted / updated private script. Visit Private Script Access on sidebar to give users access." 
+            : "Successfully added public hidden script.";
+        
+        Alert.success(message, 9000);
         this.props.history.push('/developer')
     };
 
@@ -230,6 +236,10 @@ export class AddModifyScript extends React.Component<Props | any, State> {
 
     setValue = (e: any, key: string) => {
         this.setState({[key]: e.target.value})
+    };
+    
+    allowsJar = () => {
+        return this.state.type === ScriptType.Private || this.state.type == ScriptType.HiddenPublic;
     };
 
     render() {
@@ -269,6 +279,9 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                     <li key={"private"} onClick={(e) => this.setScriptType(e, ScriptType.Private)}
                                         className="dropdown-item">Private
                                     </li>
+                                    {this.props.user.isOwner && <li key={"hiddenPublic"} onClick={(e) => this.setScriptType(e, ScriptType.HiddenPublic)}
+                                                                   className="dropdown-item">Hidden Public
+                                    </li>}
                                 </ul>
                             </div>
                         </div>
@@ -289,7 +302,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 on what your script does. Script requests may be denied due to low quality descriptions.
                             </p>
                         </div>
-                        {this.state.type !== ScriptType.Private && <div className="form-group">
+                        {!this.allowsJar() && <div className="form-group">
                             <label htmlFor="repoUrl">Repository URL</label>
                             <input onChange={(e) => this.setValue(e, 'repoUrl')} value={this.state.repoUrl} type="text"
                                    className="form-control" id="repoUrl"
@@ -300,7 +313,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 clone the repository.
                             </p>
                         </div>}
-                        {this.state.type !== ScriptType.Private && <div className="form-group">
+                        {!this.allowsJar() && <div className="form-group">
                             <label htmlFor="forumThread">Forum Thread URL</label>
                             <input onChange={(e) => this.setValue(e, 'forumThread')} value={this.state.forumThread}
                                    type="text" className="form-control" id="forumThread"
@@ -350,7 +363,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 </p>
                             </div>
                         </React.Fragment>}
-                        {this.state.type !== ScriptType.Private && !this.props.isAdminView && <React.Fragment>
+                        {!this.allowsJar() && !this.props.isAdminView && <React.Fragment>
                             <p>Your script will go through a formal verification process by staff to ensure your script
                                 is
                                 safe.</p>
@@ -364,7 +377,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                             {this.state.processing &&
                             <button type="submit" className="btn btn-primary">Processing...</button>}
                         </React.Fragment>}
-                        {this.state.type === ScriptType.Private && !this.props.isAdminView && <React.Fragment>
+                        {this.allowsJar() && !this.props.isAdminView && <React.Fragment>
                             {!this.state.processing && !this.state.scriptJar && 
                             <React.Fragment>
                                 <label style={{marginTop: '8px'}} htmlFor="hidden-new-file" className="btn btn-primary">
@@ -385,10 +398,11 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                             {this.state.processing &&
                             <button type="submit" className="btn btn-primary">Processing...</button>}
                         </React.Fragment>}
-                        {this.state.type === ScriptType.Private && !this.props.isAdminView && <React.Fragment>
-                            <p>Private scripts are not reviewed by RSPeer staff.</p>
-                            <p>We do not compile private scripts on our servers, please upload a compiled jar
-                                file of the private script.</p>
+                        {this.allowsJar() && !this.props.isAdminView && <React.Fragment>
+                            {this.state.type === ScriptType.Private && <p>Private scripts are not reviewed by RSPeer staff.</p>}
+                            {this.state.type === ScriptType.HiddenPublic && <p>Hidden Public is only uploaded by RSPeer staff.</p>}
+                            {this.state.type === ScriptType.Private &&  <p>We do not compile private scripts on our servers, please upload a compiled jar
+                                file of the private script.</p>}
                             {!this.state.processing &&
                             <React.Fragment>
                                 <button type={"submit"} className="btn btn-success">

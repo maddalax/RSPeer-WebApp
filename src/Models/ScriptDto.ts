@@ -100,7 +100,8 @@ export enum ScriptType {
     PremiumTrial,
     Premium,
     Private,
-    Mine
+    Mine,
+    HiddenPublic
 }
 
 
@@ -111,7 +112,9 @@ export const ScriptTypeFormatted = (type: ScriptType) => {
         case ScriptType.Premium:
             return "Premium";
         case ScriptType.Private:
-            return "Private"
+            return "Private";
+        case ScriptType.HiddenPublic:
+            return "Hidden Public"
     }
 };
 
