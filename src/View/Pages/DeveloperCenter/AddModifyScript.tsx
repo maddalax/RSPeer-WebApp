@@ -279,7 +279,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                     <li key={"private"} onClick={(e) => this.setScriptType(e, ScriptType.Private)}
                                         className="dropdown-item">Private
                                     </li>
-                                    {this.props.user.isOwner && <li key={"hiddenPublic"} onClick={(e) => this.setScriptType(e, ScriptType.HiddenPublic)}
+                                    {this.props.user && this.props.user.isOwner && <li key={"hiddenPublic"} onClick={(e) => this.setScriptType(e, ScriptType.HiddenPublic)}
                                                                    className="dropdown-item">Hidden Public
                                     </li>}
                                 </ul>
