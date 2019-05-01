@@ -38,10 +38,10 @@ export class UpdateBot extends React.Component<any, any> {
         if (!file)
             return;
 
-        if (file.name.indexOf('.jar') === -1) {
-            return Alert.show("File must be a .jar.")
+        if(file.name !== "rspeer-client-1.0-jar-with-dependencies-obb.jar") {
+            return Alert.show("File name must be: rspeer-client-1.0-jar-with-dependencies-obb.jar")
         }
-
+        
         this.setState({
             ...this.state,
             isUploading: false,
