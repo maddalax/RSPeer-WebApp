@@ -60,12 +60,16 @@ export class UpdateBot extends React.Component<any, any> {
         if(this.state.newVersion === this.state.currentVersion) {
             return Alert.show("You must change the version to not match the current version.");
         }
-        const confirm = window.confirm("Please click ok to confirm the updating of the bot with your selected file.");
+        let confirm = window.confirm("Please click ok to confirm the updating of the bot with your selected file.");
         if (!confirm)
             return;
         this.setState({...this.state, isUploading: true});
         const formData = new FormData();
         formData.append("file", this.state.uploadedMod.file);
+        confirm = window.confirm('The API no longer obfuscates the bot automatically, it is expected that you have uploaded an obfuscated bot, please confirm that your upload is obfuscated.');
+        if(!confirm) {
+            return;
+        }
         const res = await this.api.post(`adminBot/updateBot?silent=false&version=${this.state.newVersion}`, formData);
         this.setState({...this.state, isUploading: false});
         if (res.error) {
