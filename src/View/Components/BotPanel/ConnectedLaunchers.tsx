@@ -45,20 +45,29 @@ export class ConnectedLaunchers extends React.Component<any, State> {
     };
 
     killClient = async (client: any, index: number, host: string, shouldConfirm = true) => {
+        host = host.toLowerCase().trim();
         if (shouldConfirm) {
             const confirm = window.confirm("Are you sure you want to close " + (client.rsn || "this client") + " ?");
             if (!confirm)
                 return;
         }
-        await this.api.post("botLauncher/kill?id=" + client.id, {});
+        await this.sendMessage(client, ':kill');
         setTimeout(() => {
             this.setState(prev => {
                 if (prev.clients[host]) {
-                    prev.clients[host].splice(index);
+                    prev.clients[host].splice(prev.clients[host].indexOf(client));
                 }
                 return prev;
             })
-        }, 1500);
+        }, 1000);
+    };
+    
+    sendMessage = async (client : any, message : string) => {
+        if(!client.tag) {
+            Alert.show("Client did not have tag? Cannot send message: " + message);
+            return;
+        }
+        await this.api.post(`botLauncher/sendNew?message=${message}&tag=${client.tag}`, {});
     };
 
     killAllClients = async (launcher: any) => {
@@ -66,9 +75,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
         const confirm = window.confirm(`Are you sure you want to close all clients on ${launcher.host}? This will close ${clients.length} client(s).`);
         if (!confirm)
             return;
-        clients.forEach((c: any, index: number) => {
-            this.killClient(c, index, launcher.host, false);
-        })
+        await Promise.all(clients.map((c: any, index: number) => this.killClient(c, index, launcher.host, false)))
     };
 
     launchClient = async (socket: string, launcher: any) => {
