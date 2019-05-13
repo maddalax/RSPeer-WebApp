@@ -146,7 +146,7 @@ export class DeveloperCenter extends React.Component {
                     <a href="https://download.rspeer.org/front-site/javadocs/index.html" target={"_blank"} className="menu-link">JavaDocs</a>
                 </li>
                 <li className="menu-item">
-                    <a href="https://services.rspeer.org/api/bot/currentJar" target={"_blank"} className="menu-link">RSPeer Jar</a>
+                    <a href="https://services.rspeer.org/api/bot/currentJar" target={"_blank"} className="menu-link">Rspeer SDK Download</a>
                 </li>
             </ul>
         </li>);
