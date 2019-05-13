@@ -10,7 +10,7 @@ export class InstanceService {
 
     public async canRunMore() : Promise<boolean> {
         const limits = await this.getLimits();
-        return limits.canRunMore === true;
+        return limits.canRunMore;
     }
 
     public async getLimits() {
