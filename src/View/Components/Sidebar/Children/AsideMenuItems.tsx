@@ -53,6 +53,10 @@ export class BotPanelMenuItem extends React.Component {
                     <Link to={"/bot/management/logs"} className="menu-link"><i className="fab fa-paypal"/> View
                         Logs</Link>
                 </li>
+                <li className="menu-item">
+                    <Link to={"/bot/management/clients"} className="menu-link"><i className="fas fa-running"/> Running
+                        Clients</Link>
+                </li>
             </ul>
         </li>);
     }

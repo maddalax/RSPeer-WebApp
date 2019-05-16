@@ -28,39 +28,66 @@ import {GettingStarted} from "./View/Pages/GettingStarted";
 import {OrderManager} from "./View/Pages/Administration/Order/OrderManager";
 import {AdministrationStatsDashboard} from "./View/Pages/Administration/Stats/AdministrationStatsDashboard";
 import {ManagePrivateScriptAccess} from "./View/Pages/DeveloperCenter/ManagePrivateScriptAccess";
+import {RunningClients} from "./View/Components/BotPanel/RunningClients";
 
 export class Routes extends React.Component {
-    
-    render() : any {
+
+    render(): any {
         return (
             <Switch>
-                <Route exact path={`/`} component={(props : any) => <Dashboard {...props} {...this.props}/>}/>
-                <Route exact path={`/started`} component={(props : any) => <GettingStarted {...props} {...this.props}/>}/>
-                <Route exact path={`/login`} component={(props : any) => <SignIn {...props} {...this.props}/>}/>
-                <Route exact path={`/scripts`} component={(props : any) => <ScriptRepositoryDashboard {...props} {...this.props}/>}/>
-                <Route exact path={`/store`} component={(props : any) => <StoreDashboard {...props} {...this.props}/>}/>
-                <Route exact path={`/store/checkout`} component={(props : any) => <StoreCheckout {...props} {...this.props}/>}/>
-                <Route exact path={`/store/success`} component={(props : any) => <StoreSuccess {...props} {...this.props}/>}/>
-                <Route exact path={`/store/process`} component={(props : any) => <StoreProcess {...props} {...this.props}/>}/>
-                <Route exact path={`/developer`} component={(props : any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
-                <Route exact path={`/developer/addScript`} component={(props : any) => <AddModifyScript {...props} {...this.props}/>}/>
-                <Route exact path={`/developer/privateScript`} component={(props : any) => <ManagePrivateScriptAccess {...props} {...this.props}/>}/>
-                <Route exact path={`/developer/register`} component={(props : any) => <RegisterGitRepository {...props} {...this.props}/>}/>
-                <Route exact path={`/user/orders`} component={(props : any) => <UserCenterViewOrders {...props} {...this.props}/>}/>
-                <Route exact path={`/user/balanceChanges`} component={(props : any) => <UserCenterViewBalanceChanges {...props} {...this.props}/>}/>
-                <Route exact path={`/user/scriptAccess`} component={(props : any) => <UserCenterViewScriptAccess {...props} {...this.props}/>}/>
-                <Route exact path={`/bot/management`} component={(props : any) => <BotPanelDashboard {...props} {...this.props}/>}/>
-                <Route exact path={`/bot/management/qs`} component={(props : any) => <QuickLaunch {...props} {...this.props}/>}/>
-                <Route exact path={`/bot/management/proxy`} component={(props : any) => <ProxyManager {...props} {...this.props}/>}/>
-                <Route exact path={`/bot/management/logs`} component={(props : any) => <ViewLogs {...props} {...this.props}/>}/>
-                <Route exact path={`/bot/management/logs/:launcherId`} component={(props : any) => <ViewLogs {...props} {...this.props}/>}/>
-                <Route exact path={`/administration`} component={(props : any) => <AdministrationDashboard {...props} {...this.props}/>}/>
-                <Route exact path={`/administration/user/search`} component={(props : any) => <AdministrationUserDetails {...props} {...this.props}/>}/>
-                <Route exact path={`/administration/scripts`} component={(props : any) => <AdministrationScriptList {...props} {...this.props}/>}/>
-                <Route exact path={`/administration/scripter/payout`} component={(props : any) => <ScripterPayout {...props} {...this.props}/>}/>
-                <Route exact path={`/administration/content`} component={(props : any) => <SiteContentManager {...props} {...this.props}/>}/>
-                <Route exact path={`/administration/orders`} component={(props : any) => <OrderManager {...props} {...this.props}/>}/>
-                <Route exact path={`/administration/stats`} component={(props : any) => <AdministrationStatsDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/`} component={(props: any) => <Dashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/started`}
+                       component={(props: any) => <GettingStarted {...props} {...this.props}/>}/>
+                <Route exact path={`/login`} component={(props: any) => <SignIn {...props} {...this.props}/>}/>
+                <Route exact path={`/scripts`}
+                       component={(props: any) => <ScriptRepositoryDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/store`} component={(props: any) => <StoreDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/store/checkout`}
+                       component={(props: any) => <StoreCheckout {...props} {...this.props}/>}/>
+                <Route exact path={`/store/success`}
+                       component={(props: any) => <StoreSuccess {...props} {...this.props}/>}/>
+                <Route exact path={`/store/process`}
+                       component={(props: any) => <StoreProcess {...props} {...this.props}/>}/>
+                <Route exact path={`/developer`}
+                       component={(props: any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/developer/addScript`}
+                       component={(props: any) => <AddModifyScript {...props} {...this.props}/>}/>
+                <Route exact path={`/developer/privateScript`}
+                       component={(props: any) => <ManagePrivateScriptAccess {...props} {...this.props}/>}/>
+                <Route exact path={`/developer/register`}
+                       component={(props: any) => <RegisterGitRepository {...props} {...this.props}/>}/>
+                <Route exact path={`/user/orders`}
+                       component={(props: any) => <UserCenterViewOrders {...props} {...this.props}/>}/>
+                <Route exact path={`/user/balanceChanges`}
+                       component={(props: any) => <UserCenterViewBalanceChanges {...props} {...this.props}/>}/>
+                <Route exact path={`/user/scriptAccess`}
+                       component={(props: any) => <UserCenterViewScriptAccess {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management`}
+                       component={(props: any) => <BotPanelDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/qs`}
+                       component={(props: any) => <QuickLaunch {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/proxy`}
+                       component={(props: any) => <ProxyManager {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/logs`}
+                       component={(props: any) => <ViewLogs {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/logs/:launcherId`}
+                       component={(props: any) => <ViewLogs {...props} {...this.props}/>}/>
+                <Route exact path={`/bot/management/clients`}
+                       component={(props: any) => <RunningClients {...props} {...this.props}/>}/>
+                <Route exact path={`/administration`}
+                       component={(props: any) => <AdministrationDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/user/search`}
+                       component={(props: any) => <AdministrationUserDetails {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/scripts`}
+                       component={(props: any) => <AdministrationScriptList {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/scripter/payout`}
+                       component={(props: any) => <ScripterPayout {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/content`}
+                       component={(props: any) => <SiteContentManager {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/orders`}
+                       component={(props: any) => <OrderManager {...props} {...this.props}/>}/>
+                <Route exact path={`/administration/stats`}
+                       component={(props: any) => <AdministrationStatsDashboard {...props} {...this.props}/>}/>
             </Switch>
         )
     }
