@@ -1,6 +1,6 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
-import {ScriptDto, ScriptType, ScriptTypeFormatted} from "../../../Models/ScriptDto";
+import {ScriptDto, ScriptStatus, ScriptType, ScriptTypeFormatted} from "../../../Models/ScriptDto";
 import {Alert} from "../../../Utilities/Alert";
 import {Util} from "../../../Utilities/Util";
 
@@ -19,7 +19,8 @@ type State = {
     processing: boolean,
     type: ScriptType,
     obfuscate: boolean,
-    scriptJar : any
+    scriptJar: any,
+    status: ScriptStatus
 }
 
 type Props = {
@@ -50,9 +51,10 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             processing: false,
             type: script != null ? script.type : ScriptType.Free,
             obfuscate: true,
-            scriptJar : null
+            scriptJar: null,
+            status: script != null ? script.status : ScriptStatus.Pending
         };
-        this.api = new ApiService({throwError : true, supressAlert : true});
+        this.api = new ApiService({throwError: true, supressAlert: true});
     }
 
     componentDidMount(): void {
@@ -80,6 +82,13 @@ export class AddModifyScript extends React.Component<Props | any, State> {
         if (!confirm) {
             return;
         }
+        if (this.state.status === ScriptStatus.Pending) {
+            const confirm2 = await window.confirm("Are you sure you didn't mean to deny instead of delete a pending submission? " +
+                "If so please click cancel and use the Deny button.")
+            if (!confirm2) {
+                return;
+            }
+        }
         if (this.state.processing) {
             return;
         }
@@ -102,24 +111,24 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             return Alert.show("File must be a .jar.")
         }
 
-        this.setState({scriptJar : file});
+        this.setState({scriptJar: file});
     };
-    
-    clearPrivateScript = (e : any) => {
+
+    clearPrivateScript = (e: any) => {
         e.preventDefault();
-        this.setState({scriptJar : null})
+        this.setState({scriptJar: null})
     };
-    
+
     onFormSubmit = async (e: any) => {
         e && e.preventDefault();
         if (this.state.processing) {
             return;
         }
-        
+
         if (!this.state.category) {
             return Alert.show("Please select a script category.");
         }
-        
+
         if (!this.allowsJar() && !this.state.forumThread) {
             return Alert.show("Please enter a valid forum thread for your script. Visit https://rspeer.org/forums/ to create one.");
         }
@@ -138,10 +147,10 @@ export class AddModifyScript extends React.Component<Props | any, State> {
 
         this.setState({processing: true});
 
-        if(this.allowsJar()) {
+        if (this.allowsJar()) {
             return await this.submitJar();
         }
-        
+
         const script: any = {
             Id: this.state.scriptId,
             RepositoryUrl: this.state.repoUrl,
@@ -167,20 +176,20 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                 this.exit();
             }
         } catch (e) {
-            this.setState({processing : false});
+            this.setState({processing: false});
             console.error(e.response.data);
             const data = e.response.data;
-            if(data.error) {
+            if (data.error) {
                 Alert.show(data.error);
                 return;
             }
-            if(!data.Logs && !data.Errors) {
+            if (!data.Logs && !data.Errors) {
                 Alert.show("Failed to compile script. " + JSON.stringify(data));
                 return;
             }
             Alert.modal({
-                title : 'Failed to compile script.',
-                body : <div>
+                title: 'Failed to compile script.',
+                body: <div>
                     <h3>Logs</h3>
                     {<p>{data.Logs}</p>}
                     <br/>
@@ -189,34 +198,34 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             })
         }
     };
-    
+
     private submitJar = async () => {
-        if(!this.state.scriptJar || this.state.scriptJar.size === 0) {
+        if (!this.state.scriptJar || this.state.scriptJar.size === 0) {
             Alert.show("You must upload a script jar file!");
             return;
         }
         const path = this.state.type === ScriptType.Private ? "script/createPrivate" : "script/createPublicHidden";
         const res = await this.api.postFormData(path, {
-            command : JSON.stringify({
-                Script : {
+            command: JSON.stringify({
+                Script: {
                     Id: this.state.scriptId,
-                    Name : this.state.name,
+                    Name: this.state.name,
                     Description: this.state.description,
                     Category: this.state.category,
                     Type: this.state.type
                 }
             }),
-            file : this.state.scriptJar
+            file: this.state.scriptJar
         });
         this.setState({processing: false});
-        if(res.error) {
+        if (res.error) {
             return;
         }
-        
-        const message = this.state.type === ScriptType.Private 
-            ? "Successfully submitted / updated private script. Visit Private Script Access on sidebar to give users access." 
+
+        const message = this.state.type === ScriptType.Private
+            ? "Successfully submitted / updated private script. Visit Private Script Access on sidebar to give users access."
             : "Successfully added public hidden script.";
-        
+
         Alert.success(message, 9000);
         this.props.history.push('/developer')
     };
@@ -237,7 +246,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
     setValue = (e: any, key: string) => {
         this.setState({[key]: e.target.value})
     };
-    
+
     allowsJar = () => {
         return this.state.type === ScriptType.Private || this.state.type == ScriptType.HiddenPublic;
     };
@@ -279,8 +288,10 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                     <li key={"private"} onClick={(e) => this.setScriptType(e, ScriptType.Private)}
                                         className="dropdown-item">Private
                                     </li>
-                                    {this.props.user && this.props.user.isOwner && <li key={"hiddenPublic"} onClick={(e) => this.setScriptType(e, ScriptType.HiddenPublic)}
-                                                                   className="dropdown-item">Hidden Public
+                                    {this.props.user && this.props.user.isOwner && <li key={"hiddenPublic"}
+                                                                                       onClick={(e) => this.setScriptType(e, ScriptType.HiddenPublic)}
+                                                                                       className="dropdown-item">Hidden
+                                        Public
                                     </li>}
                                 </ul>
                             </div>
@@ -378,7 +389,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                             <button type="submit" className="btn btn-primary">Processing...</button>}
                         </React.Fragment>}
                         {this.allowsJar() && !this.props.isAdminView && <React.Fragment>
-                            {!this.state.processing && !this.state.scriptJar && 
+                            {!this.state.processing && !this.state.scriptJar &&
                             <React.Fragment>
                                 <label style={{marginTop: '8px'}} htmlFor="hidden-new-file" className="btn btn-primary">
                                     Click To Upload Script Jar
@@ -399,9 +410,12 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                             <button type="submit" className="btn btn-primary">Processing...</button>}
                         </React.Fragment>}
                         {this.allowsJar() && !this.props.isAdminView && <React.Fragment>
-                            {this.state.type === ScriptType.Private && <p>Private scripts are not reviewed by RSPeer staff.</p>}
-                            {this.state.type === ScriptType.HiddenPublic && <p>Hidden Public is only uploaded by RSPeer staff.</p>}
-                            {this.state.type === ScriptType.Private &&  <p>We do not compile private scripts on our servers, please upload a compiled jar
+                            {this.state.type === ScriptType.Private &&
+                            <p>Private scripts are not reviewed by RSPeer staff.</p>}
+                            {this.state.type === ScriptType.HiddenPublic &&
+                            <p>Hidden Public is only uploaded by RSPeer staff.</p>}
+                            {this.state.type === ScriptType.Private &&
+                            <p>We do not compile private scripts on our servers, please upload a compiled jar
                                 file of the private script.</p>}
                             {!this.state.processing &&
                             <React.Fragment>
@@ -429,14 +443,18 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                                 </div>
                             </div>
                             {!this.state.processing &&
-                            <button type="submit" className="btn btn-primary button-spacing">Update Script</button>}
+                            <button type="submit" className="btn btn-primary button-spacing">Accept</button>}
                             {this.state.processing &&
                             <button type="submit" className="btn btn-primary button-spacing">Processing...</button>}
                         </React.Fragment>}
                         {this.props.isAdminView && !this.state.processing &&
-                        <button onClick={this.deleteScript} className="btn btn-danger">Delete Script</button>}
-                        <button style={{marginLeft: '5px'}} className="btn btn-danger" onClick={this.cancel}>Cancel
-                        </button>
+                        <React.Fragment>
+                            {this.state.status === ScriptStatus.Live && <button onClick={this.deleteScript}
+                                                                                className="btn btn-danger">Delete
+                                Script</button>}
+                            <button style={{marginLeft: '5px'}} className="btn btn-danger" onClick={this.cancel}>Cancel
+                            </button>
+                        </React.Fragment>}
                     </form>
                 </div>
             </div>

@@ -1,12 +1,14 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
-import {ScriptDto, ScripterInfo, ScriptStatus, ScriptType} from "../../../Models/ScriptDto";
+import {PendingScript, ScriptDto, ScripterInfo, ScriptStatus, ScriptType} from "../../../Models/ScriptDto";
 import {Util} from "../../../Utilities/Util";
 import {AddModifyScript} from "./AddModifyScript";
+import {Alert} from "../../../Utilities/Alert";
 
 type State = {
     live: ScriptDto[],
     pending: ScriptDto[],
+    messages : PendingScript[],
     selectedScript : ScriptDto | null,
     scripterInfo : ScripterInfo | null,
     loading : boolean
@@ -24,10 +26,15 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
             pending: [],
             selectedScript : null,
             scripterInfo : null,
-            loading : true
+            loading : true,
+            messages : []
         }
     }
-
+    
+    getMetaData(script : ScriptDto) : PendingScript | null {
+        return this.state.messages.find(w => w.pendingScriptId == script.id) || null;
+    }
+    
     async componentDidMount() {
         if(!this.props.user) {
             return;
@@ -35,9 +42,11 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
         const scripterInfo = await this.api.get("scriptDevelopment/scripterInfo");
         this.setState({scripterInfo});
         const scripts: ScriptDto[] = await this.api.get("scriptDevelopment/listForScripter");
+        const messages : PendingScript[] = await this.api.get("scriptDevelopment/getMessages");
+        this.setState({messages});
         if (Array.isArray(scripts)) {
             const live = scripts.filter(w => w.status === ScriptStatus.Live);
-            const pending = scripts.filter(w => w.status !== ScriptStatus.Live);
+            const pending = scripts.filter(w => w.status === ScriptStatus.Pending || w.status === ScriptStatus.Denied);
             this.setState({live, pending});
         }
         this.setState({loading : false});
@@ -48,6 +57,22 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
 
     private updateScript = (script : ScriptDto) => {
         this.setState({selectedScript : script})
+    };
+    
+    private viewMessage = (script : ScriptDto, record : PendingScript) => {
+        const isDenied = record.status === ScriptStatus.Denied;
+        Alert.modal({
+            title : `Viewing messages for ${script.name}.`,
+            body : <div>
+                {isDenied && <h6>Your script submission has been denied for the following reason: </h6>}
+                <hr/>
+                <p style={{color : '#ea6759'}}>{record.message}</p>
+                <hr/>
+                {isDenied && <h6>Please make appropriate changes and submit a new update.</h6>}
+                {isDenied && <h6>Please join our Discord and contact staff if you have any questions: 
+                    <a href={"https://discordapp.com/invite/rMTTpsU"} target={"_blank"}> https://discordapp.com/invite/rMTTpsU</a></h6>}
+            </div>
+        })
     };
 
     private renderTable = (collection : ScriptDto[]) => {
@@ -74,6 +99,13 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
                 </thead>
                 <tbody>
                 {collection.map(s => {
+                    const meta = this.getMetaData(s);
+                    const isDenied = meta != null && meta.status === ScriptStatus.Denied;
+                    const hasMessage = meta != null && meta.message != null;
+                    if(isDenied) {
+                        s.status = ScriptStatus.Denied;
+                        s.statusFormatted = "Denied";
+                    }
                     return (<tr>
                         <th scope="row">{s.name}</th>
                         <td>{s.description}</td>
@@ -84,7 +116,9 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
                         <td>{s.categoryFormatted}</td>
                         <td>{s.totalUsers}</td>
                         <td className={color(s)}><span style={{color : 'black'}}>{s.statusFormatted}</span></td>
-                        <td><button onClick={() => this.updateScript(s)} className={"btn btn-info"}>Update</button></td>
+                        <td><button onClick={() => this.updateScript(s)} className={"btn btn-info"}>Update</button>
+                            {hasMessage && <button onClick={() => this.viewMessage(s, meta!)} className={"btn btn-success"}>View Messages</button>}
+                        </td>
                     </tr>)
                 })}
                 </tbody>
@@ -126,6 +160,7 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
             {this.state.selectedScript && <div>
                 <AddModifyScript script={this.state.selectedScript} {...this.props} onConfirm={() => {
                     this.setState({selectedScript : null})
+                    this.componentDidMount();
                 }} onCancel={() => {
                     this.setState({selectedScript : null})
                 }}/>

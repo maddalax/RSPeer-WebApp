@@ -30,8 +30,12 @@ export class Dashboard extends React.Component<any, any> {
 
     private setStates = async () => {
         const totalClientCount = await this.api.get("stats/connected");
-        const totalUsers = await this.api.get("stats/totalUsers");
-        const botVersion = await this.api.get("bot/currentVersionRaw");
+        let totalUsers = await this.api.get("stats/totalUsers");
+        let botVersion = await this.api.get("bot/currentVersionRaw");
+        if(totalUsers.error || botVersion.error) {
+            totalUsers = 0;
+            botVersion = 0.00
+        }
         this.setState({totalClientCount, totalUsers, botVersion})
     };
 

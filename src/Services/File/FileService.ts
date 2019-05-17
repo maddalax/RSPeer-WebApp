@@ -21,7 +21,8 @@ export class FileService {
     }
     
     async getFile(name : string) : Promise<string> {
-        return await this.api.get(`files/getString?name=${name}`);
+        const result = await this.api.get(`files/getString?name=${name}`);
+        return result.error ? `Failed to load content.` : result;
     }
     
 }

@@ -22,6 +22,13 @@ export interface ScriptDto {
     privateScriptAccesses: PrivateScriptAccessDto[]
 }
 
+export interface PendingScript {
+    liveScriptId: number;
+    pendingScriptId: number;
+    status : ScriptStatus;
+    message : string;
+}
+
 export interface Script {
     id: number;
     legacyId: null | string;

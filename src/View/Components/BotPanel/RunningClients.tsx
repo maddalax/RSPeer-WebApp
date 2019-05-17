@@ -76,7 +76,6 @@ export class RunningClients extends React.Component<any, State> {
                         <td>{i.proxyIp || "No Proxy"}</td>
                         <td>{i.machineName || "No Machine"}</td>
                         <td>{Util.formatDate(i.lastUpdate, true)}</td>
-                        <td><a href={"#"}>Get Screenshot</a></td>
                         <td><a href={"javascript:void(0)"} onClick={() => this.send(i, ':kill', true)}>Kill Client</a></td>
                     </tr>
                 })}
