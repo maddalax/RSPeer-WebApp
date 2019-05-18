@@ -63,7 +63,6 @@ export class RunningClients extends React.Component<any, State> {
                     <th scope="col">Proxy</th>
                     <th scope="col">Machine</th>
                     <th scope="col">Last Update</th>
-                    <th scope="col">Screenshot</th>
                     <th scope="col">Kill</th>
                 </tr>
                 </thead>
