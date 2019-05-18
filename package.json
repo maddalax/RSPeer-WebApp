@@ -30,7 +30,8 @@
     "sass-loader": "^7.1.0",
     "stacked-menu": "^1.1.12",
     "text-mask-addons": "^3.8.0",
-    "typescript": "3.3.3333"
+    "typescript": "3.3.3333",
+    "uuidv4": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

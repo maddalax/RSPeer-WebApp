@@ -3,6 +3,7 @@ import {ApiService} from "../../../Common/ApiService";
 import {InstanceService} from "../../../Services/BotPanel/InstanceService";
 import {ProxyService} from "../../../Services/BotPanel/ProxyService";
 import {Alert} from "../../../Utilities/Alert";
+const uuid = require('uuidv4');
 
 type State = {
     qs: any[],
@@ -12,7 +13,8 @@ type State = {
     count: number,
     proxies: any[],
     jvmArgs: string,
-    limits: any
+    limits: any,
+    selected : any
 }
 
 export class LaunchClientModal extends React.Component<any, State> {
@@ -34,7 +36,8 @@ export class LaunchClientModal extends React.Component<any, State> {
             count: 1,
             proxies: [],
             jvmArgs: '-Xmx384m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true -Xss2m',
-            limits: {}
+            limits: {},
+            selected : {}
         };
     }
 
@@ -70,6 +73,82 @@ export class LaunchClientModal extends React.Component<any, State> {
         this.props.onClose && this.props.onClose();
     };
 
+    isSelected = (client : any) => {
+        const value = this.state.selected[client.id];
+        return value != null && value === true;
+    };
+    
+    onCheckboxChange = (e : any, client : any) => {
+        const checked = e.target.checked;
+        this.setState(prev => {
+            prev.selected[client.id] = checked;
+            return prev;
+        })
+    };
+    
+    showQuickLaunchPrompt = async (payload : any) => {
+        this.setState({selected : {}});
+        this.setState(prev => {
+            for (let client of payload.qs.clients) {
+                prev.selected[client.id] = true;
+            }
+            return prev;
+        });
+        const toggleAll = () => {
+            for (let client of payload.qs.clients) {
+                const ele = document.getElementById(`toLaunchCheck-${client.id}`);
+                ele && ele.click();
+            }
+        };
+        Alert.modal({
+            title : "Please select the clients you would like to start.",
+            body : <div>
+                <button className={"btn btn-primary"} onClick={toggleAll}>Toggle All</button>
+                <br/><br/>
+                <table className="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Selected</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">World</th>
+                        <th scope="col">Proxy</th>
+                        <th scope="col">Script</th>
+                        <th scope="col">Script Args</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {payload.qs.clients.map((i : any, index: number) => {
+                        return <tr key={i.rsUsername}>
+                            <td>
+                                <div className="custom-control custom-checkbox">
+                                    <input type="checkbox" className="custom-control-input" id={`toLaunchCheck-${i.id}`} onChange={(e) => this.onCheckboxChange(e, i)} 
+                                           defaultChecked={true}/>
+                                        <label className="custom-control-label" htmlFor={`toLaunchCheck-${i.id}`}/>
+                                </div>
+                            </td>
+                            <td>{i.rsUsername || "No Username"}</td>
+                            <td>{`${i.world === -1 ? 'Any' : i.world}` || "No World"}</td>
+                            <td>{i.proxy != null && i.proxy.ip != null ? `${i.proxy.name} (${i.proxy.ip})` : "No Proxy"}</td>
+                            <td>{i.script != null ? i.script.name : "No Script"}</td>
+                            <td>{i.script != null ? i.script.scriptArgs : "No Script Args"}</td>
+                        </tr>
+                    })}
+                    </tbody>
+                </table>
+            </div>,
+            onConfirm : async () => {
+                payload.qs.clients = payload.qs.clients.filter((s : any) => this.state.selected[s.id] === true);
+                if(payload.qs.clients.length === 0) {
+                    this.props.onClose && this.props.onClose();
+                    return;
+                }
+                await this.sendMessage(this.props.socket, payload);
+                Alert.success(`Successfully sent message to launch ${payload.qs.clients.length} client(s). They should be starting soon.`, 5000)
+                this.props.onClose && this.props.onClose();
+            }
+        })
+    };
+    
     openClients = async () => {
         try {
             let count;
@@ -83,6 +162,7 @@ export class LaunchClientModal extends React.Component<any, State> {
                     if (proxyName) {
                         c.proxy = this.state.proxies.find(p => p.name === proxyName);
                     }
+                    c.id = uuid();
                     return c;
                 });
             }
@@ -102,15 +182,25 @@ export class LaunchClientModal extends React.Component<any, State> {
                 You may purchase more instances to run more clients by clicking on "Purchase Instances" on the sidebar.`);
                 return;
             }
-            await this.sendMessage(this.props.socket, {
+            
+            this.setState({selectedQs : qs});
+            
+            const payload = {
                 type: 'start:client',
                 session: localStorage.getItem("rspeer_session"),
-                qs: this.state.selectedQs,
+                qs,
                 jvmArgs: this.state.jvmArgs,
                 sleep: this.state.sleep,
                 proxy: this.state.selectedProxy,
                 count
-            });
+            };
+            
+            if(qs != null && qs.clients != null && qs.clients.length > 1) {
+                return this.showQuickLaunchPrompt(payload);
+            }
+            
+            await this.sendMessage(this.props.socket, payload);
+            
             Alert.success("Successfully send message to open client(s), client(s) should be opening soon.");
             setTimeout(() => {
                 this.close();
