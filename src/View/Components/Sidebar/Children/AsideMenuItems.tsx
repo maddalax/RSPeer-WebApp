@@ -12,8 +12,7 @@ export class ScriptsMenuItem extends React.Component {
                     <Link to={"/scripts?q=mine"} className="menu-link"><i className="fas fa-user"/> My Scripts</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/scripts?q=all"} className="menu-link"><i className="fas fa-globe-europe"/> All
-                        Scripts</Link>
+                    <Link to={"/scripts?q=free"} className="menu-link"><i className="fas fa-tree"/> Free Scripts</Link>
                 </li>
                 <li className="menu-item">
                     <Link to={"/scripts?q=premium"} className="menu-link"><i className="fab fa-app-store"/> Premium
@@ -22,9 +21,6 @@ export class ScriptsMenuItem extends React.Component {
                 <li className="menu-item">
                     <Link to={"/scripts?q=private"} className="menu-link"><i className="fas fa-user-secret"/> Private
                         Scripts</Link>
-                </li>
-                <li className="menu-item">
-                    <Link to={"/scripts?q=free"} className="menu-link"><i className="fas fa-tree"/> Free Scripts</Link>
                 </li>
             </ul>
         </li>);
