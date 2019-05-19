@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import {Util} from "../../Utilities/Util";
 import {HttpUtil} from "../../Utilities/HttpUtil";
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/logo.svg'
 import {ApiService} from "../../Common/ApiService";
 
 export type HeaderProps = {
@@ -66,15 +66,15 @@ export class Header extends React.Component<HeaderProps | any, State> {
     };
 
     render(): any {
-        return (<header className="app-header app-header-dark">
+        return (<header className="app-header app-header-dark" style={{backgroundColor : '#1b2033'}}>
                 <div className="top-bar">
                     <div className="top-bar-brand">
-                        <a href="/"><span className="tile tile-md tile-img mr-2" style={{width : '3.6em'}}>
+                        <a href="/"><span className="tile tile-md tile-img mr-2">
                         <img src={logo}
                              alt=""
                              style={{height: '36px', width: 'auto'}}/>
                         </span>
-                            <small>RSPeer.org</small>
+                            <small>RSPeer</small>
                         </a>
                     </div>
                     <div className="top-bar-list">
