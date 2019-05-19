@@ -156,7 +156,7 @@ export class DeveloperCenter extends React.Component {
 export class Downloads extends React.Component {
     render(): any {
         return (<li className="menu-item">
-            <a href="https://forums.rspeer.org/topic/551/rspeer-download-links" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-desktop"/> <span
+            <a href="https://rspeer.org/resources/download/" target={"_blank"} className="menu-link"><span className="menu-icon fas fa-desktop"/> <span
                 className="menu-text">Download Client</span></a>
             <a href="https://ninite.com/adoptjdkx11/" target={"_blank"} className="menu-link"><span className="menu-icon fab fa-java"/> <span
                 className="menu-text">OpenJDK 11</span></a>

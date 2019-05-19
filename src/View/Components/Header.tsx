@@ -45,7 +45,10 @@ export class Header extends React.Component<HeaderProps | any, State> {
     }
 
     private setConnectedCount = async () => {
-        const totalClientCount = await this.api.get("stats/connected");
+        let totalClientCount = await this.api.get("stats/connected");
+        if(totalClientCount.error) {
+            totalClientCount = 0;
+        }
         this.setState({totalClientCount})
     };
 

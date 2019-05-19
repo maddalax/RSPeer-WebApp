@@ -24,7 +24,7 @@ export class Aside extends React.Component<Props | any, any> {
                     <div className="aside-menu overflow-hidden">
                         <nav id="stacked-menu" className="stacked-menu">
                             <ul className="menu">
-                                <li className="menu-item has-active">
+                                <li className="menu-item">
                                     <Link to={"/"} className="menu-link"><span className="menu-icon fas fa-home"/>
                                         <span className="menu-text">Dashboard</span></Link>
                                 </li>

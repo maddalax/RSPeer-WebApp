@@ -149,7 +149,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
             {launcherCount === 0 && <div>
                 <p>You currently have no running launchers on any computers, please open rspeer-launcher to connect your
                     computer.</p>
-                <p>Need help? Click <a href="https://forums.rspeer.org/topic/550/bot-management-panel-instructions" target={"_blank"}>here.</a></p>
+                <p>Need help? Click <a href="https://rspeer.org/docs/bot-management/" target={"_blank"}>here.</a></p>
             </div>}
             {Object.entries(this.state.launchers).map(entry => {
                 const key = entry[0];
