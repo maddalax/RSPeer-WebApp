@@ -34,6 +34,7 @@ class Page extends React.Component {
                 <div className="wrapper">
                     <div className="page">
                         <div id="alert-message"/>
+                        <div id="alert-message-status"/>
                         <div className="page-inner">
                             {<Routes {...this.props}/>}
                         </div>

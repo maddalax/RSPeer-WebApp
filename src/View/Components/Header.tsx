@@ -4,6 +4,7 @@ import {Util} from "../../Utilities/Util";
 import {HttpUtil} from "../../Utilities/HttpUtil";
 import logo from '../../assets/images/logo.svg'
 import {ApiService} from "../../Common/ApiService";
+import {Alert} from "../../Utilities/Alert";
 
 export type HeaderProps = {
     user: any,
@@ -33,6 +34,7 @@ export class Header extends React.Component<HeaderProps | any, State> {
         if (isPaypalRedirect) {
             return this.props.history.push('/store/process')
         }
+        setTimeout(this.setStatus, 1000);
         await this.setConnectedCount();
         if (!this.state.interval) {
             const interval = setInterval(this.setConnectedCount, 300000);
@@ -50,6 +52,13 @@ export class Header extends React.Component<HeaderProps | any, State> {
             totalClientCount = 0;
         }
         this.setState({totalClientCount})
+    };
+    
+    private setStatus = async () => {
+        const message = await this.api.get("health/message");
+        if(message) {
+            Alert.showStatus(message);
+        }
     };
 
     private logout = () => {

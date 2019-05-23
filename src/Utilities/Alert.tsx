@@ -24,6 +24,19 @@ export class Alert {
         );
     }
 
+    public static showStatus(message: string) {
+        if(!message) {
+            return;
+        }
+        const container = document.getElementById('alert-message-status') as any;
+        ReactDOM.render(
+            <div className="alert alert-danger" role="alert" style={{backgroundColor : '#c35448', borderColor : '#c35448', color : '#ffffff'}}>
+                {message}
+            </div>,
+            container
+        );
+    }
+
     public static success(message: string, timeout = 8000) {
         setTimeout(this.removeAlert, timeout);
         const container = document.getElementById('alert-message') as any;
