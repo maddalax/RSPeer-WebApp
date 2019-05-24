@@ -9,11 +9,7 @@ export class Footer extends React.Component {
             <footer className="app-footer">
                 <ul className="list-inline">
                     <li className="list-inline-item">
-                        <a className="text-muted" href="javascript:void(0)" onClick={() => {
-                            Alert.modal({
-                                body : <PrivacyPolicy/>
-                            })
-                        }}>Privacy Policy</a>
+                        <a className="text-muted" target={"_blank"} href="https://rspeer.org/resources/privacy-policy/">Privacy Policy</a>
                     </li>
                 </ul>
                 <div className="copyright"> Copyright © RSPeer 2019. All right reserved. </div>
