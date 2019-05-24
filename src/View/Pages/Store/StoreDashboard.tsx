@@ -1,31 +1,37 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
-import {Alert} from "../../../Utilities/Alert";
+import {FileConstants, FileService} from "../../../Services/File/FileService";
 
 type State = {
     tokenQuantities: number[],
     processing: number,
     instancesToPurchase: string,
-    instancePrice: number
+    instancePrice: number,
+    text : string
 }
 
 export class StoreDashboard extends React.Component<any, State> {
 
     private api: ApiService;
+    private files : FileService;
 
     constructor(props: State) {
         super(props);
         this.api = new ApiService();
+        this.files = new FileService();
         this.state = {
             tokenQuantities: [],
             processing: 0,
             instancesToPurchase: '5',
-            instancePrice: 100
+            instancePrice: 100,
+            text : ''
         }
     }
 
-    componentDidMount(): void {
+    async componentDidMount() {
         this.setState({tokenQuantities: [500, 1000, 1500, 2000, 2500, 5000, 7500]})
+        const text = await this.files.getFile(FileConstants.STORE);
+        this.setState({text})
     }
 
     private assertCanPurchase = () => {
@@ -60,6 +66,9 @@ export class StoreDashboard extends React.Component<any, State> {
 
     render() {
         return <div>
+            <h3>RSPeer Store</h3>
+            <p>Before purchasing, please make sure you have read our <a href={"https://rspeer.org/resources/refund-policy"} target={"_blank"}>refund policy</a> and <a target="_blank" href="https://rspeer.org/resources/tos">terms of service</a>.</p>
+            <div dangerouslySetInnerHTML={{__html: this.state.text}}/>
             <div className="card">
                 <div className="card-body">
                     <h5 className="card-title">Purchase Tokens</h5>

@@ -20,11 +20,13 @@ export class SiteContentManager extends React.Component<any, any> {
         const quickLinks = await this.fileService.getFile(FileConstants.DASHBOARD_QUICK_LINKS);
         const privacyPolicy = await this.fileService.getFile(FileConstants.PRIVACY_POLICY);
         const getStarted = await this.fileService.getFile(FileConstants.GET_STARTED);
+        const store = await this.fileService.getFile(FileConstants.STORE);
         this.setState((prev: any) => {
             prev.content[FileConstants.DASHBOARD_RECENT_NEWS] = recentNews;
             prev.content[FileConstants.DASHBOARD_QUICK_LINKS] = quickLinks;
             prev.content[FileConstants.PRIVACY_POLICY] = privacyPolicy;
             prev.content[FileConstants.GET_STARTED] = getStarted;
+            prev.content[FileConstants.STORE] = store;
             return prev;
         })
     }
@@ -65,6 +67,7 @@ export class SiteContentManager extends React.Component<any, any> {
             {this.buildEditor("Quick Links", FileConstants.DASHBOARD_QUICK_LINKS)}
             {this.buildEditor("Privacy Policy", FileConstants.PRIVACY_POLICY)}
             {this.buildEditor("Getting Started", FileConstants.GET_STARTED)}
+            {this.buildEditor("Store", FileConstants.STORE)}
         </div>
     }
 
