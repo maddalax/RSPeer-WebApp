@@ -29,6 +29,7 @@ import {OrderManager} from "./View/Pages/Administration/Order/OrderManager";
 import {AdministrationStatsDashboard} from "./View/Pages/Administration/Stats/AdministrationStatsDashboard";
 import {ManagePrivateScriptAccess} from "./View/Pages/DeveloperCenter/ManagePrivateScriptAccess";
 import {RunningClients} from "./View/Components/BotPanel/RunningClients";
+import {UserCenterApiClients} from "./View/Pages/UserCenter/UserCenterApiClients";
 
 export class Routes extends React.Component {
 
@@ -62,6 +63,8 @@ export class Routes extends React.Component {
                        component={(props: any) => <UserCenterViewBalanceChanges {...props} {...this.props}/>}/>
                 <Route exact path={`/user/scriptAccess`}
                        component={(props: any) => <UserCenterViewScriptAccess {...props} {...this.props}/>}/>
+                    <Route exact path={`/user/apiClients`}
+                           component={(props: any) => <UserCenterApiClients {...props} {...this.props}/>}/>
                 <Route exact path={`/bot/management`}
                        component={(props: any) => <BotPanelDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/bot/management/qs`}

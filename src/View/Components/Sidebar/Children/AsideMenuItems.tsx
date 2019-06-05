@@ -91,6 +91,9 @@ export class UserCenter extends React.Component {
                 <li className="menu-item">
                     <Link to={"/user/scriptAccess"} className="menu-link">Script Access</Link>
                 </li>
+                <li className="menu-item">
+                    <Link to={"/user/apiClients"} className="menu-link">Api Clients</Link>
+                </li>
             </ul>
         </li>);
     }
