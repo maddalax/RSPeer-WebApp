@@ -46,7 +46,7 @@ export class LaunchClientSelectModal extends React.Component<any, State> {
       let clients = this.props.payload.qs.clients;
       const runningEmails = this.state.clients.filter(s => s.runescapeEmail != null).map(s => s.runescapeEmail.trim().toLowerCase());
       clients = clients.map((c : any) => {
-          c.running = runningEmails.includes(c.rsUsername.trim().toLowerCase());
+          c.running = c.rsUsername != null && runningEmails.includes(c.rsUsername.trim().toLowerCase());
           return c;
       });
       if(this.state.hidingRunning) {
