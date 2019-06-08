@@ -118,7 +118,7 @@ export class Community extends React.Component<any, any> {
         return (<li className="menu-item">
             <a href={this.getForumLink()} target={"_blank"} className="menu-link"><span className="menu-icon fas fa-users"/> <span
                 className="menu-text">Visit Forums</span></a>
-            <a href="https://discordapp.com/invite/rMTTpsU" target={"_blank"} className="menu-link"><span className="menu-icon fab fa-discord"/> <span
+            <a href="https://discordapp.com/invite/UVp7Evz" target={"_blank"} className="menu-link"><span className="menu-icon fab fa-discord"/> <span
                 className="menu-text">Join Our Discord</span></a>
         </li>);
     }
