@@ -97,7 +97,7 @@ export class LaunchClientModal extends React.Component<any, State> {
         });
         Alert.modal({
             title : "Please select the clients you would like to start.",
-            body : <LaunchClientSelectModal payload={payload} onCheckBoxChange={this.onCheckboxChange}/>,
+            body : <LaunchClientSelectModal payload={payload} onCheckboxChange={this.onCheckboxChange}/>,
             onConfirm : async () => {
                 payload.qs.clients = payload.qs.clients.filter((s : any) => this.state.selected[s.id] === true);
                 if(payload.qs.clients.length === 0) {
