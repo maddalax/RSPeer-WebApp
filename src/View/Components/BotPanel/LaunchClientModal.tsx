@@ -3,6 +3,8 @@ import {ApiService} from "../../../Common/ApiService";
 import {InstanceService} from "../../../Services/BotPanel/InstanceService";
 import {ProxyService} from "../../../Services/BotPanel/ProxyService";
 import {Alert} from "../../../Utilities/Alert";
+import {LaunchClientSelectModal} from './LaunchClientSelectModal';
+
 const uuid = require('uuidv4');
 
 type State = {
@@ -78,8 +80,7 @@ export class LaunchClientModal extends React.Component<any, State> {
         return value != null && value === true;
     };
     
-    onCheckboxChange = (e : any, client : any) => {
-        const checked = e.target.checked;
+    onCheckboxChange = (checked : boolean, client : any) => {
         this.setState(prev => {
             prev.selected[client.id] = checked;
             return prev;
@@ -94,48 +95,9 @@ export class LaunchClientModal extends React.Component<any, State> {
             }
             return prev;
         });
-        const toggleAll = () => {
-            for (let client of payload.qs.clients) {
-                const ele = document.getElementById(`toLaunchCheck-${client.id}`);
-                ele && ele.click();
-            }
-        };
         Alert.modal({
             title : "Please select the clients you would like to start.",
-            body : <div>
-                <button className={"btn btn-primary"} onClick={toggleAll}>Toggle All</button>
-                <br/><br/>
-                <table className="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">Selected</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">World</th>
-                        <th scope="col">Proxy</th>
-                        <th scope="col">Script</th>
-                        <th scope="col">Script Args</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {payload.qs.clients.map((i : any, index: number) => {
-                        return <tr key={i.rsUsername}>
-                            <td>
-                                <div className="custom-control custom-checkbox">
-                                    <input type="checkbox" className="custom-control-input" id={`toLaunchCheck-${i.id}`} onChange={(e) => this.onCheckboxChange(e, i)} 
-                                           defaultChecked={true}/>
-                                        <label className="custom-control-label" htmlFor={`toLaunchCheck-${i.id}`}/>
-                                </div>
-                            </td>
-                            <td>{i.rsUsername || "No Username"}</td>
-                            <td>{`${i.world === -1 ? 'Any' : i.world}` || "No World"}</td>
-                            <td>{i.proxy != null && i.proxy.ip != null ? `${i.proxy.name} (${i.proxy.ip})` : "No Proxy"}</td>
-                            <td>{i.script != null ? i.script.name : "No Script"}</td>
-                            <td>{i.script != null ? i.script.scriptArgs : "No Script Args"}</td>
-                        </tr>
-                    })}
-                    </tbody>
-                </table>
-            </div>,
+            body : <LaunchClientSelectModal payload={payload} onCheckBoxChange={this.onCheckboxChange}/>,
             onConfirm : async () => {
                 payload.qs.clients = payload.qs.clients.filter((s : any) => this.state.selected[s.id] === true);
                 if(payload.qs.clients.length === 0) {
@@ -143,7 +105,7 @@ export class LaunchClientModal extends React.Component<any, State> {
                     return;
                 }
                 await this.sendMessage(this.props.socket, payload);
-                Alert.success(`Successfully sent message to launch ${payload.qs.clients.length} client(s). They should be starting soon.`, 5000)
+                Alert.success(`Successfully sent message to launch ${payload.qs.clients.length} client(s). They should be starting soon.`, 5000);
                 this.props.onClose && this.props.onClose();
             }
         })
