@@ -137,6 +137,9 @@ export class DeveloperCenter extends React.Component {
                     <Link to={"/developer/addScript"} className="menu-link">Add New Script</Link>
                 </li>
                 <li className="menu-item">
+                    <Link to={"/developer/pricing"} className="menu-link">Script Pricing</Link>
+                </li>
+                <li className="menu-item">
                     <Link to={"/developer/privateScript"} className="menu-link">Private Script Access</Link>
                 </li>
                 <li className="menu-item">

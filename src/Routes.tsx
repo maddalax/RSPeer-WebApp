@@ -30,6 +30,7 @@ import {AdministrationStatsDashboard} from "./View/Pages/Administration/Stats/Ad
 import {ManagePrivateScriptAccess} from "./View/Pages/DeveloperCenter/ManagePrivateScriptAccess";
 import {RunningClients} from "./View/Components/BotPanel/RunningClients";
 import {UserCenterApiClients} from "./View/Pages/UserCenter/UserCenterApiClients";
+import {ScriptPricing} from "./View/Pages/DeveloperCenter/ScriptPricing";
 
 export class Routes extends React.Component {
 
@@ -51,6 +52,8 @@ export class Routes extends React.Component {
                        component={(props: any) => <StoreProcess {...props} {...this.props}/>}/>
                 <Route exact path={`/developer`}
                        component={(props: any) => <DeveloperCenterDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/developer/pricing`}
+                       component={(props: any) => <ScriptPricing {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/addScript`}
                        component={(props: any) => <AddModifyScript {...props} {...this.props}/>}/>
                 <Route exact path={`/developer/privateScript`}
