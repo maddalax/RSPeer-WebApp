@@ -37,7 +37,7 @@ export class LaunchClientModal extends React.Component<any, State> {
             sleep: 10,
             count: 1,
             proxies: [],
-            jvmArgs: '-Xmx384m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true -Xss2m',
+            jvmArgs: '-Xmx768m -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true -Xss2m',
             limits: {},
             selected : {}
         };
