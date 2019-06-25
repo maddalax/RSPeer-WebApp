@@ -27,7 +27,7 @@ export class PageContainer extends React.Component<any, State> {
         const token = HttpUtil.getParameterByName("idToken");       
         if(token) {
             UserService.setSession(token);
-            window.location.replace(window.location.origin);
+            window.location.replace(window.location.href.split("?")[0]);
         }
         if(!UserUtil.getSession()) {
             if(this.state.user != null) {
