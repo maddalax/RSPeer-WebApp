@@ -2,6 +2,7 @@ import React from 'react';
 import {LaunchClientModal} from "./LaunchClientModal";
 import {ApiService} from "../../../Common/ApiService";
 import {Alert} from "../../../Utilities/Alert";
+import {Util} from "../../../Utilities/Util";
 
 type State = {
     launchers: any,
@@ -10,12 +11,14 @@ type State = {
     selectedLauncher: any,
     launchingSocket: string | null,
     viewingLogs: boolean,
-    refreshing : boolean
+    refreshing : boolean,
+    lastUpdate : string
 };
 
 export class ConnectedLaunchers extends React.Component<any, State> {
 
     private readonly api: ApiService;
+    private interval : any;
 
     constructor(props: any) {
         super(props);
@@ -27,12 +30,18 @@ export class ConnectedLaunchers extends React.Component<any, State> {
             selectedLauncher: null,
             launchingSocket: null,
             viewingLogs : false,
-            refreshing : false
+            refreshing : false,
+            lastUpdate : ''
         }
     }
 
     async componentDidMount() {
         this.load();
+        this.interval = setInterval(this.load, 15000);
+    }
+    
+    componentWillUnmount(): void {
+        this.interval && clearInterval(this.interval);
     }
 
     getClients = (machineName: string) => {
@@ -121,6 +130,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
             });
             this.setState({clients: mapped});
         }
+        this.setState({lastUpdate : Util.formatDate(new Date().toString(), true)})
     };
 
     onModalClose = () => {
@@ -136,9 +146,8 @@ export class ConnectedLaunchers extends React.Component<any, State> {
             <h3>Connected Launchers ({launcherCount})</h3>
             <br/>
             {!this.state.refreshing && <button type="button" className="btn btn-primary" onClick={this.load}>Refresh</button>}
-            {this.state.refreshing && <button type="button" className="btn btn-primary">Loading Connected Launchers, Please Wait...</button>}
-            <small id="refreshHelp" className="form-text text-muted">Auto refresh is disabled, click refresh
-                to update connected launchers and connected clients.
+            {this.state.refreshing && <button type="button" className="btn btn-primary">Refreshing, Please Wait...</button>}
+            <small id="refreshHelp" className="form-text text-muted">Auto refreshing every 15 seconds. Last Update: {this.state.lastUpdate}
             </small>
             <br/>
             {launcherCount > 0 &&
@@ -157,16 +166,13 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                 const clients = this.getClients(launcher.host);
                 return <div className="card card-max" key={launcher.host}>
                     <div className={"card-body"}>
-                        <p>Host Name: <strong>{launcher.host}</strong></p>
-                        <p>Ip Address: <strong>{launcher.ip}</strong></p>
-                        <p>OS: <strong>{launcher.type}</strong></p>
-                        <p>OS Username: <strong>{launcher.userInfo.username}</strong></p>
-                        <p>Link Key: <strong>{launcher.linkKey}</strong></p>
+                        <p>Host Name: <strong>{launcher.host} ({launcher.ip})</strong></p>
+                        <p>Machine Info: <strong>{launcher.type} (Username: {launcher.userInfo.username})</strong></p>
                         <p>Connected Clients: {clients.length}</p>
                         <button type="button" className="btn btn-primary"
                                 onClick={() => this.launchClient(key, launcher)}>Launch Client(s)
                         </button>
-                        <button type="button" className="btn btn-danger"
+                        <button style={{marginLeft : '5px'}} type="button" className="btn btn-danger"
                                 onClick={() => this.killLauncher(key)}>Kill Launcher
                         </button>
                         <br/><br/>

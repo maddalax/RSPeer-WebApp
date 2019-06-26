@@ -56,7 +56,7 @@ export class ProxyManager extends React.Component<any, any> {
         return <div>
             <h3>Manage Your Proxies</h3>
             <p>Add or manage proxies to use with quick launch setups and/or starting clients with proxies.</p>
-            <p>You may have up to <strong>150 proxies</strong> at any given time.</p>
+            <p>You may have up to <strong>500 proxies</strong> at any given time.</p>
             <button className="btn btn-primary" type="button" id="addProxy"
                     onClick={this.addProxy}>
                 Add New Proxy

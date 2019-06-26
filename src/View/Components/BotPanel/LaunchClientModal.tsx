@@ -14,6 +14,7 @@ type State = {
     sleep: number,
     count: number,
     proxies: any[],
+    loading : boolean,
     jvmArgs: string,
     limits: any,
     selected : any
@@ -34,6 +35,7 @@ export class LaunchClientModal extends React.Component<any, State> {
             qs: [],
             selectedQs: null,
             selectedProxy: null,
+            loading : true,
             sleep: 10,
             count: 1,
             proxies: [],
@@ -53,7 +55,7 @@ export class LaunchClientModal extends React.Component<any, State> {
         if(Array.isArray(proxies)) {
             this.setState({proxies});
         }
-        this.setState({limits});
+        this.setState({limits, loading : false});
     }
 
     sendMessage = async (socket: string, payload: any) => {
@@ -189,7 +191,7 @@ export class LaunchClientModal extends React.Component<any, State> {
         return (<div className={"container"}>
             <h3>You have used up all your available client instances.</h3>
             <p>To continue running more clients, please close existing ones or purchase more instances from <a
-                target={"_blank"} href={"https://store.rspeer.org"}>here.</a></p>
+                target={"_blank"} href={"https://app.rspeer.org/#/store"}>here.</a></p>
             <p>You are running <span
                 style={{color: 'rgb(70, 239, 110)'}}>{this.state.limits.running} / {this.state.limits.allowed}</span> clients.
             </p>
@@ -207,16 +209,18 @@ export class LaunchClientModal extends React.Component<any, State> {
             <div>
                 <div className={"container"}>
                     <h3>Launch Clients</h3>
-                    <p>You are allowed to run <span
+                    {this.state.limits != null && this.state.limits.running != null && <p>You are allowed to run <span
                         style={{color: 'rgb(70, 239, 110)'}}>{(this.state.limits.allowed - this.state.limits.running).toString()}</span> more
-                        clients.</p>
-                    <p>Select a quick launch preset OR open manually below.</p>
+                        clients.</p>}
+                    {this.state.limits == null || this.state.limits.running == null && <p
+                        style={{color: 'rgb(70, 239, 110)'}}>Loading instances...</p>}
+                    <p>Select a <strong>quick launch</strong> preset OR <strong>open manually</strong> below.</p>
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {this.state.selectedQs ? this.state.selectedQs.name : "Select Quick Launch"}
+                            {this.state.selectedQs ? this.state.selectedQs.name : (this.state.loading ? 'Loading Quick Launch...' : "Select Quick Launch")}
                         </button>
-                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{maxHeight : '300px', overflow : 'scroll'}}>
                             {this.state.qs.filter(w => w.name).map(q => {
                                 return <a key={q.name} className="dropdown-item" href="javascript:void(0)"
                                           onClick={() => this.selectQs(q)}>{q.name}</a>
@@ -251,9 +255,9 @@ export class LaunchClientModal extends React.Component<any, State> {
                             <button className="btn btn-secondary dropdown-toggle" type="button"
                                     id="proxyDropdown"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                {this.state.selectedProxy ? this.state.selectedProxy.name : "Optional - Select A Proxy"}
+                                {this.state.selectedProxy ? this.state.selectedProxy.name : (this.state.loading ? "Loading Proxies..." : "Optional - Select A Proxy")}
                             </button>
-                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton" style={{maxHeight : '300px', overflow : 'scroll'}}>
                                 {this.state.proxies.filter(w => w.name).map(q => {
                                     return <a className="dropdown-item" href="javascript:void(0)" key={q.name}
                                               onClick={() => this.selectProxy(q)}>{q.name} - {q.ip}:{q.port}</a>
@@ -272,10 +276,13 @@ export class LaunchClientModal extends React.Component<any, State> {
                         </button>
                     </div>}
                     {this.state.selectedQs &&
-                    <button onClick={this.openClients} className="btn btn-dark" type="button" id="openClients">
-                        Open Client(s) Using {this.state.selectedQs.name} Quick Launch
-                    </button>}
-                    <button onClick={this.close} className="btn btn-danger" type="button" id="openClientsCancel">
+                    <React.Fragment>
+                        <button onClick={this.openClients} className="btn btn-dark" type="button" id="openClients">
+                            Open Client(s) Using {this.state.selectedQs.name} Quick Launch
+                        </button>
+                        <br/>
+                    </React.Fragment>}
+                    <button style={{marginTop : '5px'}} onClick={this.close} className="btn btn-danger" type="button" id="openClientsCancel">
                         Cancel
                     </button>
                 </div>
