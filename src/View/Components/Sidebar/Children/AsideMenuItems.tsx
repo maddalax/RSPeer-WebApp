@@ -29,7 +29,7 @@ export class ScriptsMenuItem extends React.Component {
 
 export class BotPanelMenuItem extends React.Component {
     render(): any {
-        return (<li className="menu-item has-child">
+        return (<li className="menu-item has-child" id={"bot-panel-menu"}>
             <a href="#" className="menu-link"><span className="menu-icon fas fa-robot"/> <span
                 className="menu-text">Bot Management</span></a> {/* child menu */}
             <ul className="menu">
@@ -42,11 +42,11 @@ export class BotPanelMenuItem extends React.Component {
                         <i className="fas fa-globe-europe"/> Manage Quick Launch</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/bot/management/proxy"} className="menu-link"><i className="fab fa-paypal"/> Manage
+                    <Link to={"/bot/management/proxy"} className="menu-link"><i className="fas fa-wifi"/> Manage
                         Proxies</Link>
                 </li>
                 <li className="menu-item">
-                    <Link to={"/bot/management/logs"} className="menu-link"><i className="fab fa-paypal"/> View
+                    <Link to={"/bot/management/logs"} className="menu-link"><i className="fas fa-file-alt"/> View
                         Logs</Link>
                 </li>
                 <li className="menu-item">

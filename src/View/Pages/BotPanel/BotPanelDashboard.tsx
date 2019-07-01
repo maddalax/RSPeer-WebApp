@@ -1,6 +1,7 @@
 import React from 'react';
 import {LinkKey} from "../../Components/BotPanel/LinkKey";
 import {ConnectedLaunchers} from "../../Components/BotPanel/ConnectedLaunchers";
+import {HttpUtil} from "../../../Utilities/HttpUtil";
 
 type State = {
     loading : boolean
@@ -9,6 +10,8 @@ type State = {
 type Props = {
     user : any
 }
+
+let openedMenu = false;
 
 export class BotPanelDashboard extends React.Component<Props, State> {
     
@@ -19,6 +22,22 @@ export class BotPanelDashboard extends React.Component<Props, State> {
         };
     }
 
+    componentDidMount(): void {
+        if(!openedMenu) {
+            const menu = HttpUtil.getParameterByName('menu');
+            if (menu && menu === 'bot_panel') {
+                openedMenu = true;
+                window.setTimeout(() => {
+                    // @ts-ignore
+                    if(window.$) {
+                        // @ts-ignore
+                        window.$('#bot-panel-menu').click();
+                    }
+                }, 1500)
+            }
+        }
+    }
+    
     render() {
         if(!this.props.user) {
             return <div>
