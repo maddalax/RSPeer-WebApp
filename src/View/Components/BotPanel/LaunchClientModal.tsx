@@ -215,7 +215,7 @@ export class LaunchClientModal extends React.Component<any, State> {
                     {this.state.limits == null || this.state.limits.running == null && <p
                         style={{color: 'rgb(70, 239, 110)'}}>Loading instances...</p>}
                     <p>Select a <strong>quick launch</strong> preset OR <strong>open manually</strong> below.</p>
-                    <div className="dropdown">
+                    {this.state.loading || this.state.qs.length > 0 && <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {this.state.selectedQs ? this.state.selectedQs.name : (this.state.loading ? 'Loading Quick Launch...' : "Select Quick Launch")}
@@ -226,8 +226,9 @@ export class LaunchClientModal extends React.Component<any, State> {
                                           onClick={() => this.selectQs(q)}>{q.name}</a>
                             })}
                         </div>
-                    </div>
-                    <br/>
+                    </div>}
+                    {!this.state.loading && this.state.qs.length === 0 && <p style={{color : '#00a28a'}}>You do not have any quick launch configurations created, click <strong>"Manage Quick Launch"</strong> to create one. This will allow you to launch
+                    a list of accounts with custom client options, proxies, and scripts automatically. This is completely optional, you can click Open Client(s) without Quick Launch below as well.</p>}
                     <hr/>
                     <h3>Advanced Options</h3>
                     <p><strong>Custom JVM Arguments. </strong>
@@ -271,13 +272,13 @@ export class LaunchClientModal extends React.Component<any, State> {
                             this.setState({count: parseInt(e.target.value)})
                         }}/>
                         <br/>
-                        <button onClick={this.openClients} className="btn btn-dark" type="button" id="openClients">
+                        <button onClick={this.openClients} className="btn btn-success" type="button" id="openClients">
                             Open Client(s) Without Quick Launch
                         </button>
                     </div>}
                     {this.state.selectedQs &&
                     <React.Fragment>
-                        <button onClick={this.openClients} className="btn btn-dark" type="button" id="openClients">
+                        <button onClick={this.openClients} className="btn btn-success" type="button" id="openClients">
                             Open Client(s) Using {this.state.selectedQs.name} Quick Launch
                         </button>
                         <br/>

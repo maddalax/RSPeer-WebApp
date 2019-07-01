@@ -88,6 +88,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
     };
 
     launchClient = async (socket: string, launcher: any) => {
+        this.props.onLaunchClient && this.props.onLaunchClient(true);
         this.setState({isLaunching: true, launchingSocket: socket})
     };
 
@@ -134,6 +135,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
     };
 
     onModalClose = () => {
+        this.props.onLaunchClient && this.props.onLaunchClient(false);
         this.setState({isLaunching: false, viewingLogs: false, selectedLauncher: null})
     };
 
@@ -145,8 +147,8 @@ export class ConnectedLaunchers extends React.Component<any, State> {
         return <div>
             <h3>Connected Launchers ({launcherCount})</h3>
             <br/>
-            {!this.state.refreshing && <button type="button" className="btn btn-primary" onClick={this.load}>Refresh</button>}
-            {this.state.refreshing && <button type="button" className="btn btn-primary">Refreshing, Please Wait...</button>}
+            {!this.state.refreshing && <button type="button" className="btn btn-success" onClick={this.load}>Refresh</button>}
+            {this.state.refreshing && <button type="button" className="btn btn-success">Refreshing, Please Wait...</button>}
             <small id="refreshHelp" className="form-text text-muted">Auto refreshing every 15 seconds. Last Update: {this.state.lastUpdate}
             </small>
             <br/>
@@ -169,7 +171,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                         <p>Host Name: <strong>{launcher.host} ({launcher.ip})</strong></p>
                         <p>Machine Info: <strong>{launcher.type} (Username: {launcher.userInfo.username})</strong></p>
                         <p>Connected Clients: {clients.length}</p>
-                        <button type="button" className="btn btn-primary"
+                        <button type="button" className="btn btn-success"
                                 onClick={() => this.launchClient(key, launcher)}>Launch Client(s)
                         </button>
                         <button style={{marginLeft : '5px'}} type="button" className="btn btn-danger"
@@ -181,7 +183,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                         <button type="button" className="btn btn-dark"
                                 onClick={() => this.viewLogs(key, launcher.host)}>View Logs
                         </button>
-                        {clients.length > 0 && <button type="button" className="btn btn-danger"
+                        {clients.length > 0 && <button type="button" style={{marginLeft : '5px'}} className="btn btn-danger"
                                                        onClick={() => this.killAllClients(launcher)}>Close Client(s)
                             ({clients.length})</button>}
                         <br/><br/>

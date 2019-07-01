@@ -4,7 +4,8 @@ import {ConnectedLaunchers} from "../../Components/BotPanel/ConnectedLaunchers";
 import {HttpUtil} from "../../../Utilities/HttpUtil";
 
 type State = {
-    loading : boolean
+    loading : boolean,
+    launchingClient : boolean
 }
 
 type Props = {
@@ -16,7 +17,8 @@ export class BotPanelDashboard extends React.Component<Props, State> {
     constructor(props : any) {
         super(props);
         this.state = {
-            loading : true
+            loading : true,
+            launchingClient : false
         };
     }
 
@@ -41,9 +43,11 @@ export class BotPanelDashboard extends React.Component<Props, State> {
         }
         return (
             <div>
-                {this.props.user && <LinkKey user={this.props.user}/>}
+                {!this.state.launchingClient && this.props.user && <LinkKey user={this.props.user}/>}
                 <hr/>
-                {this.props.user && <ConnectedLaunchers userId={this.props.user.id} {...this.props}/>}
+                {this.props.user && <ConnectedLaunchers userId={this.props.user.id} {...this.props} onLaunchClient={(value : boolean) => {
+                    this.setState({launchingClient : value})
+                }}/>}
             </div>
         );
     }
