@@ -11,8 +11,6 @@ type Props = {
     user : any
 }
 
-let openedMenu = false;
-
 export class BotPanelDashboard extends React.Component<Props, State> {
     
     constructor(props : any) {
@@ -23,19 +21,16 @@ export class BotPanelDashboard extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        if(!openedMenu) {
-            const menu = HttpUtil.getParameterByName('menu');
-            if (menu && menu === 'bot_panel') {
-                openedMenu = true;
-                window.setTimeout(() => {
-                    // @ts-ignore
-                    if(window.$) {
-                        // @ts-ignore
-                        window.$('#bot-panel-menu').click();
-                    }
-                }, 1500)
+        window.setTimeout(() => {
+            // @ts-ignore
+            if(window.$) {
+                // @ts-ignore
+                const panel = window.$('#bot-panel-menu');
+                if(!panel.hasClass('has-open')) {
+                    panel.click();
+                }
             }
-        }
+        }, 1500)
     }
     
     render() {
