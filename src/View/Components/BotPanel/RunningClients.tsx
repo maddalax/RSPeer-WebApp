@@ -38,6 +38,20 @@ export class RunningClients extends React.Component<any, State> {
         this.setState({clients, loading : false});
     };
 
+    private reloadAllScripts = async () => {
+        const confirm = window.confirm('This will restart all running scripts on all clients, are you sure? This only will work on v1.88 and later.');
+        if(!confirm) {
+            return;
+        }
+        Alert.success("Sent message to restart scripts.");
+        try {
+            const promises = this.state.clients.map(c => this.send(c, ':reload_script'));
+            await Promise.all(promises);
+        } catch (e) {
+            Alert.show(e.toString());
+        }
+    };
+    
     send = async (client : any, message : string, reload = false) => {
         if(!client.tag) {
             Alert.show("Client did not have tag? Cannot send message: " + message);
@@ -53,6 +67,7 @@ export class RunningClients extends React.Component<any, State> {
         return <div>
             <h6>Total Running Clients: {this.state.clients.length}</h6>
             <button className={"btn btn-success"} onClick={this.load}>{this.state.loading ? 'Loading...' : 'Refresh'}</button>
+            <button className={"btn btn-primary"} style={{marginLeft : '5px'}} onClick={this.reloadAllScripts}>{'Reload All Scripts'}</button>
             <br/><br/>
             <table className="table table-bordered">
                 <thead>
@@ -64,6 +79,7 @@ export class RunningClients extends React.Component<any, State> {
                     <th scope="col">Machine</th>
                     <th scope="col">Last Update</th>
                     <th scope="col">Kill</th>
+                    <th scope="col">Reload Script</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -76,6 +92,7 @@ export class RunningClients extends React.Component<any, State> {
                         <td>{i.machineName || "No Machine"}</td>
                         <td>{Util.formatDate(i.lastUpdate, true)}</td>
                         <td><a href={"javascript:void(0)"} onClick={() => this.send(i, ':kill', true)}>Kill Client</a></td>
+                        <td><a href={"javascript:void(0)"} onClick={() => this.send(i, ':reload_script', false)}>Reload Script</a></td>
                     </tr>
                 })}
                 </tbody>
