@@ -28,6 +28,6 @@ export interface Item {
     price:               number;
     feesPercent:         number;
     paymentMethod:       number;
-    expirationInMinutes: null;
+    expirationInMinutes: number;
     type:                number;
 }

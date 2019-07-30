@@ -31,6 +31,7 @@ import {ManagePrivateScriptAccess} from "./View/Pages/DeveloperCenter/ManagePriv
 import {RunningClients} from "./View/Components/BotPanel/RunningClients";
 import {UserCenterApiClients} from "./View/Pages/UserCenter/UserCenterApiClients";
 import {ScriptPricing} from "./View/Pages/DeveloperCenter/ScriptPricing";
+import {StoreInuvationPurchase} from './View/Pages/Store/StoreInuvationPurchase';
 
 export class Routes extends React.Component {
 
@@ -44,6 +45,7 @@ export class Routes extends React.Component {
                 <Route exact path={`/scripts`}
                        component={(props: any) => <ScriptRepositoryDashboard {...props} {...this.props}/>}/>
                 <Route exact path={`/store`} component={(props: any) => <StoreDashboard {...props} {...this.props}/>}/>
+                <Route exact path={`/store/inuvation`} component={(props: any) => <StoreInuvationPurchase {...props} {...this.props}/>}/>
                 <Route exact path={`/store/checkout`}
                        component={(props: any) => <StoreCheckout {...props} {...this.props}/>}/>
                 <Route exact path={`/store/success`}

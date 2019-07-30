@@ -3,6 +3,14 @@ import {Alert} from "../../Utilities/Alert";
 import {Order} from "../../Models/Order";
 import {Util} from "../../Utilities/Util";
 import React from "react";
+import {OrderStatus} from "../../Models/StoreItem";
+
+export interface GetOrdersQuery {
+    itemId? : number;
+    sku? : string;
+    status? : OrderStatus
+    notExpired? : boolean
+}
 
 export class OrderService {
     
@@ -11,6 +19,10 @@ export class OrderService {
     constructor(api : ApiService = new ApiService()) {
         this.api = api;
     }
+    
+    getOrders = async (query : GetOrdersQuery) : Promise<Order> => {
+        return await this.api.post("order/list", query);
+    };
     
     showOrder = async (id : number) => {
         const res = await this.api.get("order/get?id=" + id);
