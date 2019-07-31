@@ -1,7 +1,15 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
 import {HttpUtil} from "../../../Utilities/HttpUtil";
-import {ScriptCategories, ScriptDto, ScriptOrderBy, ScriptType, ScriptTypes} from "../../../Models/ScriptDto";
+import {
+    Game,
+    GameFormatted,
+    ScriptCategories,
+    ScriptDto,
+    ScriptOrderBy,
+    ScriptType,
+    ScriptTypes
+} from "../../../Models/ScriptDto";
 import {UserUtil} from "../../../Utilities/UserUtil";
 import {Alert} from "../../../Utilities/Alert";
 
@@ -14,7 +22,8 @@ type State = {
     category: string,
     [key: string]: any
     loggedIn: boolean,
-    originalQueryType : string
+    originalQueryType : string,
+    game : Game
 }
 
 export class ScriptRepositoryDashboard extends React.Component<any, State> {
@@ -35,7 +44,8 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             queryType: queryType,
             orderBy: 'featured',
             category: 'All',
-            loggedIn: true
+            loggedIn: true,
+            game : Game.Osrs
         }
     }
 
@@ -62,6 +72,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             type: this.state.queryType,
             search: this.state.search,
             orderBy: this.state.orderBy,
+            game : this.state.game,
             //Subtract 1 off index because 'All' is added to beginning of the list.
             category: this.state.category === 'All' ? null : ScriptCategories.indexOf(this.state.category) - 1
         });
@@ -96,7 +107,7 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
         });
     };
 
-    private setFilter(key: string, value: string) {
+    private setFilter(key: string, value: any) {
         this.setState({
             [key]: value, loading: true
         }, this.load)
@@ -115,6 +126,21 @@ export class ScriptRepositoryDashboard extends React.Component<any, State> {
             <div className={"row"}>
                 <div>
                     <form className="form-inline">
+                        <div className="form-group  mx-sm-1 mb-2">
+                            <div className="dropdown">
+                                <button className="btn btn-secondary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                    Game: {GameFormatted(this.state.game)}
+                                </button>
+                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a className="dropdown-item" href="javascript:void(0)" onClick={
+                                        () => this.setFilter('game', Game.Osrs)}>Runescape 2007</a>
+                                    <a className="dropdown-item" href="javascript:void(0)" onClick={
+                                        () => this.setFilter('game', Game.Rs3)}>Runescape 3</a>
+                                </div>
+                            </div>
+                        </div>
                         <div className="form-group  mx-sm-1 mb-2">
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button"
@@ -319,7 +345,7 @@ export class ScriptCard extends React.Component<ScriptCardProps, ScriptCardState
                     <h5 className="card-title" style={this.title}>{this.props.script.name}</h5>
                     <div>
                         <h6 style={this.subTitle} className="card-subtitle mb-2 text-muted">Type: <span
-                            style={typeStyles}>{this.props.script.typeFormatted}</span></h6>
+                            style={typeStyles}>{this.props.script.typeFormatted} ({GameFormatted(this.props.script.game)})</span></h6>
                         <h6 style={this.subTitle}
                             className="card-subtitle mb-2 text-muted">Developer: {this.props.script.author}</h6>
                         <h6 style={this.subTitle} className="card-subtitle mb-2 text-muted">Total

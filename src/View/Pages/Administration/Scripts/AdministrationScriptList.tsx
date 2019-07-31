@@ -1,6 +1,6 @@
 import React from 'react';
 import {ApiService} from "../../../../Common/ApiService";
-import {ScriptDto, ScriptOrderBy, ScriptStatus, ScriptType} from "../../../../Models/ScriptDto";
+import {Game, GameFormatted, ScriptDto, ScriptOrderBy, ScriptStatus, ScriptType} from "../../../../Models/ScriptDto";
 import {Util} from "../../../../Utilities/Util";
 import {Alert} from "../../../../Utilities/Alert";
 import {AddModifyScript} from "../../DeveloperCenter/AddModifyScript";
@@ -9,7 +9,9 @@ import {HttpUtil} from "../../../../Utilities/HttpUtil";
 
 type State = {
     scripts: ScriptDto[],
-    status: ScriptStatus
+    status: ScriptStatus,
+    game : Game,
+    loading : boolean
 }
 
 export class AdministrationScriptList extends React.Component<any, State> {
@@ -22,6 +24,8 @@ export class AdministrationScriptList extends React.Component<any, State> {
         const status = HttpUtil.getParameterByName("status");
         this.state = {
             scripts: [],
+            loading : true,
+            game : Game.Both,
             status: status === 'pending' ? ScriptStatus.Pending : ScriptStatus.Live
         };
     }
@@ -29,15 +33,23 @@ export class AdministrationScriptList extends React.Component<any, State> {
     async componentDidMount() {
         const scripts = await this.api.post('script/list', {
             orderBy: ScriptOrderBy.alphabetical,
-            status: this.state.status
+            status: this.state.status,
+            game : this.state.game
         });
         if (Array.isArray(scripts)) {
             this.setState({scripts});
         }
+        this.setState({loading : false});
     }
 
     setScriptStatus = (status: ScriptStatus) => {
         this.setState({status, scripts: []}, () => {
+            this.componentDidMount();
+        })
+    };
+
+    setGame = (game: Game) => {
+        this.setState({game, scripts: []}, () => {
             this.componentDidMount();
         })
     };
@@ -73,6 +85,21 @@ export class AdministrationScriptList extends React.Component<any, State> {
                 <button className="btn btn-secondary dropdown-toggle" type="button"
                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
+                    Game: {GameFormatted(this.state.game)}
+                </button>
+                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a className="dropdown-item" href="javascript:void(0)"
+                       onClick={() => this.setGame(Game.Both)}>All</a>
+                    <a className="dropdown-item" href="javascript:void(0)"
+                       onClick={() => this.setGame(Game.Osrs)}>{GameFormatted(Game.Osrs)}</a>
+                    <a className="dropdown-item" href="javascript:void(0)"
+                       onClick={() => this.setGame(Game.Rs3)}>{GameFormatted(Game.Rs3)}</a>
+                </div>
+            </div>
+            <div className="dropdown" style={{marginTop : '5px'}}>
+                <button className="btn btn-secondary dropdown-toggle" type="button"
+                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
                     Script Status: {this.state.status === ScriptStatus.Live ? 'Live' : 'Pending'}
                 </button>
                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -103,6 +130,7 @@ export class AdministrationScriptList extends React.Component<any, State> {
                 <table className="table table-bordered table-striped">
                     <thead>
                     <tr>
+                        <th scope="col">Game</th>
                         <th scope="col">Name</th>
                         <th scope="col">Author</th>
                         <th scope="col">Description</th>
@@ -118,11 +146,18 @@ export class AdministrationScriptList extends React.Component<any, State> {
                     </tr>
                     </thead>
                     <tbody>
+                    {this.state.loading && <tr>
+                        <td>Loading scripts.</td>
+                    </tr>}
+                    {this.state.scripts.length == 0 && !this.state.loading && <tr>
+                        <td>No results for your query.</td>
+                    </tr>}
                     {this.state.scripts.map(s => {
                         const style = (script: ScriptDto) => {
                             if (script.type === ScriptType.Premium) return {color: 'white', backgroundColor: '#59ea8c'};
                         };
                         return (<tr>
+                            <th scope="row">{GameFormatted(s.game)}</th>
                             <th scope="row">{s.name}</th>
                             <th scope="row">{s.author}</th>
                             <td>{s.description}</td>

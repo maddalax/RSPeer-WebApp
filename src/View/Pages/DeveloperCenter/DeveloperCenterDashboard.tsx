@@ -1,6 +1,13 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
-import {PendingScript, ScriptDto, ScripterInfo, ScriptStatus, ScriptType} from "../../../Models/ScriptDto";
+import {
+    GameFormatted,
+    PendingScript,
+    ScriptDto,
+    ScripterInfo,
+    ScriptStatus,
+    ScriptType
+} from "../../../Models/ScriptDto";
 import {Util} from "../../../Utilities/Util";
 import {AddModifyScript} from "./AddModifyScript";
 import {Alert} from "../../../Utilities/Alert";
@@ -75,6 +82,32 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
         })
     };
 
+    private deletePrivateScript = async (script : ScriptDto) => {
+        const confirm = window.confirm(`Are you sure you want to delete ${script.name}?`);
+        if(!confirm) {
+            return;
+        }
+        const res = await this.api.post("script/deletePrivate", {
+            scriptId : script.id
+        });
+        if(res.error) {
+            return Alert.show(res.error);
+        }
+        Alert.success(`Successfully removed ${script.name}.`);
+        this.setState(prev => {
+            const exists = script.status == ScriptStatus.Pending 
+                ? prev.pending.find(s => s.id == script.id) 
+                : prev.live.find(s => s.id == script.id);
+            if(!exists) {
+                return prev;
+            }
+            script.status == ScriptStatus.Pending 
+                ? prev.pending.splice(prev.live.indexOf(exists), 1) 
+                : prev.live.splice(prev.live.indexOf(exists), 1);
+            return prev;
+        })
+    };
+    
     private renderTable = (collection : ScriptDto[]) => {
         const color = (script : ScriptDto) => {
             if(script.status === ScriptStatus.Live) return "table-success";
@@ -85,6 +118,7 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
             <table className="table table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th scope="col">Game</th>
                     <th scope="col">Name</th>
                     <th scope="col">Description</th>
                     <th scope="col">Version</th>
@@ -107,6 +141,7 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
                         s.statusFormatted = "Denied";
                     }
                     return (<tr>
+                        <th>{GameFormatted(s.game)}</th>
                         <th scope="row">{s.name}</th>
                         <td>{s.description}</td>
                         <td>{s.version}</td>
@@ -117,6 +152,7 @@ export class DeveloperCenterDashboard extends React.Component<any, State> {
                         <td>{s.totalUsers}</td>
                         <td className={color(s)}><span style={{color : 'black'}}>{s.statusFormatted}</span></td>
                         <td><button onClick={() => this.updateScript(s)} className={"btn btn-info"}>Update</button>
+                            {s.type == ScriptType.Private && <button style={{marginTop : '5px'}} onClick={() => this.deletePrivateScript(s)} className={"btn btn-danger"}>Delete</button>}
                             {hasMessage && <button onClick={() => this.viewMessage(s, meta!)} className={"btn btn-success"}>View Messages</button>}
                         </td>
                     </tr>)

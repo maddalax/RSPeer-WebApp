@@ -1,6 +1,6 @@
 import React from 'react';
 import {ApiService} from "../../../Common/ApiService";
-import {ScriptDto, ScriptStatus, ScriptType, ScriptTypeFormatted} from "../../../Models/ScriptDto";
+import {Game, GameFormatted, ScriptDto, ScriptStatus, ScriptType, ScriptTypeFormatted} from "../../../Models/ScriptDto";
 import {Alert} from "../../../Utilities/Alert";
 import {Util} from "../../../Utilities/Util";
 
@@ -20,6 +20,7 @@ type State = {
     type: ScriptType,
     obfuscate: boolean,
     scriptJar: any,
+    game : Game,
     status: ScriptStatus
 }
 
@@ -52,6 +53,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             type: script != null ? script.type : ScriptType.Free,
             obfuscate: true,
             scriptJar: null,
+            game : script != null ? script.game : Game.Osrs,
             status: script != null ? script.status : ScriptStatus.Pending
         };
         this.api = new ApiService({throwError: true, supressAlert: true});
@@ -74,6 +76,12 @@ export class AddModifyScript extends React.Component<Props | any, State> {
     setScriptType = (e: any, type: ScriptType) => {
         e.preventDefault();
         this.setState({type});
+    };
+
+    setGame = (e: any, game: Game) => {
+        e.preventDefault();
+        console.log('set game', game);
+        this.setState({game});
     };
 
     deleteScript = async (e: any) => {
@@ -160,7 +168,8 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             ForumThread: this.state.forumThread,
             Price: this.state.price,
             Instances: this.state.instances,
-            Type: this.state.type
+            Type: this.state.type,
+            Game : this.state.game
         };
 
         const path = this.props.isAdminView ? 'adminScript/update' : 'script/create';
@@ -212,7 +221,8 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                     Name: this.state.name,
                     Description: this.state.description,
                     Category: this.state.category,
-                    Type: this.state.type
+                    Type: this.state.type,
+                    Game : this.state.game
                 }
             }),
             file: this.state.scriptJar
@@ -269,6 +279,25 @@ export class AddModifyScript extends React.Component<Props | any, State> {
                     </div>}
                     <br/>
                     <form onSubmit={this.onFormSubmit}>
+                        <div className="form-group">
+                            <label>Game</label>
+                            <div className="dropdown">
+                                <button className="btn btn-secondary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                    {GameFormatted(this.state.game)}
+                                </button>
+                                <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                    style={{"height": "auto", "maxHeight": "200px", "overflow-y": "scroll"}}>
+                                    <li key={"osrs"} onClick={(e) => this.setGame(e, Game.Osrs)}
+                                        className="dropdown-item">Runescape 2007
+                                    </li>
+                                    <li key={"rs3"} onClick={(e) => this.setGame(e, Game.Rs3)}
+                                        className="dropdown-item">Runescape 3
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <div className="form-group">
                             <label>Script Type</label>
                             <div className="dropdown">
