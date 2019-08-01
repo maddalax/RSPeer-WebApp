@@ -228,6 +228,7 @@ export class AddModifyScript extends React.Component<Props | any, State> {
             file: this.state.scriptJar
         });
         this.setState({processing: false});
+
         if (res.error) {
             return;
         }

@@ -71,7 +71,7 @@ export class Dashboard extends React.Component<any, any> {
                                         <h2 className="metric-label"> Total Users </h2>
                                         <p className="metric-value h3">
                                             <sub><i className="oi oi-people"/></sub> <span
-                                            className="value">{this.state.totalUsers}</span>
+                                            className="value">{Util.formatNumber(this.state.totalUsers)}</span>
                                         </p>
                                     </a>
                                 </div>
