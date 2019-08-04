@@ -1,3 +1,5 @@
+import {Game} from "./ScriptDto";
+
 export interface RunescapeClient {
     lastUpdate: string,
     proxyIp: string,
@@ -6,4 +8,5 @@ export interface RunescapeClient {
     rsn: string,
     runescapeEmail: string,
     tag: string
+    game : Game
 }

@@ -3,6 +3,7 @@ import {ApiService} from "../../../Common/ApiService";
 import {Util} from "../../../Utilities/Util";
 import {RunescapeClient} from "../../../Models/RunescapeClient";
 import {Alert} from "../../../Utilities/Alert";
+import {GameFormatted} from "../../../Models/ScriptDto";
 
 type State = {
     clients : RunescapeClient[],
@@ -72,6 +73,7 @@ export class RunningClients extends React.Component<any, State> {
             <table className="table table-bordered">
                 <thead>
                 <tr>
+                    <th scope="col">Game</th>
                     <th scope="col">Email</th>
                     <th scope="col">RSN</th>
                     <th scope="col">Script</th>
@@ -85,6 +87,7 @@ export class RunningClients extends React.Component<any, State> {
                 <tbody>
                 {this.state.clients.map((i: RunescapeClient, index: number) => {
                     return <tr key={i.tag}>
+                        <td>{GameFormatted(i.game)}</td>
                         <td>{i.runescapeEmail || "Not Logged In"}</td>
                         <td>{i.rsn || "Not Logged In"}</td>
                         <td>{i.scriptName || "No Script"}</td>

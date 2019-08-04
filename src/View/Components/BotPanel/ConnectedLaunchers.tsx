@@ -3,6 +3,8 @@ import {LaunchClientModal} from "./LaunchClientModal";
 import {ApiService} from "../../../Common/ApiService";
 import {Alert} from "../../../Utilities/Alert";
 import {Util} from "../../../Utilities/Util";
+import {GameFormatted} from "../../../Models/ScriptDto";
+import {RunescapeClient} from "../../../Models/RunescapeClient";
 
 type State = {
     launchers: any,
@@ -190,6 +192,7 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                         <table className="table table-bordered">
                             <thead>
                             <tr>
+                                <th scope="col">Game</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">RSN</th>
                                 <th scope="col">Proxy Ip</th>
@@ -198,8 +201,9 @@ export class ConnectedLaunchers extends React.Component<any, State> {
                             </tr>
                             </thead>
                             <tbody>
-                            {clients.map((i: any, index: number) => {
-                                return <tr key={i.id}>
+                            {clients.map((i: RunescapeClient, index: number) => {
+                                return <tr key={i.tag}>
+                                    <td>{GameFormatted(i.game)}</td>
                                     <td>{i.runescapeEmail || "Not Logged In"}</td>
                                     <td>{i.rsn || "Not Logged In"}</td>
                                     <td>{i.proxyIp || "No Proxy"}</td>
