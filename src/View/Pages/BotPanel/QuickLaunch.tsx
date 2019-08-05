@@ -1,5 +1,6 @@
 import React from 'react';
 import {ImportQsJson} from "./ImportJson";
+import {ImportQsCsv} from "./ImportCsv";
 import {ApiService} from "../../../Common/ApiService";
 import {AddClientModal} from "../../Components/BotPanel/AddClientModal";
 import {Alert} from "../../../Utilities/Alert";
@@ -84,12 +85,16 @@ export class QuickLaunch extends React.Component<any, any> {
         this.setState({importingJson: true, selectedQs: qs});
     };
 
+    importCsv = (qs: any) => {
+        this.setState({importingCsv: true, selectedQs: qs});
+    };
+
     addNewClient = (client: any) => {
         this.setState({addingClient: true, selectedClient: client})
     };
 
     onClose = (res: any) => {
-        this.setState({importingJson: false, addingClient: false}, () => {
+        this.setState({importingJson: false, importingCsv: false, addingClient: false}, () => {
             if (!res || !res.clients) {
                 return;
             }
@@ -122,6 +127,11 @@ export class QuickLaunch extends React.Component<any, any> {
         if (this.state.importingJson) {
             return <ImportQsJson qs={this.state.selectedQs} onClose={this.onClose}/>
         }
+
+        if (this.state.importingCsv) {
+            return <ImportQsCsv qs={this.state.selectedQs} onClose={this.onClose}/>
+        }
+
         return <div>
             <div>
                 <h3>Quick Launch Manager</h3>
@@ -164,6 +174,10 @@ export class QuickLaunch extends React.Component<any, any> {
                 <button className="btn btn-dark button-spacing" type="button" id="importJson"
                         onClick={() => this.importJson(this.state.selectedQs)}>
                     Import JSON
+                </button>
+                <button className="btn btn-dark button-spacing" type="button" id="importCsv"
+                        onClick={() => this.importCsv(this.state.selectedQs)}>
+                    Import CSV
                 </button>
                 <button className="btn btn-danger button-spacing" type="button" id="deleteQs"
                         onClick={() => this.delete(this.state.selectedQs)}>
