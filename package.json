@@ -6,7 +6,7 @@
     "axios": "0.19.0",
     "bootstrap": "4.3.1",
     "file-saver": "^2.0.2",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "masonry-layout": "4.2.2",
     "open-iconic": "1.1.1",
     "perfect-scrollbar": "1.4.0",
