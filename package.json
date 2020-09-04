@@ -23,7 +23,7 @@
     "uuidv4": "^4.0.0"
   },
   "devDependencies": {
-    "node-sass": "4.12.0",
+    "node-sass": "4.13.1",
     "rimraf": "2.7.1",
     "sass-loader": "^7.1.0",
     "typescript": "3.6.4",
